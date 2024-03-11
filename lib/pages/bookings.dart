@@ -42,8 +42,8 @@ class _MyBookingsPageState extends State<MyBookingsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       key: scaffoldKey,
-      appBar: myComponents.appBar(scaffoldKey: scaffoldKey),
-      drawer: NavDrawer(),
+      // appBar: myComponents.appBar(scaffoldKey: scaffoldKey),
+      // drawer: NavDrawer(),
       body: SafeArea(
         child: Column(
           children: [
@@ -56,17 +56,21 @@ class _MyBookingsPageState extends State<MyBookingsPage> {
                     child: myComponents.background(),
                   ),
                   Padding(
-                    padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
+                    padding:
+                        EdgeInsets.symmetric(horizontal: horizontalPadding),
                     child: ListView.builder(
-                      itemCount: bookingDetailsList.length + 1, // Add 1 for the "View More" button
-                      itemBuilder: (context, index){
+                      itemCount: bookingDetailsList.length +
+                          1, // Add 1 for the "View More" button
+                      itemBuilder: (context, index) {
                         if (index < bookingDetailsList.length) {
                           // Build the regular list item
                           return Container(
-                            padding: EdgeInsets.symmetric(vertical: verticalPadding),
+                            padding:
+                                EdgeInsets.symmetric(vertical: verticalPadding),
                             child: myComponents.coloredBackground(
-                              color: Color.fromRGBO(43, 177, 230, 0.4), 
+                              color: Color.fromRGBO(43, 177, 230, 0.4),
                               childWidget: myComponents.bookingDetails(
+                                context,
                                 "${bookingDetailsList[index]['amount']}",
                                 "R434TGERGFWEGEY4",
                                 "Alabang Starmall-Naga, Camarines Sur",
@@ -79,9 +83,7 @@ class _MyBookingsPageState extends State<MyBookingsPage> {
                           return Align(
                             alignment: Alignment.bottomRight,
                             child: TextButton(
-                              onPressed: (){
-                                
-                              },
+                              onPressed: () {},
                               child: Text(
                                 "View More >>",
                                 style: TextStyle(
