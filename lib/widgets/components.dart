@@ -400,7 +400,16 @@ class pageComponents {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text("Reference Code"),
-            Text(referenceCode),
+            SizedBox(
+              width: 20,
+            ),
+            Expanded(
+              child: Text(
+                referenceCode,
+                overflow: TextOverflow.ellipsis,
+                textAlign: TextAlign.end,
+              ),
+            ),
           ],
         ),
         Row(
@@ -460,7 +469,7 @@ class pageComponents {
       builder: (BuildContext context) {
         return AlertDialog(
           content: Container(
-            height: MediaQuery.of(context).size.height * 0.20,
+            height: MediaQuery.of(context).size.height * 0.25,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -546,13 +555,14 @@ class pageComponents {
                     ),
                   ],
                 ),
-                Text(
-                  "---------------",
-                  style: TextStyle(
-                      fontSize: 35.0,
-                      color: Colors.grey,
-                      fontWeight: FontWeight.w800),
-                ),
+                Divider(),
+                // Text(
+                //   "---------------",
+                //   style: TextStyle(
+                //       fontSize: 35.0,
+                //       color: Colors.grey,
+                //       fontWeight: FontWeight.w800),
+                // ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -636,7 +646,7 @@ class pageComponents {
       builder: (BuildContext context) {
         return AlertDialog(
           content: Container(
-            height: MediaQuery.of(context).size.height * 0.50,
+            height: MediaQuery.of(context).size.height * 0.60,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -647,6 +657,7 @@ class pageComponents {
                     fontWeight: FontWeight.w900,
                     color: Color(0xffef8b06),
                   ),
+                  textAlign: TextAlign.center,
                 ),
                 Text(
                   alertDescription,
@@ -676,25 +687,28 @@ class pageComponents {
                   ),
                   textAlign: TextAlign.center,
                 ),
-                Container(
-                  width: 200.0,
-                  height: 200.0,
-                  child: FittedBox(
-                    fit: BoxFit.scaleDown,
-                    child: Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(5.0),
-                        border: Border.all(
-                          color:
-                              Color.fromRGBO(13, 93, 158, 1.0), // Border color
-                          width: 5,
+                FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: Container(
+                    width: 180.0,
+                    height: 180.0,
+                    child: FittedBox(
+                      fit: BoxFit.scaleDown,
+                      child: Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(5.0),
+                          border: Border.all(
+                            color: Color.fromRGBO(
+                                13, 93, 158, 1.0), // Border color
+                            width: 5,
+                          ),
+                          color: Colors.white,
                         ),
-                        color: Colors.white,
-                      ),
-                      child: QrImageView(
-                        data: 'QWERTYUIOP',
-                        version: QrVersions.auto,
-                        size: 200.0,
+                        child: QrImageView(
+                          data: 'QWERTYUIOP',
+                          version: QrVersions.auto,
+                          size: 200.0,
+                        ),
                       ),
                     ),
                   ),
@@ -778,7 +792,7 @@ class pageComponents {
       builder: (BuildContext context) {
         return AlertDialog(
           content: Container(
-            height: MediaQuery.of(context).size.height * 0.20,
+            height: MediaQuery.of(context).size.height * 0.25,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -1185,7 +1199,7 @@ void bookingQR(BuildContext context) {
                   Text(
                     "SCAN TO VIEW BOOKING STATUS",
                     style: TextStyle(
-                      fontSize: 26.0,
+                      fontSize: 22.0,
                       fontWeight: FontWeight.w700,
                       color: Color(0xffef8a05),
                     ),

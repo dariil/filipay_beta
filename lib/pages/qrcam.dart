@@ -105,7 +105,9 @@ class _QRCamState extends State<QRCam> {
                                     );
                                   },
                                 ),
-                                Text("Flash"),
+                                FittedBox(
+                                    fit: BoxFit.scaleDown,
+                                    child: Text("Flash")),
                               ],
                             )),
                       ),
@@ -134,7 +136,9 @@ class _QRCamState extends State<QRCam> {
                                     );
                                   },
                                 ),
-                                Text("Generate QR Code"),
+                                FittedBox(
+                                    fit: BoxFit.scaleDown,
+                                    child: Text("Generate QR Code")),
                               ],
                             )),
                       ),
@@ -164,7 +168,9 @@ class _QRCamState extends State<QRCam> {
                                     );
                                   },
                                 ),
-                                Text("Switch Camera")
+                                FittedBox(
+                                    fit: BoxFit.scaleDown,
+                                    child: Text("Switch Camera"))
                               ],
                             )),
                       )

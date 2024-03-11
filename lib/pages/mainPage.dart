@@ -50,101 +50,106 @@ class _MainPageState extends State<MainPage> {
       key: scaffoldKey,
       appBar: myComponents.appBar(scaffoldKey: scaffoldKey),
       drawer: NavDrawer(),
-      bottomNavigationBar: Container(
-        padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
-        color: Color(0xffd0e2f3),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Container(
-              width: 120,
-              height: 40,
-              child: ElevatedButton(
-                onPressed: () => {
-                  switchPanelPA(),
+      bottomNavigationBar: FittedBox(
+        fit: BoxFit.scaleDown,
+        child: Container(
+          padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
+          color: Color(0xffd0e2f3),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Container(
+                width: 120,
+                height: 40,
+                child: ElevatedButton(
+                  onPressed: () => {
+                    switchPanelPA(),
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: isPayAhead
+                        ? Color.fromRGBO(39, 50, 115, 1.0)
+                        : Colors.white,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(5.0),
+                      side: BorderSide(
+                          color: Color.fromRGBO(39, 50, 115, 1.0), width: 2.0),
+                    ),
+                    padding:
+                        EdgeInsets.symmetric(horizontal: 0.0, vertical: 1.0),
+                  ),
+                  child: Text('PAY AHEAD',
+                      style: TextStyle(
+                        fontSize: 10.0,
+                        color: isPayAhead
+                            ? Colors.white
+                            : Color.fromRGBO(82, 161, 217, 1.0),
+                      )),
+                ),
+              ),
+              SizedBox(
+                width: 20.0,
+              ),
+              GestureDetector(
+                onTap: () {
+                  sample.transportMode = 'QR Reader';
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => QRCam(),
+                    ),
+                  );
                 },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: isPayAhead
-                      ? Color.fromRGBO(39, 50, 115, 1.0)
-                      : Colors.white,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(5.0),
-                    side: BorderSide(
-                        color: Color.fromRGBO(39, 50, 115, 1.0), width: 2.0),
+                child: Container(
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Color(0xff52a1d9),
+                      width: 5.0,
+                    ),
+                    shape: BoxShape.circle,
+                    color: Colors.white,
                   ),
-                  padding: EdgeInsets.symmetric(horizontal: 0.0, vertical: 1.0),
-                ),
-                child: Text('PAY AHEAD',
-                    style: TextStyle(
-                      fontSize: 10.0,
-                      color: isPayAhead
-                          ? Colors.white
-                          : Color.fromRGBO(82, 161, 217, 1.0),
-                    )),
-              ),
-            ),
-            SizedBox(
-              width: 20.0,
-            ),
-            GestureDetector(
-              onTap: () {
-                sample.transportMode = 'QR Reader';
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) => QRCam(),
-                  ),
-                );
-              },
-              child: Container(
-                decoration: BoxDecoration(
-                  border: Border.all(
-                    color: Color(0xff52a1d9),
-                    width: 5.0,
-                  ),
-                  shape: BoxShape.circle,
-                  color: Colors.white,
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: Image(
-                    width: 40.0,
-                    image: AssetImage("assets/general/qr-code-scan.png"),
+                  child: Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: Image(
+                      width: 40.0,
+                      image: AssetImage("assets/general/qr-code-scan.png"),
+                    ),
                   ),
                 ),
               ),
-            ),
-            SizedBox(
-              width: 20.0,
-            ),
-            Container(
-              width: 120,
-              height: 40,
-              child: ElevatedButton(
-                onPressed: () => {
-                  switchPanelPOTG(),
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: isPayAhead
-                      ? Colors.white
-                      : Color.fromRGBO(39, 50, 115, 1.0),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(5.0),
-                    side: BorderSide(
-                        color: Color.fromRGBO(39, 50, 115, 1.0),
-                        width: 2.0), // Change the color and width here
-                  ),
-                  padding: EdgeInsets.symmetric(horizontal: 0.0, vertical: 1.0),
-                ),
-                child: Text('PAY ON THE GO',
-                    style: TextStyle(
-                      fontSize: 10.0,
-                      color: isPayAhead
-                          ? Color.fromRGBO(82, 161, 217, 1.0)
-                          : Colors.white,
-                    )),
+              SizedBox(
+                width: 20.0,
               ),
-            ),
-          ],
+              Container(
+                width: 120,
+                height: 40,
+                child: ElevatedButton(
+                  onPressed: () => {
+                    switchPanelPOTG(),
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: isPayAhead
+                        ? Colors.white
+                        : Color.fromRGBO(39, 50, 115, 1.0),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(5.0),
+                      side: BorderSide(
+                          color: Color.fromRGBO(39, 50, 115, 1.0),
+                          width: 2.0), // Change the color and width here
+                    ),
+                    padding:
+                        EdgeInsets.symmetric(horizontal: 0.0, vertical: 1.0),
+                  ),
+                  child: Text('PAY ON THE GO',
+                      style: TextStyle(
+                        fontSize: 10.0,
+                        color: isPayAhead
+                            ? Color.fromRGBO(82, 161, 217, 1.0)
+                            : Colors.white,
+                      )),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
       body: Stack(children: [

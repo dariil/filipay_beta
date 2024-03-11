@@ -482,23 +482,25 @@ class _AccountSetupState extends State<AccountSetup> {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: [
-                                Container(
-                                  width: 50.0,
+                                Expanded(
                                   child: Divider(
                                     color: Colors.black,
                                     thickness: 1.0,
                                   ),
                                 ),
-                                Text(
-                                  "LIMITS AND VERIFICATIONS.",
-                                  style: TextStyle(
-                                    fontSize: 14.0,
-                                    fontWeight: FontWeight.w400,
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 5.0),
+                                  child: Text(
+                                    "LIMITS AND VERIFICATIONS",
+                                    style: TextStyle(
+                                      fontSize: 14.0,
+                                      fontWeight: FontWeight.w400,
+                                    ),
+                                    textAlign: TextAlign.center,
                                   ),
-                                  textAlign: TextAlign.center,
                                 ),
-                                Container(
-                                  width: 50.0,
+                                Expanded(
                                   child: Divider(
                                     color: Colors.black,
                                     thickness: 1.0,

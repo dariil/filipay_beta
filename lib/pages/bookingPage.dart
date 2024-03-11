@@ -165,71 +165,74 @@ class _BookingPage extends State<BookingPage> {
                           borderRadius: BorderRadius.circular(9),
                           color: Color.fromRGBO(242, 242, 242, 1),
                         ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Container(
-                              height: 40,
-                              width: 40,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(5),
-                                color: Color.fromRGBO(24, 70, 126, 1),
-                              ),
-                              child: Center(
-                                child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(10),
-                                  child: Image.asset(
-                                    'assets/transportation/jeepney-bordered.png',
-                                    width: 30,
-                                    height: 40,
+                        child: FittedBox(
+                          fit: BoxFit.scaleDown,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Container(
+                                height: 40,
+                                width: 40,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(5),
+                                  color: Color.fromRGBO(24, 70, 126, 1),
+                                ),
+                                child: Center(
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(10),
+                                    child: Image.asset(
+                                      'assets/transportation/jeepney-bordered.png',
+                                      width: 30,
+                                      height: 40,
+                                    ),
                                   ),
                                 ),
                               ),
-                            ),
-                            SizedBox(width: 10),
-                            DropdownButtonHideUnderline(
-                              child: Container(
-                                width: 300,
-                                child: DropdownButton<String>(
-                                  value: _selectedCompany,
-                                  icon: Container(
-                                    padding: EdgeInsets.only(right: 1),
-                                    height: 40,
-                                    width: 40,
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(5),
-                                      color: Color.fromRGBO(83, 161, 216, 1),
-                                    ),
-                                    child: Icon(
-                                      Icons.arrow_drop_down,
-                                      color: Color.fromRGBO(40, 52, 116, 1),
-                                    ),
-                                  ),
-                                  items: <String>[
-                                    'Bicol Isarog Transport System, Inc.',
-                                    'Sucat Transport System, Inc.',
-                                    'Cavite Transport System, Inc.',
-                                    'Laguna Transport System Inc.',
-                                  ].map((String value) {
-                                    return DropdownMenuItem<String>(
-                                      value: value,
-                                      child: Padding(
-                                        padding: EdgeInsets.symmetric(
-                                          horizontal: 10.0,
-                                        ),
-                                        child: Text(
-                                          value,
-                                          style: TextStyle(fontSize: 15),
-                                          overflow: TextOverflow.ellipsis,
-                                        ),
+                              SizedBox(width: 5),
+                              DropdownButtonHideUnderline(
+                                child: Container(
+                                  width: 350,
+                                  child: DropdownButton<String>(
+                                    value: _selectedCompany,
+                                    icon: Container(
+                                      padding: EdgeInsets.only(right: 1),
+                                      height: 40,
+                                      width: 40,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(5),
+                                        color: Color.fromRGBO(83, 161, 216, 1),
                                       ),
-                                    );
-                                  }).toList(),
-                                  onChanged: _handleCompanySelection,
+                                      child: Icon(
+                                        Icons.arrow_drop_down,
+                                        color: Color.fromRGBO(40, 52, 116, 1),
+                                      ),
+                                    ),
+                                    items: <String>[
+                                      'Bicol Isarog Transport System, Inc.',
+                                      'Sucat Transport System, Inc.',
+                                      'Cavite Transport System, Inc.',
+                                      'Laguna Transport System Inc.',
+                                    ].map((String value) {
+                                      return DropdownMenuItem<String>(
+                                        value: value,
+                                        child: Padding(
+                                          padding: EdgeInsets.symmetric(
+                                            horizontal: 10.0,
+                                          ),
+                                          child: Text(
+                                            value,
+                                            style: TextStyle(fontSize: 15),
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
+                                        ),
+                                      );
+                                    }).toList(),
+                                    onChanged: _handleCompanySelection,
+                                  ),
                                 ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
                       SizedBox(height: 20),
@@ -408,48 +411,51 @@ class _BookingPage extends State<BookingPage> {
                                     ),
                                     Padding(
                                       padding: const EdgeInsets.only(top: 6.0),
-                                      child: Container(
-                                        height: 40,
-                                        padding: EdgeInsets.symmetric(
-                                            horizontal: 10),
-                                        decoration: BoxDecoration(
-                                          color:
-                                              Color.fromRGBO(255, 255, 255, 1),
-                                        ),
-                                        child: DropdownButtonHideUnderline(
-                                          child: DropdownButton<String>(
-                                            value: _selectedDestination,
-                                            icon: Icon(
-                                              Icons.arrow_drop_down,
-                                              color: Color.fromRGBO(
-                                                  40, 52, 116, 1),
+                                      child: FittedBox(
+                                        fit: BoxFit.scaleDown,
+                                        child: Container(
+                                          height: 40,
+                                          padding: EdgeInsets.symmetric(
+                                              horizontal: 10),
+                                          decoration: BoxDecoration(
+                                            color: Color.fromRGBO(
+                                                255, 255, 255, 1),
+                                          ),
+                                          child: DropdownButtonHideUnderline(
+                                            child: DropdownButton<String>(
+                                              value: _selectedDestination,
+                                              icon: Icon(
+                                                Icons.arrow_drop_down,
+                                                color: Color.fromRGBO(
+                                                    40, 52, 116, 1),
+                                              ),
+                                              items: <String>[
+                                                'SELECT A DESTINATION',
+                                                'Destination 2',
+                                                'Destination 3'
+                                              ].map((String value) {
+                                                return DropdownMenuItem<String>(
+                                                  value: value,
+                                                  child: Text(
+                                                    value,
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                    style: TextStyle(
+                                                        fontSize: 12,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        color: Color.fromRGBO(
+                                                            83, 161, 216, 1)),
+                                                  ),
+                                                );
+                                              }).toList(),
+                                              onChanged: (String? newValue) {
+                                                setState(() {
+                                                  _selectedDestination =
+                                                      newValue!;
+                                                });
+                                              },
                                             ),
-                                            items: <String>[
-                                              'SELECT A DESTINATION',
-                                              'Destination 2',
-                                              'Destination 3'
-                                            ].map((String value) {
-                                              return DropdownMenuItem<String>(
-                                                value: value,
-                                                child: Text(
-                                                  value,
-                                                  overflow:
-                                                      TextOverflow.ellipsis,
-                                                  style: TextStyle(
-                                                      fontSize: 12,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      color: Color.fromRGBO(
-                                                          83, 161, 216, 1)),
-                                                ),
-                                              );
-                                            }).toList(),
-                                            onChanged: (String? newValue) {
-                                              setState(() {
-                                                _selectedDestination =
-                                                    newValue!;
-                                              });
-                                            },
                                           ),
                                         ),
                                       ),

@@ -204,51 +204,54 @@ class topupbutton extends StatelessWidget {
       onTap: thisFunction,
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Padding(
-              padding: EdgeInsets.all(8.0),
-              child: Column(
-                children: [
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => SelectAmountPage()));
-                    },
-                    child: Container(
-                      decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: Color(0xffb5e1ee),
-                          border: Border.all(
-                            width: 4.0,
-                            color: Color(0xff61a7da),
-                          )),
-                      child: Padding(
-                        padding: EdgeInsets.all(20.0),
-                        child: Image(
-                          image: AssetImage("assets/e-wallet/$imagename"),
-                          width: 80.0,
-                          height: 80.0,
+        child: FittedBox(
+          fit: BoxFit.scaleDown,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Column(
+                  children: [
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => SelectAmountPage()));
+                      },
+                      child: Container(
+                        decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: Color(0xffb5e1ee),
+                            border: Border.all(
+                              width: 4.0,
+                              color: Color(0xff61a7da),
+                            )),
+                        child: Padding(
+                          padding: EdgeInsets.all(20.0),
+                          child: Image(
+                            image: AssetImage("assets/e-wallet/$imagename"),
+                            width: 80.0,
+                            height: 80.0,
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-            SizedBox(
-              width: 10,
-            ),
-            Text(
-              "$label",
-              style: TextStyle(
-                fontSize: 30.0,
+              SizedBox(
+                width: 10,
               ),
-            ),
-          ],
+              Text(
+                "$label",
+                style: TextStyle(
+                  fontSize: 30.0,
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

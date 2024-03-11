@@ -11,7 +11,6 @@ class TOS extends StatefulWidget {
 class _TOSState extends State<TOS> {
   @override
   Widget build(BuildContext context) {
-    pageComponents myComponents = pageComponents();
     return Scaffold(
         appBar: AppBar(
           title: Text("Terms of Service"),

@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 // import 'package:flutter_application_2/pages/paymentSuccessfulPage.dart';
 // import 'package:flutter_application_2/widgets/appbar.dart';
 import '../widgets/components.dart';
-import 'drawer.dart';
 
 class TransactionHistoryPage extends StatefulWidget {
   const TransactionHistoryPage({Key? key, required this.title})

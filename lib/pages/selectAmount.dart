@@ -155,95 +155,93 @@ class _SelectAmountPageState extends State<SelectAmountPage> {
             alignment: Alignment.bottomCenter,
             child: myComponents.background(),
           ),
-          Column(children: [
-            myComponents.headerPageLabel(context, ""),
-            Container(
-              padding: EdgeInsets.symmetric(horizontal: 50.0),
-              child: Center(
-                child: Text(
-                  "Choose denomination to generate QR code.",
-                  style: TextStyle(
-                    color: Color(0xff18467e),
-                    fontSize: 28.0,
-                    fontWeight: FontWeight.w400,
+          SingleChildScrollView(
+            child: Column(children: [
+              myComponents.headerPageLabel(context, ""),
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: 50.0),
+                child: Center(
+                  child: Text(
+                    "Choose denomination to generate QR code.",
+                    style: TextStyle(
+                      color: Color(0xff18467e),
+                      fontSize: 28.0,
+                      fontWeight: FontWeight.w400,
+                    ),
                   ),
                 ),
               ),
-            ),
-            SizedBox(height: 30.0),
-            Expanded(
-              child: SingleChildScrollView(
-                child: Form(
-                  key: _formKey,
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 20.0, vertical: 5.0),
-                    child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            "Enter desired load amount",
+              SizedBox(height: 30.0),
+              Form(
+                key: _formKey,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 20.0, vertical: 5.0),
+                  child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "Enter desired load amount",
+                        ),
+                        AmountField(
+                          focusNode: _focusNode,
+                          controller: _controller,
+                        ),
+                        SizedBox(height: 30.0),
+                        Text(
+                          "Or you can also choose from the amount selection below?",
+                        ),
+                        SizedBox(height: 10.0),
+                        GridView.builder(
+                          shrinkWrap: true, // Add this line
+                          gridDelegate:
+                              const SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 3,
+                            mainAxisSpacing: 15.0,
+                            crossAxisSpacing: 15.0,
+                            childAspectRatio:
+                                1.5, // Aspect ratio of each grid item
                           ),
-                          AmountField(
-                            focusNode: _focusNode,
-                            controller: _controller,
-                          ),
-                          SizedBox(height: 30.0),
-                          Text(
-                            "Or you can also choose from the amount selection below?",
-                          ),
-                          SizedBox(height: 10.0),
-                          GridView.builder(
-                            shrinkWrap: true, // Add this line
-                            gridDelegate:
-                                const SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 3,
-                              mainAxisSpacing: 15.0,
-                              crossAxisSpacing: 15.0,
-                              childAspectRatio:
-                                  1.5, // Aspect ratio of each grid item
-                            ),
-                            itemCount: buttonData.length,
-                            itemBuilder: (BuildContext context, int index) {
-                              return mainButtons.loadButtons(
-                                context: context,
-                                onPressed: buttonData[index]['onPressed'],
-                                text: buttonData[index]['text'],
-                                BackgroundColor: Colors.white,
-                                textColor: Color(0xff53a1d8),
-                                padding: EdgeInsets.symmetric(
-                                    horizontal: 10.0, vertical: 10.0),
-                                radius: BorderRadius.circular(8.0),
-                              );
-                            },
-                          ),
-                          SizedBox(height: 30.0),
-                          Padding(
-                            padding:
-                                const EdgeInsets.symmetric(horizontal: 80.0),
-                            child: mainButtons.mainButton(
+                          itemCount: buttonData.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            return mainButtons.loadButtons(
                               context: context,
-                              onPressed: () {
-                                _focusNode.unfocus();
-                                if (_formKey.currentState!.validate()) {
-                                  setTrue();
-                                  loadingConnect();
-                                  loadAmount = double.parse(_controller.text);
-                                }
-                              },
-                              text: 'CONFIRM',
-                              BackgroundColor: Color.fromRGBO(47, 50, 145, 1.0),
+                              onPressed: buttonData[index]['onPressed'],
+                              text: buttonData[index]['text'],
+                              BackgroundColor: Colors.white,
+                              textColor: Color(0xff53a1d8),
                               padding: EdgeInsets.symmetric(
-                                  horizontal: 40.0, vertical: 20.0),
-                              BorderRadius: BorderRadius.circular(15.0),
-                            ),
+                                  horizontal: 10.0, vertical: 10.0),
+                              radius: BorderRadius.circular(8.0),
+                            );
+                          },
+                        ),
+                        SizedBox(height: 30.0),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 80.0),
+                          child: mainButtons.mainButton(
+                            context: context,
+                            onPressed: () {
+                              _focusNode.unfocus();
+                              if (_formKey.currentState!.validate()) {
+                                setTrue();
+                                loadingConnect();
+                                loadAmount = double.parse(_controller.text);
+                              }
+                            },
+                            text: 'CONFIRM',
+                            BackgroundColor: Color.fromRGBO(47, 50, 145, 1.0),
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 40.0, vertical: 20.0),
+                            BorderRadius: BorderRadius.circular(15.0),
                           ),
-                        ]),
-                  ),
+                        ),
+                        SizedBox(height: 20.0),
+                      ]),
                 ),
               ),
-            ),
-          ]),
+            ]),
+          ),
           Center(
             child: _isLoading
                 ? myComponents.simulateLoading(
