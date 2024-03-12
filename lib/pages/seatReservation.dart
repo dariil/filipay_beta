@@ -379,7 +379,7 @@ class _SeatReservationState extends State<SeatReservation> {
                   SizedBox(height: 20.0),
                   Container(
                     width: MediaQuery.of(context).size.width * 0.9,
-                    height: MediaQuery.of(context).size.height * 0.7,
+                    // height: MediaQuery.of(context).size.height * 0.7,
                     decoration: BoxDecoration(
                       border: Border.all(
                           width: 1.0,
