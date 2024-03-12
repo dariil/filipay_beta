@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_2/pages/newChatPage.dart';
-import 'package:flutter_application_2/widgets/helpCenterappbar.dart';
-import 'package:flutter_application_2/widgets/background.dart';
-import 'package:flutter_application_2/pages/helpCenterPage.dart';
+import 'package:filipay_beta/pages/newChatPage.dart';
+import 'package:filipay_beta/widgets/helpCenterappbar.dart';
+import 'package:filipay_beta/pages/helpCenterPage.dart';
 
 import 'package:intl/intl.dart';
 
@@ -88,7 +87,7 @@ class _ResponseChatPageState extends State<ResponseChatPage> {
                             children: [
                               if (showIcon)
                                 Image.asset(
-                                  'assets/chatbot-icon.png',
+                                  'assets/general/chatbot-icon.png',
                                   width: 40,
                                 ),
                               if (!showIcon) // Add a blank Icon for alignment

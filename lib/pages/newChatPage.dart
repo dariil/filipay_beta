@@ -2,7 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:flutter_application_2/widgets/helpCenterappbar.dart';
+import 'package:filipay_beta/widgets/helpCenterappbar.dart';
 
 class NewChatPage extends StatefulWidget {
   const NewChatPage({Key? key, this.title = "I need help with something."})
@@ -36,7 +36,7 @@ class _NewChatPageState extends State<NewChatPage> {
         botReply1 = 'How can we help?'; // First bot reply
         messages.add(botReply1);
 
-     //if Message came from HelpCenterPage
+        //if Message came from HelpCenterPage
       } else {
         botReply1 = 'We received your message.'; // First bot reply
         botReply2 = 'To assist you better,\n' +
@@ -97,7 +97,7 @@ class _NewChatPageState extends State<NewChatPage> {
                             children: [
                               if (showIcon)
                                 Image.asset(
-                                  'assets/chatbot-icon.png',
+                                  'assets/general/chatbot-icon.png',
                                   width: 40,
                                 ),
                               if (!showIcon)

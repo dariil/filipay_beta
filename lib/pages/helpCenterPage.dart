@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_2/widgets/blurContainer.dart';
-import 'package:flutter_application_2/widgets/helpCenterappbar.dart';
+import 'package:filipay_beta/widgets/blurContainer.dart';
+import 'package:filipay_beta/widgets/helpCenterappbar.dart';
 import 'package:gradient_borders/gradient_borders.dart';
-import 'package:flutter_application_2/pages/ResponsePage.dart';
-import 'package:flutter_application_2/pages/newChatPage.dart';
+import 'package:filipay_beta/pages/ResponsePage.dart';
+import 'package:filipay_beta/pages/newChatPage.dart';
 
 class HelpCenterPage extends StatefulWidget {
   const HelpCenterPage({Key? key, required this.title}) : super(key: key);
@@ -19,6 +19,7 @@ class _HelpCenterPageState extends State<HelpCenterPage> {
 
   @override
   Widget build(BuildContext context) {
+    GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
     return Scaffold(
       resizeToAvoidBottomInset: true,
       appBar: MyAppBar(title: widget.title),
@@ -65,7 +66,7 @@ class _HelpCenterPageState extends State<HelpCenterPage> {
                       });
                     },
                     child: Image.asset(
-                      'assets/filipay-chat.png',
+                      'assets/general/filipay-chat.png',
                       width: 80,
                       height: 80,
                     ),
@@ -140,7 +141,7 @@ class _HelpCenterPageState extends State<HelpCenterPage> {
                                 children: [
                                   SizedBox(width: 10),
                                   Image.asset(
-                                    'assets/filipay-card-icon.png',
+                                    'assets/general/filipay-card-icon.png',
                                     width: 40,
                                     height: 40,
                                   ),
@@ -200,7 +201,7 @@ class _HelpCenterPageState extends State<HelpCenterPage> {
                                 children: [
                                   SizedBox(width: 10),
                                   Image.asset(
-                                    'assets/reservation-icon.png',
+                                    'assets/general/reservation-icon.png',
                                     width: 40,
                                     height: 40,
                                   ),
@@ -260,7 +261,7 @@ class _HelpCenterPageState extends State<HelpCenterPage> {
                                 children: [
                                   SizedBox(width: 10),
                                   Image.asset(
-                                    'assets/topup-icon.png',
+                                    'assets/general/topup-icon.png',
                                     width: 40,
                                     height: 40,
                                   ),

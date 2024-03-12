@@ -9,6 +9,8 @@ import 'transactionHistoryPage.dart';
 import 'package:image_picker/image_picker.dart';
 import 'TOSPage.dart';
 import 'privacyPolicyPage.dart';
+import 'newChatPage.dart';
+import 'helpCenterPage.dart';
 
 class NavDrawer extends StatefulWidget {
   const NavDrawer({super.key});
@@ -162,8 +164,8 @@ class _NavDrawerState extends State<NavDrawer> {
             myPageComponents.drawerItems(
                 context: context,
                 imagePath: "assets/general/message-square-detail-regular.png",
-                drawerItemText: "Messages",
-                destinationPage: LoginPage()),
+                drawerItemText: "Help Center",
+                destinationPage: HelpCenterPage(title: "Help Center")),
             myPageComponents.drawerItems(
                 context: context,
                 imagePath: "assets/general/error-regular.png",
