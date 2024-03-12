@@ -280,7 +280,8 @@ class _PrivacyPolicyState extends State<PrivacyPolicy> {
                     padding:
                         EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
                     BorderRadius: BorderRadius.circular(50.0),
-                  )
+                  ),
+                  SizedBox(height: 30.0),
                 ],
               ),
             ),

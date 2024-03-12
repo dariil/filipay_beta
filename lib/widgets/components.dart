@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:art_sweetalert/art_sweetalert.dart';
+import 'package:hive_flutter/adapters.dart';
 import 'package:slider_button/slider_button.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import '../functions/functions.dart';
@@ -36,12 +37,36 @@ class pageComponents {
     );
   }
 
+  final _filipay = Hive.box("filipay");
+
+  Future<void> _getData() async {
+    final userList = _filipay.get('tbl_users');
+    print(userList[0]['user_email']);
+    print("GUMAGANA");
+  }
+
+  Future<void> _getAllData() async {
+    final userList = _filipay.get('tbl_users');
+    for (int i = 0; i < userList.length; i++) {
+      print("email: ${userList[i]['user_email']}");
+      print("password: ${userList[i]['user_pass']}");
+      print("user id: ${userList[i]['user_id']}");
+    }
+  }
+
+  Future<void> _removeAllData() async {
+    final userList = _filipay.get('tbl_users');
+    userList.clear();
+    _filipay.put('tbl_users', userList);
+  }
+
   ElevatedButton otherSignupBtn({
     required BuildContext context,
     required String imagePath,
     required String buttonText,
     required buttonColor,
     required Color buttonTextColor,
+    // required action,
   }) {
     double screenWidth = MediaQuery.of(context).size.width;
     return ElevatedButton(
@@ -49,7 +74,7 @@ class pageComponents {
         backgroundColor: buttonColor,
       ),
       onPressed: () {
-        // Add your onPressed logic here
+        _getAllData();
       },
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -993,7 +1018,7 @@ class pageComponents {
       builder: (BuildContext context) {
         return AlertDialog(
           content: Container(
-            height: 300,
+            height: 330,
             width: 370,
             child: Center(
               child: Stack(children: [
@@ -1008,19 +1033,23 @@ class pageComponents {
                         fontWeight: FontWeight.w700,
                         color: Color(0xffef8a05),
                       ),
+                      textAlign: TextAlign.center,
                     ),
                     SizedBox(
                       height: 20.0,
                     ),
                     Center(
-                      child: SizedBox(
-                        width: 220,
-                        height: 220,
-                        child: Container(
-                          child: QrImageView(
-                            data: 'QWERTYUIOP',
-                            version: QrVersions.auto,
-                            size: 200.0,
+                      child: FittedBox(
+                        fit: BoxFit.scaleDown,
+                        child: SizedBox(
+                          width: 220,
+                          height: 220,
+                          child: Container(
+                            child: QrImageView(
+                              data: 'QWERTYUIOP',
+                              version: QrVersions.auto,
+                              size: 200.0,
+                            ),
                           ),
                         ),
                       ),
@@ -1088,47 +1117,44 @@ class pageComponents {
                       ),
                       Padding(
                         padding: const EdgeInsets.only(top: 10.0),
-                        child: Expanded(
-                          child: ElevatedButton(
-                            onPressed: () {
-                              // Perform login action
-                              if (_formKey.currentState!.validate()) {
-                                ArtSweetAlert.show(
-                                  context: context,
-                                  artDialogArgs: ArtDialogArgs(
-                                    showCancelBtn: true,
-                                    type: ArtSweetAlertType.info,
-                                    confirmButtonText: "Logout",
-                                    title: "Confirm Logout",
-                                    text: "Are you sure you want to logout?",
-                                    onConfirm: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) => LoginPage()),
-                                      );
-                                    },
-                                  ),
-                                );
-                              }
-                            },
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor:
-                                  Color.fromRGBO(135, 189, 230, 1.0),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10.0),
-                              ),
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 5.0, vertical: 15.0),
-                              elevation: 5,
-                              textStyle: const TextStyle(
-                                fontSize: 16.0,
-                              ),
+                        child: ElevatedButton(
+                          onPressed: () {
+                            // Perform login action
+                            if (_formKey.currentState!.validate()) {
+                              ArtSweetAlert.show(
+                                context: context,
+                                artDialogArgs: ArtDialogArgs(
+                                  showCancelBtn: true,
+                                  type: ArtSweetAlertType.info,
+                                  confirmButtonText: "Logout",
+                                  title: "Confirm Logout",
+                                  text: "Are you sure you want to logout?",
+                                  onConfirm: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => LoginPage()),
+                                    );
+                                  },
+                                ),
+                              );
+                            }
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Color.fromRGBO(135, 189, 230, 1.0),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10.0),
                             ),
-                            child: const Text(
-                              'VERIFY',
-                              style: TextStyle(color: Colors.white),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 5.0, vertical: 15.0),
+                            elevation: 5,
+                            textStyle: const TextStyle(
+                              fontSize: 16.0,
                             ),
+                          ),
+                          child: const Text(
+                            'VERIFY',
+                            style: TextStyle(color: Colors.white),
                           ),
                         ),
                       ),

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:hive_flutter/adapters.dart';
 import '../widgets/components.dart';
+import '../functions/functions.dart';
 import 'login.dart';
 import 'pin.dart';
 
@@ -13,39 +15,66 @@ class RegisterPage extends StatefulWidget {
 class _RegisterPageState extends State<RegisterPage> {
   bool _obscureText = true;
 
+  pageComponents myComponents = pageComponents();
+  pageFunctions myFunc = pageFunctions();
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final emailControler = TextEditingController();
+  final passController = TextEditingController();
+  final confirmPassController = TextEditingController();
+
+  final _filipay = Hive.box("filipay");
+
+  // List<Map<String, dynamic>> tbl_users = [];
+
+  Future<void> _initializedData() async {
+    _filipay.put('tbl_users', myFunc.tbl_users);
+
+    final userList = _filipay.get('tbl_users');
+
+    myFunc.user_id = myFunc.tbl_users.length;
+
+    userList.add({
+      "user_id": myFunc.user_id,
+      "user_email": emailControler.text,
+      "user_pass": passController.text,
+    });
+    print(userList[0]['user_email']);
+    print("TESTING!");
+    _filipay.put('tbl_users', myFunc.tbl_users);
+  }
+
   void _togglePassword() {
     setState(() {
       _obscureText = !_obscureText;
     });
   }
 
-  pageComponents myComponents = pageComponents();
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
         color: Colors.white,
         child: Stack(
-          children:[ 
-             Align(
+          children: [
+            Align(
               alignment: Alignment.bottomCenter,
               child: myComponents.background(),
             ),
             SizedBox(
-              height: MediaQuery.of(context).size.height*1,
+              height: MediaQuery.of(context).size.height * 1,
               child: Padding(
-                padding:  EdgeInsets.symmetric(horizontal: 24.0, vertical: 54.0),
+                padding: EdgeInsets.symmetric(horizontal: 24.0, vertical: 54.0),
                 child: SingleChildScrollView(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                       Image(
-                        image: AssetImage("assets/general/filipay-logo-w-name.png"),
+                      Image(
+                        image: AssetImage(
+                            "assets/general/filipay-logo-w-name.png"),
                         width: 115,
                         height: 115,
                       ),
-                       Center(
+                      Center(
                         child: Text(
                           "SIGN UP",
                           style: TextStyle(
@@ -55,136 +84,158 @@ class _RegisterPageState extends State<RegisterPage> {
                           ),
                         ),
                       ),
-                       SizedBox(
+                      SizedBox(
                         height: 20.0,
                       ),
                       Form(
-                        key: _formKey,
-                        child: Column(
-                          children: [
-                            Container(
-                              padding: EdgeInsets.all(20.0),
-                              decoration: BoxDecoration(
-                                color:  Color.fromRGBO(195, 224, 232, 1.0),
-                                borderRadius: BorderRadius.circular(10.0),
+                          key: _formKey,
+                          child: Column(
+                            children: [
+                              Container(
+                                padding: EdgeInsets.all(20.0),
+                                decoration: BoxDecoration(
+                                  color: Color.fromRGBO(195, 224, 232, 1.0),
+                                  borderRadius: BorderRadius.circular(10.0),
+                                ),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      "Email Address",
+                                      style: TextStyle(
+                                        color: Color.fromRGBO(5, 80, 120, 1.0),
+                                      ),
+                                    ),
+                                    TextFormFieldsWidget(
+                                      thisTextInputType:
+                                          TextInputType.emailAddress,
+                                      emailController: emailControler,
+                                    ),
+                                    Text(
+                                      "Create Password",
+                                      style: TextStyle(
+                                        color: Color.fromRGBO(5, 80, 120, 1.0),
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      width: double.infinity,
+                                      child: PasswordFormFieldWidget(
+                                        thisTextInputType:
+                                            TextInputType.visiblePassword,
+                                        controller: passController,
+                                        confirmPasswordController:
+                                            confirmPassController,
+                                      ),
+                                    ),
+                                    Text(
+                                      "Confirm Password",
+                                      style: TextStyle(
+                                        color: Color.fromRGBO(5, 80, 120, 1.0),
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      width: double.infinity,
+                                      child: PasswordFormFieldWidget(
+                                        thisTextInputType:
+                                            TextInputType.visiblePassword,
+                                        controller: confirmPassController,
+                                        confirmPasswordController:
+                                            passController,
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ),
-                              child:  Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    "Email Address",
-                                    style: TextStyle(
-                                      color: Color.fromRGBO(5, 80, 120, 1.0),
-                                    ),
-                                  ),
-                                  TextFormFieldsWidget(thisTextInputType: TextInputType.emailAddress,),
-                                  Text(
-                                    "Create Password",
-                                    style: TextStyle(
-                                      color: Color.fromRGBO(5, 80, 120, 1.0),
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    width: double.infinity,
-                                    child: PasswordFormFieldWidget(thisTextInputType: TextInputType.visiblePassword,),
-                                  ),
-                                  Text(
-                                    "Confirm Password",
-                                    style: TextStyle(
-                                      color: Color.fromRGBO(5, 80, 120, 1.0),
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    width: double.infinity,
-                                    child: PasswordFormFieldWidget(thisTextInputType: TextInputType.visiblePassword,),
-                                  ),
-                                ],
+                              SizedBox(
+                                height: 25.0,
                               ),
-                            ),
-                             SizedBox(
-                              height: 25.0,
-                            ),
-                            Center(
-                              child: Padding(
-                                padding:  EdgeInsets.symmetric(horizontal: 20.0, vertical: 8.0),
-                                child: SizedBox(
-                                  height: 50,
-                                  width: double.infinity,
-                                  child: mainButtons.mainButton(
-                                    context: context,
-                                    onPressed: () {
-                                      if (_formKey.currentState!.validate()) {
+                              Center(
+                                child: Padding(
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: 20.0, vertical: 8.0),
+                                  child: SizedBox(
+                                    height: 50,
+                                    width: double.infinity,
+                                    child: mainButtons.mainButton(
+                                      context: context,
+                                      onPressed: () {
+                                        if (_formKey.currentState!.validate()) {
+                                          _initializedData();
                                           Navigator.push(
-                                          context,
-                                          MaterialPageRoute(builder: (context) => CreatePin()),
-                                        );
-                                      }
-                                    },
-                                    text: 'SIGN UP',
-                                    BackgroundColor:  Color.fromRGBO(47, 50, 145, 1.0),
-                                    padding:  EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-                                    BorderRadius: BorderRadius.circular(10.0),
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    CreatePin()),
+                                          );
+                                        }
+
+                                        if (passController.text !=
+                                            confirmPassController.text) {}
+                                      },
+                                      text: 'SIGN UP',
+                                      BackgroundColor:
+                                          Color.fromRGBO(47, 50, 145, 1.0),
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal: 16.0, vertical: 8.0),
+                                      BorderRadius: BorderRadius.circular(10.0),
+                                    ),
                                   ),
                                 ),
                               ),
-                            ),
-                             SizedBox(
-                              height: 15.0,
-                            ),
-                            Container(
-                              child: Stack(
-                                children: [
-                                   Align(
-                                    alignment: Alignment.center,
-                                    child: Padding(
-                                      padding: EdgeInsets.only(top: 5.2),
-                                      child: Divider(
-                                        color: Colors.black,
-                                        thickness: 1.0,
-                                      ),
-                                    ),
-                                  ),
-                                  Align(
-                                    alignment: Alignment.center,
-                                    child: Container(
-                                      width: 50.0,
-                                      decoration:  BoxDecoration(
-                                        color: Colors.white,
-                                      ),
-                                      child:  Text(
-                                        "OR",
-                                        textAlign: TextAlign.center,
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.w200,
-                                          fontSize: 18.0,
-                                        )
-                                      ),
-                                    ),
-                                  ),
-                                ],
+                              SizedBox(
+                                height: 15.0,
                               ),
-                            ),
-                          ],
-                        )
-                      ),
+                              Container(
+                                child: Stack(
+                                  children: [
+                                    Align(
+                                      alignment: Alignment.center,
+                                      child: Padding(
+                                        padding: EdgeInsets.only(top: 5.2),
+                                        child: Divider(
+                                          color: Colors.black,
+                                          thickness: 1.0,
+                                        ),
+                                      ),
+                                    ),
+                                    Align(
+                                      alignment: Alignment.center,
+                                      child: Container(
+                                        width: 50.0,
+                                        decoration: BoxDecoration(
+                                          color: Colors.white,
+                                        ),
+                                        child: Text("OR",
+                                            textAlign: TextAlign.center,
+                                            style: TextStyle(
+                                              fontWeight: FontWeight.w200,
+                                              fontSize: 18.0,
+                                            )),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          )),
                       Center(
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                             Text(
+                            Text(
                               "already have an account?",
                               style: TextStyle(
                                 color: Colors.grey,
                               ),
                             ),
                             TextButton(
-                              onPressed: (
-                              ) {
+                              onPressed: () {
                                 Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context) =>  LoginPage(),
+                                  builder: (context) => LoginPage(),
                                 ));
                               },
-                              child:  Text("Login here",
+                              child: Text(
+                                "Login here",
                                 style: TextStyle(
                                   color: Color.fromRGBO(5, 80, 120, 1.0),
                                   fontStyle: FontStyle.italic,
@@ -207,13 +258,19 @@ class _RegisterPageState extends State<RegisterPage> {
 }
 
 class PasswordFormFieldWidget extends StatefulWidget {
-   PasswordFormFieldWidget({
-    super.key,required this.thisTextInputType
+  PasswordFormFieldWidget({
+    super.key,
+    required this.thisTextInputType,
+    required this.controller,
+    required this.confirmPasswordController,
   });
   final TextInputType thisTextInputType;
+  final TextEditingController controller;
+  final TextEditingController confirmPasswordController;
 
   @override
-  State<PasswordFormFieldWidget> createState() => _PasswordFormFieldWidgetState();
+  State<PasswordFormFieldWidget> createState() =>
+      _PasswordFormFieldWidgetState();
 }
 
 class _PasswordFormFieldWidgetState extends State<PasswordFormFieldWidget> {
@@ -225,17 +282,23 @@ class _PasswordFormFieldWidgetState extends State<PasswordFormFieldWidget> {
     });
   }
 
+  String? _validatePassword(String? value) {
+    if (value!.isEmpty) {
+      return 'Please enter your password';
+    }
+    if (value != widget.controller.text) {
+      return 'Passwords do not match';
+    }
+    return null;
+  }
+
   @override
   Widget build(BuildContext context) {
     return TextFormField(
       keyboardType: widget.thisTextInputType,
-      obscureText: _obscureText, 
-      validator: (value) {
-        if (value!.isEmpty) {
-          return 'Please enter your password';
-        }
-        return null;
-      },
+      obscureText: _obscureText,
+      controller: widget.confirmPasswordController,
+      validator: _validatePassword,
       decoration: InputDecorations.passwordFields(
         obscureText: _obscureText,
         togglePassword: _togglePassword,
@@ -245,26 +308,35 @@ class _PasswordFormFieldWidgetState extends State<PasswordFormFieldWidget> {
   }
 }
 
-
 class TextFormFieldsWidget extends StatelessWidget {
-   TextFormFieldsWidget({
-    super.key,required this.thisTextInputType
-  });
+  TextFormFieldsWidget(
+      {super.key,
+      required this.thisTextInputType,
+      required this.emailController});
   final TextInputType thisTextInputType;
+  final TextEditingController emailController;
   @override
   Widget build(BuildContext context) {
     pageComponents myComponents = pageComponents();
     return SizedBox(
       width: double.infinity,
       child: TextFormField(
+        controller: emailController,
         keyboardType: thisTextInputType,
         validator: (value) {
           if (value!.isEmpty) {
-            return 'Please enter a valid email';
+            return 'Please enter an email address';
+          }
+          // Regular expression for email validation
+          final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
+          if (!emailRegex.hasMatch(value)) {
+            return 'Please enter a valid email address';
           }
           return null;
         },
-        decoration: myComponents.textFieldWhite(BorderRadius: BorderRadius.circular(10.0),),
+        decoration: myComponents.textFieldWhite(
+          BorderRadius: BorderRadius.circular(10.0),
+        ),
       ),
     );
   }

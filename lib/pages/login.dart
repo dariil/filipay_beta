@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:hive_flutter/adapters.dart';
 import '../widgets/components.dart';
 import 'signup.dart';
 import 'mainPage.dart';
@@ -11,6 +13,8 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  TextEditingController emailController = TextEditingController();
+  TextEditingController passController = TextEditingController();
   bool _obscureText = true;
 
   void _togglePassword() {
@@ -21,6 +25,32 @@ class _LoginPageState extends State<LoginPage> {
 
   pageComponents myComponents = pageComponents();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
+  final _filipay = Hive.box("filipay");
+
+  Future<bool> _loginUser(String email, String password) async {
+    final userList = _filipay.get('tbl_users');
+
+    for (var user in userList) {
+      if (user['user_email'] == email && user['user_pass'] == password) {
+        print('Login successful for ${user['user_email']}');
+        return true;
+      }
+    }
+    print('Login failed');
+    return false;
+  }
+
+  Future<void> login() async {
+    bool success = await _loginUser(emailController.text, passController.text);
+    if (success) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => MainPage()),
+      );
+    } else {}
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -78,6 +108,7 @@ class _LoginPageState extends State<LoginPage> {
                                     TextFormFieldsWidget(
                                       thisTextInputType:
                                           TextInputType.emailAddress,
+                                      controller: emailController,
                                     ),
                                     GestureDetector(
                                       onTap: () {
@@ -107,6 +138,7 @@ class _LoginPageState extends State<LoginPage> {
                                       child: PasswordFormFieldWidget(
                                         thisTextInputType:
                                             TextInputType.visiblePassword,
+                                        controller: passController,
                                       ),
                                     ),
                                     GestureDetector(
@@ -166,12 +198,11 @@ class _LoginPageState extends State<LoginPage> {
                                       context: context,
                                       onPressed: () {
                                         if (_formKey.currentState!.validate()) {
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    MainPage()),
-                                          );
+                                          login();
+                                          // _loginUser(emailController.text,
+                                          //     passController.text) ;
+                                          // if (_loginUser(emailController.text,
+                                          //     passController)) {}
                                         }
                                       },
                                       text: 'LOGIN',
@@ -226,21 +257,27 @@ class _LoginPageState extends State<LoginPage> {
                       padding:
                           EdgeInsets.symmetric(horizontal: 50.0, vertical: 8.0),
                       child: myComponents.otherSignupBtn(
-                          context: context,
-                          imagePath: "assets/general/facebook-logo.png",
-                          buttonText: "Sign in with Facebook",
-                          buttonColor: Color.fromRGBO(11, 97, 184, 1.0),
-                          buttonTextColor: Colors.white),
+                        context: context,
+                        imagePath: "assets/general/facebook-logo.png",
+                        buttonText: "Sign in with Facebook",
+                        buttonColor: Color.fromRGBO(11, 97, 184, 1.0),
+                        buttonTextColor: Colors.white,
+                        // action: _getData(),
+                      ),
                     ),
                     Padding(
                       padding:
                           EdgeInsets.symmetric(horizontal: 50.0, vertical: 8.0),
                       child: myComponents.otherSignupBtn(
-                          context: context,
-                          imagePath: "assets/general/google-icon.png",
-                          buttonText: "Sign in with Google",
-                          buttonColor: Colors.white,
-                          buttonTextColor: Colors.black),
+                        context: context,
+                        imagePath: "assets/general/google-icon.png",
+                        buttonText: "Sign in with Google",
+                        buttonColor: Colors.white,
+                        buttonTextColor: Colors.black,
+                        // action: () {
+                        //   _getData();
+                        // }),
+                      ),
                     ),
                   ],
                 ),
@@ -254,8 +291,10 @@ class _LoginPageState extends State<LoginPage> {
 }
 
 class PasswordFormFieldWidget extends StatefulWidget {
-  PasswordFormFieldWidget({super.key, required this.thisTextInputType});
+  PasswordFormFieldWidget(
+      {super.key, required this.thisTextInputType, required this.controller});
   final TextInputType thisTextInputType;
+  final TextEditingController controller;
 
   @override
   State<PasswordFormFieldWidget> createState() =>
@@ -274,6 +313,7 @@ class _PasswordFormFieldWidgetState extends State<PasswordFormFieldWidget> {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      controller: widget.controller,
       keyboardType: widget.thisTextInputType,
       obscureText: _obscureText,
       validator: (value) {
@@ -292,14 +332,17 @@ class _PasswordFormFieldWidgetState extends State<PasswordFormFieldWidget> {
 }
 
 class TextFormFieldsWidget extends StatelessWidget {
-  TextFormFieldsWidget({super.key, required this.thisTextInputType});
+  TextFormFieldsWidget(
+      {super.key, required this.thisTextInputType, required this.controller});
   final TextInputType thisTextInputType;
+  final TextEditingController controller;
   @override
   Widget build(BuildContext context) {
     pageComponents myComponents = pageComponents();
     return SizedBox(
       width: double.infinity,
       child: TextFormField(
+        controller: controller,
         keyboardType: thisTextInputType,
         validator: (value) {
           if (value!.isEmpty) {

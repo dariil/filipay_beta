@@ -84,7 +84,7 @@ class _EWalletPageState extends State<EWalletPage> {
                                 myComponents.transportaionMode(
                                     padding: 20.0,
                                     context: context,
-                                    page: TopUpPage(),
+                                    page: Placeholder(),
                                     modeText: "FCP Rewards",
                                     path: "assets/e-wallet/FCP-Logo.png"),
                               ]),
@@ -94,13 +94,13 @@ class _EWalletPageState extends State<EWalletPage> {
                                 myComponents.transportaionMode(
                                     padding: 20.0,
                                     context: context,
-                                    page: TopUpPage(),
+                                    page: Placeholder(),
                                     modeText: "Request",
                                     path: "assets/e-wallet/Request.png"),
                                 myComponents.transportaionMode(
                                     padding: 20.0,
                                     context: context,
-                                    page: LoginPage(),
+                                    page: Placeholder(),
                                     modeText: "Send",
                                     path: "assets/e-wallet/Send_icon.png"),
                               ]),
