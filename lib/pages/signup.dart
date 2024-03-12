@@ -237,7 +237,7 @@ class _RegisterPageState extends State<RegisterPage> {
                               child: Text(
                                 "Login here",
                                 style: TextStyle(
-                                  color: Color.fromRGBO(5, 80, 120, 1.0),
+                                  color: Color.fromRGBO(189, 223, 241, 1),
                                   fontStyle: FontStyle.italic,
                                 ),
                               ),
