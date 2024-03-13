@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:filipay_beta/widgets/blurContainer.dart';
 import 'package:filipay_beta/widgets/helpCenterappbar.dart';
+import 'package:flutter/widgets.dart';
 import 'package:gradient_borders/gradient_borders.dart';
 import 'package:filipay_beta/pages/ResponsePage.dart';
 import 'package:filipay_beta/pages/newChatPage.dart';
@@ -19,13 +20,12 @@ class _HelpCenterPageState extends State<HelpCenterPage> {
 
   @override
   Widget build(BuildContext context) {
-    GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
     return Scaffold(
       resizeToAvoidBottomInset: true,
       appBar: MyAppBar(title: widget.title),
       body: SingleChildScrollView(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.end,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Stack(
               children: [
@@ -91,8 +91,6 @@ class _HelpCenterPageState extends State<HelpCenterPage> {
                   padding: const EdgeInsets.only(top: 200.0),
                   child: Center(
                     child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Text(
                           "Select a topic\nor type a question below.",

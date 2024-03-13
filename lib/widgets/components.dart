@@ -51,12 +51,14 @@ class pageComponents {
       print("email: ${userList[i]['user_email']}");
       print("password: ${userList[i]['user_pass']}");
       print("user id: ${userList[i]['user_id']}");
+      print("user pin: ${userList[i]['user_pin']}");
     }
   }
 
   Future<void> _removeAllData() async {
     final userList = _filipay.get('tbl_users');
     userList.clear();
+    print("DATA REMOVED SUCCESSFULLY");
     _filipay.put('tbl_users', userList);
   }
 

@@ -4,6 +4,8 @@ import 'package:hive_flutter/adapters.dart';
 import '../widgets/components.dart';
 import 'signup.dart';
 import 'mainPage.dart';
+import '../functions/functions.dart';
+import 'pin.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -16,6 +18,8 @@ class _LoginPageState extends State<LoginPage> {
   TextEditingController emailController = TextEditingController();
   TextEditingController passController = TextEditingController();
   bool _obscureText = true;
+  bool _isLoading = false;
+  pageFunctions myFunc = pageFunctions();
 
   void _togglePassword() {
     setState(() {
@@ -34,6 +38,8 @@ class _LoginPageState extends State<LoginPage> {
     for (var user in userList) {
       if (user['user_email'] == email && user['user_pass'] == password) {
         print('Login successful for ${user['user_email']}');
+        int index = userList.indexWhere((user) => user['user_email'] == email);
+        myFunc.current_user_id = userList[index]['user_id'];
         return true;
       }
     }
@@ -44,11 +50,31 @@ class _LoginPageState extends State<LoginPage> {
   Future<void> login() async {
     bool success = await _loginUser(emailController.text, passController.text);
     if (success) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => MainPage()),
-      );
-    } else {}
+      setState(() {
+        _isLoading = true;
+      });
+      Future.delayed(Duration(seconds: 2), () {
+        setState(() {
+          _isLoading = false;
+          myFunc.loginPin = true;
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => CreatePin()),
+          );
+        });
+      });
+    } else {
+      setState(() {
+        _isLoading = true;
+        Future.delayed(Duration(seconds: 2), () {
+          setState(() {
+            _isLoading = false;
+            myComponents.error(context, "Invalid credentials!",
+                "Incorrect email or password. Please try again.");
+          });
+        });
+      });
+    }
   }
 
   @override
@@ -282,6 +308,12 @@ class _LoginPageState extends State<LoginPage> {
                   ],
                 ),
               ),
+            ),
+            Center(
+              child: _isLoading
+                  ? myComponents.simulateLoading(
+                      context: context, loadText: "Processing")
+                  : Text(''),
             ),
           ],
         ),

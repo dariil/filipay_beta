@@ -32,11 +32,13 @@ class _RegisterPageState extends State<RegisterPage> {
     final userList = _filipay.get('tbl_users');
 
     myFunc.user_id = myFunc.tbl_users.length;
+    myFunc.current_user_id = myFunc.user_id;
 
     userList.add({
       "user_id": myFunc.user_id,
       "user_email": emailControler.text,
       "user_pass": passController.text,
+      "user_pin": 0000,
     });
     print(userList[0]['user_email']);
     print("TESTING!");

@@ -20,6 +20,12 @@ class pageFunctions {
     _createNew = value;
   }
 
+  static bool _loginPin = false;
+  bool get loginPin => _loginPin;
+  set loginPin(bool value) {
+    _loginPin = value;
+  }
+
   static String _date = "N/A";
   static String _headerDate = "N/A";
 
@@ -58,5 +64,12 @@ class pageFunctions {
 
   set user_id(int value) {
     _user_id = value;
+  }
+
+  static int? _currently_logged_user;
+  int get current_user_id => _currently_logged_user!;
+
+  set current_user_id(int value) {
+    _currently_logged_user = value;
   }
 }
