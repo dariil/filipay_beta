@@ -9,7 +9,6 @@ import 'transactionHistoryPage.dart';
 import 'package:image_picker/image_picker.dart';
 import 'TOSPage.dart';
 import 'privacyPolicyPage.dart';
-import 'newChatPage.dart';
 import 'helpCenterPage.dart';
 
 class NavDrawer extends StatefulWidget {

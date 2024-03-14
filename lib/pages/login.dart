@@ -3,7 +3,6 @@ import 'package:flutter/widgets.dart';
 import 'package:hive_flutter/adapters.dart';
 import '../widgets/components.dart';
 import 'signup.dart';
-import 'mainPage.dart';
 import '../functions/functions.dart';
 import 'pin.dart';
 

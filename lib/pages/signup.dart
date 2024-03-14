@@ -28,8 +28,10 @@ class _RegisterPageState extends State<RegisterPage> {
 
   Future<void> _initializedData() async {
     _filipay.put('tbl_users', myFunc.tbl_users);
+    _filipay.put('tbl_user_profile', myFunc.tbl_user_profile);
 
     final userList = _filipay.get('tbl_users');
+    final userProfileList = _filipay.get('tbl_user_profile');
 
     myFunc.user_id = myFunc.tbl_users.length;
     myFunc.current_user_id = myFunc.user_id;
@@ -40,9 +42,26 @@ class _RegisterPageState extends State<RegisterPage> {
       "user_pass": passController.text,
       "user_pin": 0000,
     });
+
+    myFunc.user_profile_id = myFunc.tbl_user_profile.length;
+
+    userProfileList.add({
+      "user_profile_id": myFunc.user_profile_id,
+      "user_id": myFunc.current_user_id,
+      "profile_picture": "",
+      "firstname": "",
+      "middlename": "",
+      "lastname": "",
+      "date_of_birth": "",
+      "address": "",
+      "user_type": "N/A",
+      "cash_limits": 0.0,
+    });
+
     print(userList[0]['user_email']);
     print("TESTING!");
     _filipay.put('tbl_users', myFunc.tbl_users);
+    _filipay.put('tbl_user_profile', myFunc.tbl_user_profile);
   }
 
   void _togglePassword() {

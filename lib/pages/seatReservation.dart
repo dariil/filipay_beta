@@ -176,6 +176,7 @@ class _SeatReservationState extends State<SeatReservation> {
           () {
             Navigator.pop(context);
           },
+          "Confirm booking?",
           "The reflected fare will be deducted immediately and cannot be refunded. Are you sure you want to continue?",
         );
       });

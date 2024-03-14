@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import '../widgets/components.dart';
-import 'login.dart';
 import 'topUpPage.dart';
 
 class EWalletPage extends StatefulWidget {

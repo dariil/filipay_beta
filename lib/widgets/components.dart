@@ -47,11 +47,25 @@ class pageComponents {
 
   Future<void> _getAllData() async {
     final userList = _filipay.get('tbl_users');
+    final userProfileList = _filipay.get('tbl_user_profile');
     for (int i = 0; i < userList.length; i++) {
+      print("===========================================");
       print("email: ${userList[i]['user_email']}");
       print("password: ${userList[i]['user_pass']}");
       print("user id: ${userList[i]['user_id']}");
       print("user pin: ${userList[i]['user_pin']}");
+      print("\n\n");
+      print("profile id: ${userProfileList[i]['user_profile_id']}");
+      print("user id: ${userProfileList[i]['user_id']}");
+      print("profile picture: ${userProfileList[i]['profile_picture']}");
+      print("first name: ${userProfileList[i]['firstname']}");
+      print("middle name: ${userProfileList[i]['middlename']}");
+      print("last name: ${userProfileList[i]['lastname']}");
+      print("date of birth: ${userProfileList[i]['date_of_birth']}");
+      print("address: ${userProfileList[i]['address']}");
+      print("user type: ${userProfileList[i]['user_type']}");
+      print("cashin limits: ${userProfileList[i]['cashin_limits']}");
+      print("===========================================");
     }
   }
 
@@ -489,6 +503,49 @@ class pageComponents {
     );
   }
 
+  Container userType(
+      {required String text,
+      required BoxDecoration decoration,
+      required Color textColor}) {
+    return Container(
+      margin: const EdgeInsets.all(8.0),
+      width: 80.0,
+      height: 50.0,
+      decoration: decoration,
+      child: Center(
+        child: Text(
+          text,
+          style: TextStyle(
+            color: textColor,
+            fontWeight: FontWeight.w900,
+            fontSize: 10.0,
+          ),
+          textAlign: TextAlign.center,
+        ),
+      ),
+    );
+  }
+
+  BoxDecoration selectedUserType() {
+    return BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(5.0),
+        border: Border.all(
+          width: 2.0,
+          color: Color.fromRGBO(24, 69, 125, 1.0),
+        ));
+  }
+
+  BoxDecoration defaultUserType() {
+    return BoxDecoration(
+        color: Color.fromRGBO(24, 69, 125, 1.0),
+        borderRadius: BorderRadius.circular(5.0),
+        border: Border.all(
+          width: 2.0,
+          color: Color.fromRGBO(24, 69, 125, 1.0),
+        ));
+  }
+
   void alert(BuildContext context, Function() onOkPressed, String alertTitle,
       String alertDescription) {
     showDialog(
@@ -768,28 +825,19 @@ class pageComponents {
       builder: (BuildContext context) {
         return AlertDialog(
           content: Container(
-            height: MediaQuery.of(context).size.height * 0.20,
+            height: MediaQuery.of(context).size.height * 0.25,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Align(
-                  alignment: Alignment.topRight,
-                  child: GestureDetector(
-                    onTap: () {
-                      Navigator.pop(context);
-                    },
-                    child: Icon(
-                      Icons.cancel_sharp,
-                      color: Color.fromRGBO(24, 69, 125, 1.0),
+                Center(
+                  child: Text(
+                    alertTitle,
+                    style: TextStyle(
+                      fontSize: 30,
+                      fontWeight: FontWeight.w900,
+                      color: Colors.red,
                     ),
-                  ),
-                ),
-                Text(
-                  alertTitle,
-                  style: TextStyle(
-                    fontSize: 30,
-                    fontWeight: FontWeight.w900,
-                    color: Colors.red,
+                    textAlign: TextAlign.center,
                   ),
                 ),
                 SizedBox(
@@ -813,7 +861,7 @@ class pageComponents {
   }
 
   void bookConfirmation(BuildContext context, Function() onOkPressed,
-      Function() onCancelPressed, String alertDescription) {
+      Function() onCancelPressed, String alertTitle, String alertDescription) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -833,6 +881,18 @@ class pageComponents {
                       Icons.cancel_sharp,
                       color: Color.fromRGBO(24, 69, 125, 1.0),
                     ),
+                  ),
+                ),
+                SizedBox(
+                  height: 10.0,
+                ),
+                Text(
+                  alertTitle,
+                  style: TextStyle(
+                    fontStyle: FontStyle.italic,
+                    fontSize: 20,
+                    fontWeight: FontWeight.w900,
+                    color: Color(0xffef8b06),
                   ),
                 ),
                 SizedBox(

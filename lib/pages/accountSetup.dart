@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import '../widgets/components.dart';
 import '../functions/functions.dart';
 import 'pin.dart';
@@ -19,13 +20,169 @@ class AccountSetup extends StatefulWidget {
 }
 
 class _AccountSetupState extends State<AccountSetup> {
-  pageComponents myComponents = pageComponents();
-  pageFunctions pinPage = pageFunctions();
-  InputDecoration decoration = InputDecoration();
+  final _filipay = Hive.box("filipay");
+
+  bool _isLoading = false;
+  String selectedOption = "NONE";
+  bool standardSelected = false;
+  bool studentSelected = false;
+  bool seniorSelected = false;
+  bool pwdSelected = false;
+  String? birthdate = "";
+
+  TextEditingController firstNameController = TextEditingController();
+  TextEditingController middleNameController = TextEditingController();
+  TextEditingController lastNameController = TextEditingController();
   TextEditingController dateofbirthController = TextEditingController();
+  TextEditingController addressController = TextEditingController();
+
+  pageComponents myComponents = pageComponents();
+  pageFunctions myFunc = pageFunctions();
+  InputDecoration decoration = InputDecoration();
   TextEditingController controller = TextEditingController();
   bool isEditing = false;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
+  void standard() {
+    setState(() {
+      selectedOption = "STANDARD";
+      standardSelected = true;
+      studentSelected = false;
+      seniorSelected = false;
+      pwdSelected = false;
+    });
+  }
+
+  void student() {
+    setState(() {
+      selectedOption = "STUDENT";
+      standardSelected = false;
+      studentSelected = true;
+      seniorSelected = false;
+      pwdSelected = false;
+    });
+  }
+
+  void senior() {
+    setState(() {
+      selectedOption = "SENIOR CITIZEN";
+      standardSelected = false;
+      studentSelected = false;
+      seniorSelected = true;
+      pwdSelected = false;
+    });
+  }
+
+  void pwd() {
+    setState(() {
+      selectedOption = "PWD";
+      standardSelected = false;
+      studentSelected = false;
+      seniorSelected = false;
+      pwdSelected = true;
+    });
+  }
+
+  void initState() {
+    super.initState();
+    print("\n\nTHIS IS WORKING\n\n");
+    final userProfileList = _filipay.get('tbl_user_profile');
+
+    int userProfileListIndex = userProfileList
+        .indexWhere((user) => user['user_id'] == myFunc.current_user_id);
+
+    firstNameController.text =
+        userProfileList[userProfileListIndex]['firstname'];
+    middleNameController.text =
+        userProfileList[userProfileListIndex]['middlename'];
+    lastNameController.text = userProfileList[userProfileListIndex]['lastname'];
+    dateofbirthController.text =
+        userProfileList[userProfileListIndex]['date_of_birth'];
+    addressController.text = userProfileList[userProfileListIndex]['address'];
+  }
+
+  void finishSetup() {
+    final userProfileList = _filipay.get('tbl_user_profile');
+
+    int userProfileListIndex = userProfileList
+        .indexWhere((user) => user['user_id'] == myFunc.current_user_id);
+
+    if (userProfileList[userProfileListIndex]['firstname'] == "" ||
+        userProfileList[userProfileListIndex]['middlename'] == "" ||
+        userProfileList[userProfileListIndex]['lastname'] == "" ||
+        userProfileList[userProfileListIndex]['date_of_birth'] == "" ||
+        userProfileList[userProfileListIndex]['address'] == "" ||
+        userProfileList[userProfileListIndex]['user_type'] == "N/A") {
+      myComponents.error(context, "Account setup incomplete",
+          "You need to setup your account first. Please fill al the fields to complete setup.");
+    } else if (firstNameController.text !=
+            userProfileList[userProfileListIndex]['firstname'] ||
+        middleNameController.text !=
+            userProfileList[userProfileListIndex]['middlename'] ||
+        lastNameController.text !=
+            userProfileList[userProfileListIndex]['lastname'] ||
+        dateofbirthController.text !=
+            userProfileList[userProfileListIndex]['date_of_birth'] ||
+        addressController.text !=
+            userProfileList[userProfileListIndex]['address']) {
+      myComponents.alert(context, () {
+        Navigator.of(context).pushReplacement(MaterialPageRoute(
+          builder: (context) => MainPage(),
+        ));
+      }, "Unsaved Changes",
+          "You have unsaved changes. Click OK to exit without saving?");
+    } else {
+      Navigator.of(context).pushReplacement(MaterialPageRoute(
+        builder: (context) => MainPage(),
+      ));
+    }
+  }
+
+  Future<void> saveChanges(BuildContext context) async {
+    final userProfileList = _filipay.get('tbl_user_profile');
+    int userProfileListIndex = userProfileList
+        .indexWhere((user) => user['user_id'] == myFunc.current_user_id);
+
+    if (firstNameController.text.isEmpty ||
+        middleNameController.text.isEmpty ||
+        lastNameController.text.isEmpty ||
+        dateofbirthController.text.isEmpty ||
+        addressController.text.isEmpty) {
+      myComponents.error(context, "Fields cannot be empty",
+          "Make sure to fill all text fields. Please try again.");
+    } else {
+      myComponents.bookConfirmation(context, () {
+        Navigator.pop(context);
+        setState(() {
+          _isLoading = true;
+          Future.delayed(Duration(seconds: 2), () {
+            setState(() {
+              userProfileList[userProfileListIndex]['firstname'] =
+                  firstNameController.text;
+              userProfileList[userProfileListIndex]['middlename'] =
+                  middleNameController.text;
+              userProfileList[userProfileListIndex]['lastname'] =
+                  lastNameController.text;
+              userProfileList[userProfileListIndex]['date_of_birth'] =
+                  dateofbirthController.text;
+              userProfileList[userProfileListIndex]['address'] =
+                  addressController.text;
+              userProfileList[userProfileListIndex]['user_type'] =
+                  selectedOption;
+              _filipay.put('tbl_users', myFunc.tbl_users);
+              _filipay.put('tbl_user_profile', myFunc.tbl_user_profile);
+              _isLoading = false;
+              myComponents.alert(context, () {
+                Navigator.pop(context);
+              }, "Successful!", "Changes has been saved!.");
+            });
+          });
+        });
+      }, () {
+        Navigator.pop(context);
+      }, "Save changes", "Would you like to save these changes?");
+    }
+  }
 
   final ImagePicker _picker = ImagePicker();
   Future<void> _pickImage(BuildContext context) async {
@@ -37,7 +194,6 @@ class _AccountSetupState extends State<AccountSetup> {
   }
 
   DateTime? _selectedDate;
-  String birthdate = "December 11, 2001";
 
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
@@ -50,13 +206,13 @@ class _AccountSetupState extends State<AccountSetup> {
       setState(() {
         _selectedDate = picked;
         birthdate = "${DateFormat('MMMM dd, yyyy').format(_selectedDate!)}";
-        dateofbirthController.text = birthdate;
+        dateofbirthController.text = birthdate!;
       });
   }
 
   @override
   Widget build(BuildContext context) {
-    dateofbirthController.text = birthdate;
+    // dateofbirthController.text = birthdate!;
     return Scaffold(
       body: SafeArea(
         child: Column(
@@ -71,12 +227,7 @@ class _AccountSetupState extends State<AccountSetup> {
                 children: [
                   GestureDetector(
                     onTap: () {
-                      myComponents.alert(context, () {
-                        Navigator.of(context).pushReplacement(MaterialPageRoute(
-                          builder: (context) => MainPage(),
-                        ));
-                      }, "Unsaved Changes",
-                          "You have unsaved changes. Click OK to exit without saving?");
+                      finishSetup();
                     },
                     child: Icon(
                       Icons.arrow_back_sharp,
@@ -95,7 +246,7 @@ class _AccountSetupState extends State<AccountSetup> {
                               builder: (context) => ChangePasswordPage()),
                         );
                       } else if (value == 'change_pin') {
-                        pinPage.pinMode = true;
+                        myFunc.pinMode = true;
                         Navigator.push(
                           context,
                           MaterialPageRoute(builder: (context) => CreatePin()),
@@ -211,7 +362,7 @@ class _AccountSetupState extends State<AccountSetup> {
                                           ),
                                           SetupAccountTextForm(
                                             myComponents: myComponents,
-                                            initialText: "John Daryll",
+                                            controller: firstNameController,
                                           ),
                                           Text(
                                             "Middle Name",
@@ -222,7 +373,7 @@ class _AccountSetupState extends State<AccountSetup> {
                                           ),
                                           SetupAccountTextForm(
                                             myComponents: myComponents,
-                                            initialText: "Santelices",
+                                            controller: middleNameController,
                                           ),
                                           Text(
                                             "Last Name",
@@ -237,7 +388,7 @@ class _AccountSetupState extends State<AccountSetup> {
                                           ),
                                           SetupAccountTextForm(
                                             myComponents: myComponents,
-                                            initialText: "Santiago",
+                                            controller: lastNameController,
                                           ),
                                           Text(
                                             "Date of Birth",
@@ -332,8 +483,7 @@ class _AccountSetupState extends State<AccountSetup> {
                                           ),
                                           SetupAccountTextForm(
                                             myComponents: myComponents,
-                                            initialText:
-                                                "Carmen Homes, Barangay San Antonio, San Pedro, Laguna",
+                                            controller: addressController,
                                           ),
                                         ],
                                       ),
@@ -349,98 +499,70 @@ class _AccountSetupState extends State<AccountSetup> {
                                 scrollDirection: Axis.horizontal,
                                 child: Row(
                                   children: [
-                                    Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Container(
-                                        width: 80.0,
-                                        height: 50.0,
-                                        decoration: BoxDecoration(
-                                            color: Color.fromRGBO(
-                                                24, 69, 125, 1.0),
-                                            borderRadius:
-                                                BorderRadius.circular(5.0)),
-                                        child: Center(
-                                          child: Text(
-                                            "STANDARD",
-                                            style: TextStyle(
-                                              color: Colors.white,
-                                              fontWeight: FontWeight.w900,
-                                              fontSize: 10.0,
-                                            ),
-                                            textAlign: TextAlign.center,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Container(
-                                        width: 80.0,
-                                        height: 50.0,
-                                        decoration: BoxDecoration(
-                                            color: Color.fromRGBO(
-                                                24, 69, 125, 1.0),
-                                            borderRadius:
-                                                BorderRadius.circular(5.0)),
-                                        child: Center(
-                                          child: Text(
-                                            "STUDENT",
-                                            style: TextStyle(
-                                              color: Colors.white,
-                                              fontWeight: FontWeight.w900,
-                                              fontSize: 11.0,
-                                            ),
-                                            textAlign: TextAlign.center,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Container(
-                                        width: 80.0,
-                                        height: 50.0,
-                                        decoration: BoxDecoration(
-                                            color: Color.fromRGBO(
-                                                24, 69, 125, 1.0),
-                                            borderRadius:
-                                                BorderRadius.circular(5.0)),
-                                        child: Center(
-                                          child: Text(
-                                            "SENIOR CITIZEN",
-                                            style: TextStyle(
-                                              color: Colors.white,
-                                              fontWeight: FontWeight.w900,
-                                              fontSize: 11.0,
-                                            ),
-                                            textAlign: TextAlign.center,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Container(
-                                        width: 80.0,
-                                        height: 50.0,
-                                        decoration: BoxDecoration(
-                                            color: Color.fromRGBO(
-                                                24, 69, 125, 1.0),
-                                            borderRadius:
-                                                BorderRadius.circular(5.0)),
-                                        child: Center(
-                                          child: Text(
-                                            "PWD",
-                                            style: TextStyle(
-                                              color: Colors.white,
-                                              fontWeight: FontWeight.w900,
-                                              fontSize: 11.0,
-                                            ),
-                                            textAlign: TextAlign.center,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
+                                    GestureDetector(
+                                        onTap: () {
+                                          standard();
+                                        },
+                                        child: standardSelected
+                                            ? myComponents.userType(
+                                                text: "STANDARD",
+                                                decoration: myComponents
+                                                    .selectedUserType(),
+                                                textColor: Color.fromRGBO(
+                                                    24, 69, 125, 1.0))
+                                            : myComponents.userType(
+                                                text: "STANDARD",
+                                                decoration: myComponents
+                                                    .defaultUserType(),
+                                                textColor: Colors.white)),
+                                    GestureDetector(
+                                        onTap: () {
+                                          student();
+                                        },
+                                        child: studentSelected
+                                            ? myComponents.userType(
+                                                text: "STUDENT",
+                                                decoration: myComponents
+                                                    .selectedUserType(),
+                                                textColor: Color.fromRGBO(
+                                                    24, 69, 125, 1.0))
+                                            : myComponents.userType(
+                                                text: "STUDENT",
+                                                decoration: myComponents
+                                                    .defaultUserType(),
+                                                textColor: Colors.white)),
+                                    GestureDetector(
+                                        onTap: () {
+                                          senior();
+                                        },
+                                        child: seniorSelected
+                                            ? myComponents.userType(
+                                                text: "SENIOR CITIZEN",
+                                                decoration: myComponents
+                                                    .selectedUserType(),
+                                                textColor: Color.fromRGBO(
+                                                    24, 69, 125, 1.0))
+                                            : myComponents.userType(
+                                                text: "SENIOR CITIZEN",
+                                                decoration: myComponents
+                                                    .defaultUserType(),
+                                                textColor: Colors.white)),
+                                    GestureDetector(
+                                        onTap: () {
+                                          pwd();
+                                        },
+                                        child: pwdSelected
+                                            ? myComponents.userType(
+                                                text: "PWD",
+                                                decoration: myComponents
+                                                    .selectedUserType(),
+                                                textColor: Color.fromRGBO(
+                                                    24, 69, 125, 1.0))
+                                            : myComponents.userType(
+                                                text: "PWD",
+                                                decoration: myComponents
+                                                    .defaultUserType(),
+                                                textColor: Colors.white)),
                                   ],
                                 ),
                               ),
@@ -589,7 +711,7 @@ class _AccountSetupState extends State<AccountSetup> {
                             mainButtons.mainButton(
                               context: context,
                               onPressed: () {
-                                // myComponents.unsavedChanges(context);
+                                saveChanges(context);
                               },
                               text: 'SAVE',
                               BackgroundColor: Color.fromRGBO(47, 50, 145, 1.0),
@@ -605,6 +727,12 @@ class _AccountSetupState extends State<AccountSetup> {
                       ),
                     ),
                   ),
+                  Center(
+                    child: _isLoading
+                        ? myComponents.simulateLoading(
+                            context: context, loadText: "Processing")
+                        : Text(''),
+                  ),
                 ],
               ),
             ),
@@ -619,10 +747,10 @@ class SetupAccountTextForm extends StatefulWidget {
   const SetupAccountTextForm({
     Key? key,
     required this.myComponents,
-    this.initialText = '',
+    required this.controller,
   }) : super(key: key);
-  final String initialText;
 
+  final TextEditingController controller;
   final pageComponents myComponents;
 
   @override
@@ -630,12 +758,12 @@ class SetupAccountTextForm extends StatefulWidget {
 }
 
 class _SetupAccountTextFormState extends State<SetupAccountTextForm> {
-  TextEditingController _controller = TextEditingController();
-  bool _isEditing = true;
+  late bool _isEditing;
 
+  @override
   void initState() {
     super.initState();
-    _controller = TextEditingController(text: widget.initialText);
+    _isEditing = true;
   }
 
   @override
@@ -643,7 +771,7 @@ class _SetupAccountTextFormState extends State<SetupAccountTextForm> {
     return Stack(
       children: [
         TextFormField(
-          controller: _controller,
+          controller: widget.controller,
           enabled: !_isEditing,
           decoration: widget.myComponents.userInfoDecoration(
             BorderRadius.circular(20.0),
@@ -653,8 +781,10 @@ class _SetupAccountTextFormState extends State<SetupAccountTextForm> {
         Align(
           alignment: Alignment.centerRight,
           child: IconButton(
-            icon: Icon(_isEditing ? Icons.edit : Icons.close,
-                color: Color(0xff53a1d8)),
+            icon: Icon(
+              _isEditing ? Icons.edit : Icons.close,
+              color: Color(0xff53a1d8),
+            ),
             onPressed: () {
               setState(() {
                 _isEditing = !_isEditing;

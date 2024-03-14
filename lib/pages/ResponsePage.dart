@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:filipay_beta/pages/newChatPage.dart';
 import 'package:filipay_beta/widgets/helpCenterappbar.dart';
-import 'package:filipay_beta/pages/helpCenterPage.dart';
 
 import 'package:intl/intl.dart';
 

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import '../widgets/components.dart';
-import 'drawer.dart';
 
 class MyBookingsPage extends StatefulWidget {
   const MyBookingsPage({super.key});

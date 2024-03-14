@@ -50,20 +50,23 @@ class pageFunctions {
   }
 
   static List<Map<String, dynamic>> _tbl_users = [];
-
   List<Map<String, dynamic>> get tbl_users => _tbl_users;
 
   static int? _user_id;
-
-  // Future<void> _getAllData() async {
-  //   final userList = _filipay.get('tbl_users');
-  //   _user_id = userList.length;
-  // }
-
   int get user_id => _user_id!;
 
   set user_id(int value) {
     _user_id = value;
+  }
+
+  static List<Map<String, dynamic>> _tbl_user_profile = [];
+  List<Map<String, dynamic>> get tbl_user_profile => _tbl_user_profile;
+
+  static int? _user_profile_id;
+  int get user_profile_id => _user_profile_id!;
+
+  set user_profile_id(int value) {
+    _user_profile_id = value;
   }
 
   static int? _currently_logged_user;
@@ -73,3 +76,7 @@ class pageFunctions {
     _currently_logged_user = value;
   }
 }
+  // Future<void> _getAllData() async {
+  //   final userList = _filipay.get('tbl_users');
+  //   _user_id = userList.length;
+  // }
