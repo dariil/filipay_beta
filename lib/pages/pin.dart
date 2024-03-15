@@ -84,23 +84,19 @@ class _CreatePinState extends State<CreatePin> {
   }
 
   Future<void> currentUserPin() async {
-    _filipay.put('tbl_users', pinPage.tbl_users);
-    _filipay.put('tbl_user_profile', pinPage.tbl_user_profile);
     print("\n\nTHIS IS WORKING\n\n");
+    // _filipay.put('tbl_users', pinPage.tbl_users);
     final userList = _filipay.get('tbl_users');
     int index = userList
         .indexWhere((user) => user['user_id'] == pinPage.current_user_id);
     userPin = userList[index]['user_pin'];
-    _filipay.put('tbl_users', pinPage.tbl_users);
-    _filipay.put('tbl_user_profile', pinPage.tbl_user_profile);
   }
 
   /////////////////////////////////////////////////////////////////////////////////////////////
   void loadingConfirm() {
-    _filipay.put('tbl_users', pinPage.tbl_users);
-    _filipay.put('tbl_user_profile', pinPage.tbl_user_profile);
     _isLoading = true;
     Future.delayed(Duration(seconds: 2), () {
+      // _filipay.put('tbl_users', pinPage.tbl_users);
       final userList = _filipay.get('tbl_users');
       setState(() {
         _isLoading = false;
@@ -111,17 +107,15 @@ class _CreatePinState extends State<CreatePin> {
         userPin = userList[index]['user_pin'];
         print(userList[index]['user_pin']);
         enter();
+        _filipay.put('tbl_users', pinPage.tbl_users);
       });
-      _filipay.put('tbl_users', pinPage.tbl_users);
-      _filipay.put('tbl_user_profile', pinPage.tbl_user_profile);
     });
   }
 
   void pinChanged() {
-    _filipay.put('tbl_users', pinPage.tbl_users);
-    _filipay.put('tbl_user_profile', pinPage.tbl_user_profile);
     _isLoading = true;
     Future.delayed(Duration(seconds: 2), () {
+      // _filipay.put('tbl_users', pinPage.tbl_users);
       final userList = _filipay.get('tbl_users');
       setState(() {
         _isLoading = false;
@@ -136,7 +130,6 @@ class _CreatePinState extends State<CreatePin> {
         );
       });
       _filipay.put('tbl_users', pinPage.tbl_users);
-      _filipay.put('tbl_user_profile', pinPage.tbl_user_profile);
     });
   }
 
@@ -209,10 +202,9 @@ class _CreatePinState extends State<CreatePin> {
   }
 
   Future<void> _pinLogin() async {
-    _filipay.put('tbl_users', pinPage.tbl_users);
-    _filipay.put('tbl_user_profile', pinPage.tbl_user_profile);
+    // _filipay.put('tbl_users', pinPage.tbl_users);
+    // _filipay.put('tbl_user_profile', pinPage.tbl_user_profile);
     final userList = _filipay.get('tbl_users');
-
     final userProfileList = _filipay.get('tbl_user_profile');
 
     int userProfileListIndex = userProfileList
@@ -253,8 +245,6 @@ class _CreatePinState extends State<CreatePin> {
           });
         }
       }
-      _filipay.put('tbl_users', pinPage.tbl_users);
-      _filipay.put('tbl_user_profile', pinPage.tbl_user_profile);
     });
   }
 

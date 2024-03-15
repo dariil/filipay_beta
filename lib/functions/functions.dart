@@ -2,6 +2,11 @@ import 'package:hive_flutter/hive_flutter.dart';
 
 class pageFunctions {
   final _filipay = Hive.box("filipay");
+  void initState() {
+    final userList = _filipay.get('tbl_users');
+    final userProfileList = _filipay.get('tbl_user_profile');
+  }
+
   static String _transportMode = "QR Reader";
 
   String get transportMode => _transportMode;
@@ -49,8 +54,12 @@ class pageFunctions {
     _reservedTime = value;
   }
 
-  static List<Map<String, dynamic>> _tbl_users = [];
-  List<Map<String, dynamic>> get tbl_users => _tbl_users;
+  static List<Map<dynamic, dynamic>> _tbl_users = [];
+  List<Map<dynamic, dynamic>> get tbl_users => _tbl_users;
+
+  set tbl_users(List<Map<dynamic, dynamic>> value) {
+    _tbl_users = value;
+  }
 
   static int? _user_id;
   int get user_id => _user_id!;
@@ -59,8 +68,12 @@ class pageFunctions {
     _user_id = value;
   }
 
-  static List<Map<String, dynamic>> _tbl_user_profile = [];
-  List<Map<String, dynamic>> get tbl_user_profile => _tbl_user_profile;
+  static List<Map<dynamic, dynamic>> _tbl_user_profile = [];
+  List<Map<dynamic, dynamic>> get tbl_user_profile => _tbl_user_profile;
+
+  set tbl_user_profile(List<Map<dynamic, dynamic>> value) {
+    _tbl_user_profile = value;
+  }
 
   static int? _user_profile_id;
   int get user_profile_id => _user_profile_id!;
