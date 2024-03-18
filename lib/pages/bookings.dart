@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:hive_flutter/adapters.dart';
 import '../widgets/components.dart';
+import '../functions/functions.dart';
 
 class MyBookingsPage extends StatefulWidget {
   const MyBookingsPage({super.key});
@@ -10,39 +12,86 @@ class MyBookingsPage extends StatefulWidget {
 class _MyBookingsPageState extends State<MyBookingsPage> {
   GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
   pageComponents myComponents = pageComponents();
+  pageFunctions myFunc = pageFunctions();
+  final _filipay = Hive.box("filipay");
 
-  List<Map<String, dynamic>> bookingDetailsList = [
+  List<Map<String, dynamic>> tbl_bookings = [
     {
-      'amount': '1800.00',
-      'referenceCode': 'R434TGERGFWEGEY4',
-      'route': 'Alabang Starmall-Naga, Camarines Sur',
-      'date': '02/19/2024',
-      'time': '6:00',
+      "booking_id": 4,
+      "seat_reservation_id": 20,
+      "user_id": 0,
+      "reference_code": "TY5H6TW5T565YE",
+      "route": "Sample Route 1",
+      "date": "03/01/2024",
+      "status": "COMPLETED",
     },
     {
-      'amount': '1800.00',
-      'referenceCode': 'R434TGERGFWEGEY4',
-      'route': 'Alabang Starmall-Naga, Camarines Sur',
-      'date': '02/19/2024',
-      'time': '6:00',
+      "booking_id": 0,
+      "seat_reservation_id": 1,
+      "user_id": 1,
+      "reference_code": "TY5H6TW5T565YE",
+      "route": "Sample Route 1",
+      "date": "03/18/2024",
+      "status": "PENDING",
     },
     {
-      'amount': '1800.00',
-      'referenceCode': 'R434TGERGFWEGEY4',
-      'route': 'Alabang Starmall-Naga, Camarines Sur',
-      'date': '02/19/2024',
-      'time': '6:00',
+      "booking_id": 0,
+      "seat_reservation_id": 0,
+      "user_id": 0,
+      "reference_code": "0TIGJRO54P3444D",
+      "route": "Sample Route 2",
+      "date": "02/24/2024",
+      "status": "COMPLETED",
+    },
+  ];
+
+  List<Map<String, dynamic>> tbl_seat_reservation = [
+    {
+      "seat_reservation_id": 20,
+      "time": "11:30 AM",
+      "quantity": 1,
+      "seat_number": [18],
+      "price": 900
+    },
+    {
+      "seat_reservation_id": 1,
+      "time": "9:30 PM",
+      "quantity": 3,
+      "seat_number": [18],
+      "price": 2700
+    },
+    {
+      "seat_reservation_id": 0,
+      "time": "3:30 PM",
+      "quantity": 2,
+      "seat_number": [6, 5],
+      "price": 1800
     },
   ];
 
   double verticalPadding = 10.0;
   double horizontalPadding = 30.0;
+
+  String getTime(int seatReservationId) {
+    final seatReservationList = _filipay.get('tbl_seat_reservation');
+    myFunc.tbl_seat_reservation =
+        List<Map<dynamic, dynamic>>.from(seatReservationList);
+    return myFunc.tbl_seat_reservation.firstWhere((element) =>
+        element['seat_reservation_id'] == seatReservationId)['time'];
+  }
+
+  int getPrice(int seatReservationId) {
+    final seatReservationList = _filipay.get('tbl_seat_reservation');
+    myFunc.tbl_seat_reservation =
+        List<Map<dynamic, dynamic>>.from(seatReservationList);
+    return myFunc.tbl_seat_reservation.firstWhere((element) =>
+        element['seat_reservation_id'] == seatReservationId)['price'];
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       key: scaffoldKey,
-      // appBar: myComponents.appBar(scaffoldKey: scaffoldKey),
-      // drawer: NavDrawer(),
       body: SafeArea(
         child: Column(
           children: [
@@ -58,11 +107,21 @@ class _MyBookingsPageState extends State<MyBookingsPage> {
                     padding:
                         EdgeInsets.symmetric(horizontal: horizontalPadding),
                     child: ListView.builder(
-                      itemCount: bookingDetailsList.length +
-                          1, // Add 1 for the "View More" button
+                      itemCount: myFunc.tbl_bookings
+                              .where((booking) =>
+                                  booking['user_id'] == myFunc.current_user_id)
+                              .length +
+                          1,
                       itemBuilder: (context, index) {
-                        if (index < bookingDetailsList.length) {
-                          // Build the regular list item
+                        final filteredBookings = myFunc.tbl_bookings
+                            .where((booking) =>
+                                booking['user_id'] == myFunc.current_user_id)
+                            .toList();
+                        if (index < filteredBookings.length) {
+                          final booking = filteredBookings[index];
+                          final time = getTime(booking['seat_reservation_id']);
+                          final price =
+                              getPrice(booking['seat_reservation_id']);
                           return Container(
                             padding:
                                 EdgeInsets.symmetric(vertical: verticalPadding),
@@ -70,11 +129,11 @@ class _MyBookingsPageState extends State<MyBookingsPage> {
                               color: Color.fromRGBO(43, 177, 230, 0.4),
                               childWidget: myComponents.bookingDetails(
                                 context,
-                                "${bookingDetailsList[index]['amount']}",
-                                "R434TGERGFWEGEY4",
-                                "Alabang Starmall-Naga, Camarines Sur",
-                                "02/19/2024",
-                                "6:00",
+                                "${price}",
+                                "${booking['reference_code']}",
+                                "${booking['route']}",
+                                "${booking['date']}",
+                                "${time}",
                               ),
                             ),
                           );

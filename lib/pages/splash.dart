@@ -46,35 +46,6 @@ class _SplashState extends State<Splash> with SingleTickerProviderStateMixin {
   }
 
   Future<void> _initializedData() async {
-    // _filipay.put('tbl_users', myFunc.tbl_users);
-    // _filipay.put('tbl_user_profile', myFunc.tbl_user_profile);
-    // Check if data already exists in Hive
-    if (!_myBox.containsKey('userInfo')) {
-      // Data doesn't exist, initialize it
-      Map<String, dynamic> userInfo = {
-        "_id": "123123",
-        "fname": "test fname",
-        "age": 12,
-      };
-      _myBox.put('userInfo', userInfo);
-    }
-
-    if (!_myBox.containsKey('transactionHistory')) {
-      List<Map<String, dynamic>> transactionHistory = [
-        {
-          "userId": "123123",
-          "fname": "test fname",
-          "age": 12,
-        },
-        {
-          "userId": "abcd",
-          "fname": "test fname",
-          "age": 12,
-        }
-      ];
-      _myBox.put('transactionHistory', transactionHistory);
-    }
-
     if (!_filipay.containsKey('tbl_users')) {
       myFunc.tbl_users.add({
         "user_id": 0,
@@ -107,8 +78,53 @@ class _SplashState extends State<Splash> with SingleTickerProviderStateMixin {
       myFunc.tbl_user_profile =
           List<Map<dynamic, dynamic>>.from(userProfileList);
     }
-    // _filipay.put('tbl_users', myFunc.tbl_users);
-    // _filipay.put('tbl_user_profile', myFunc.tbl_user_profile);
+
+    if (!_filipay.containsKey('tbl_bookings')) {
+      myFunc.tbl_bookings.add({
+        "booking_id": 0,
+        "seat_reservation_id": 0,
+        "user_id": 0,
+        "reference_code": "TY5H6TW5T565YE",
+        "route": "Sample Route 1",
+        "date": "03/18/2024",
+        "status": "PENDING",
+      });
+      myFunc.tbl_bookings.add({
+        "booking_id": 0,
+        "seat_reservation_id": 0,
+        "user_id": 0,
+        "reference_code": "TY5H6TW5T565YE",
+        "route": "Sample Route 1",
+        "date": "03/18/2024",
+        "status": "PENDING",
+      });
+      _filipay.put('tbl_bookings', myFunc.tbl_bookings);
+    } else {
+      final userBookings = _filipay.get('tbl_bookings');
+      myFunc.tbl_bookings = List<Map<dynamic, dynamic>>.from(userBookings);
+    }
+
+    if (!_filipay.containsKey('tbl_seat_reservation')) {
+      myFunc.tbl_seat_reservation.add({
+        "seat_reservation_id": 0,
+        "time": "9:30 PM",
+        "quantity": 1,
+        "seat_number": [18],
+        "price": 900
+      });
+      myFunc.tbl_seat_reservation.add({
+        "seat_reservation_id": 0,
+        "time": "9:30 PM",
+        "quantity": 1,
+        "seat_number": [18],
+        "price": 900
+      });
+      _filipay.put('tbl_seat_reservation', myFunc.tbl_seat_reservation);
+    } else {
+      final userReservation = _filipay.get('tbl_seat_reservation');
+      myFunc.tbl_seat_reservation =
+          List<Map<dynamic, dynamic>>.from(userReservation);
+    }
   }
 
   @override

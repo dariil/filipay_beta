@@ -88,6 +88,20 @@ class pageFunctions {
   set current_user_id(int value) {
     _currently_logged_user = value;
   }
+
+  static List<Map<dynamic, dynamic>> _tbl_bookings = [];
+  List<Map<dynamic, dynamic>> get tbl_bookings => _tbl_bookings;
+
+  set tbl_bookings(List<Map<dynamic, dynamic>> value) {
+    _tbl_bookings = value;
+  }
+
+  static List<Map<dynamic, dynamic>> _tbl_seat_reservation = [];
+  List<Map<dynamic, dynamic>> get tbl_seat_reservation => _tbl_seat_reservation;
+
+  set tbl_seat_reservation(List<Map<dynamic, dynamic>> value) {
+    _tbl_seat_reservation = value;
+  }
 }
   // Future<void> _getAllData() async {
   //   final userList = _filipay.get('tbl_users');
