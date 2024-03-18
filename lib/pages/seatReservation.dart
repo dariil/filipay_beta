@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:hive_flutter/adapters.dart';
 import '../widgets/components.dart';
 import '../src/util/time_range.dart';
 import '../functions/functions.dart';
@@ -14,6 +15,7 @@ class SeatReservation extends StatefulWidget {
 }
 
 class _SeatReservationState extends State<SeatReservation> {
+  final _filipay = Hive.box("filipay");
   static const orange = Color(0xFF00adee);
   static const dark = Color(0xFF00adee);
 
@@ -151,6 +153,8 @@ class _SeatReservationState extends State<SeatReservation> {
   }
 
   void loadingConnect() {
+    final userBookings = _filipay.get('tbl_bookings');
+    final userReservation = _filipay.get('tbl_seat_reservation');
     setTrue();
     Future.delayed(Duration(seconds: 1), () {
       setState(() {
@@ -164,11 +168,24 @@ class _SeatReservationState extends State<SeatReservation> {
               Future.delayed(Duration(seconds: 2), () {
                 setState(() {
                   _isLoading = false;
+
+                  /// ADD HERE
+                  int index = userReservation.indexWhere((user) =>
+                      user['booking_id'] == (myFunc.active_booking_id));
+                  userReservation[index]['time'] = myFunc.reservedTime;
+                  userReservation[index]['quantity'] = selectedSeatCount;
+                  userReservation[index]['seat_number'] = [5, 6];
+                  userReservation[index]['price'] = price;
+                  _filipay.put(
+                      'tbl_seat_reservation', myFunc.tbl_seat_reservation);
+
+                  ///
                   myComponents.bookSuccessful(
                       context,
                       "Alabang Starmall-Naga, Camarines Sur",
                       "Friday 05/07/2021 11:30 pm",
                       price);
+                  myFunc.active_booking_id = 0;
                 });
               });
             });
@@ -274,6 +291,7 @@ class _SeatReservationState extends State<SeatReservation> {
                             // setState(() => print("$formattedTime"));
                             setState(() {
                               myFunc.reservedTime = "$formattedTime";
+                              print(myFunc.reservedTime);
                             });
                           },
                         ),

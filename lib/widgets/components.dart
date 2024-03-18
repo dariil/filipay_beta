@@ -69,6 +69,32 @@ class pageComponents {
     }
   }
 
+  Future<void> _getAllBookingInfo() async {
+    final userBookings = _filipay.get('tbl_bookings');
+    final userReservation = _filipay.get('tbl_seat_reservation');
+    for (int i = 0; i < userBookings.length; i++) {
+      print("===========================================");
+      print("\n\n");
+      print("booking id: ${userBookings[i]['booking_id']}");
+      print("seat reservation id: ${userBookings[i]['seat_reservation_id']}");
+      print("user id: ${userBookings[i]['user_id']}");
+      print("reference code: ${userBookings[i]['reference_code']}");
+      print("route: ${userBookings[i]['route']}");
+      print("date: ${userBookings[i]['date']}");
+      print("status: ${userBookings[i]['status']}");
+      print("\n\n");
+      print(
+          "seat reservation id: ${userReservation[i]['seat_reservation_id']}");
+      print("booking id: ${userReservation[i]['booking_id']}");
+      print("time: ${userReservation[i]['time']}");
+      print("quantity: ${userReservation[i]['quantity']}");
+      print("seat number: ${userReservation[i]['seat_number']}");
+      print("price: ${userReservation[i]['price']}");
+      print("\n\n");
+      print("===========================================");
+    }
+  }
+
   Future<void> _removeAllData() async {
     final userList = _filipay.get('tbl_users');
     userList.clear();
@@ -90,7 +116,7 @@ class pageComponents {
         backgroundColor: buttonColor,
       ),
       onPressed: () {
-        _getAllData();
+        _getAllBookingInfo();
       },
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,

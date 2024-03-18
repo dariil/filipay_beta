@@ -13,7 +13,6 @@ class Splash extends StatefulWidget {
 
 class _SplashState extends State<Splash> with SingleTickerProviderStateMixin {
   pageFunctions myFunc = pageFunctions();
-  final _myBox = Hive.box("mybox");
   final _filipay = Hive.box("filipay");
   late AnimationController _controller;
   late Animation<double> _animation;
@@ -80,24 +79,24 @@ class _SplashState extends State<Splash> with SingleTickerProviderStateMixin {
     }
 
     if (!_filipay.containsKey('tbl_bookings')) {
-      myFunc.tbl_bookings.add({
-        "booking_id": 0,
-        "seat_reservation_id": 0,
-        "user_id": 0,
-        "reference_code": "TY5H6TW5T565YE",
-        "route": "Sample Route 1",
-        "date": "03/18/2024",
-        "status": "PENDING",
-      });
-      myFunc.tbl_bookings.add({
-        "booking_id": 0,
-        "seat_reservation_id": 0,
-        "user_id": 0,
-        "reference_code": "TY5H6TW5T565YE",
-        "route": "Sample Route 1",
-        "date": "03/18/2024",
-        "status": "PENDING",
-      });
+      // myFunc.tbl_bookings.add({
+      //   "booking_id": 0,
+      //   "seat_reservation_id": 0,
+      //   "user_id": 0,
+      //   "reference_code": "TY5H6TW5T565YE",
+      //   "route": "Sample Route 1",
+      //   "date": "03/18/2024",
+      //   "status": "PENDING",
+      // });
+      // myFunc.tbl_bookings.add({
+      //   "booking_id": 1,
+      //   "seat_reservation_id": 20,
+      //   "user_id": 1,
+      //   "reference_code": "GS6H0TW5FKNVYE",
+      //   "route": "Sample Route 2",
+      //   "date": "02/24/2024",
+      //   "status": "PENDING",
+      // });
       _filipay.put('tbl_bookings', myFunc.tbl_bookings);
     } else {
       final userBookings = _filipay.get('tbl_bookings');
@@ -105,20 +104,22 @@ class _SplashState extends State<Splash> with SingleTickerProviderStateMixin {
     }
 
     if (!_filipay.containsKey('tbl_seat_reservation')) {
-      myFunc.tbl_seat_reservation.add({
-        "seat_reservation_id": 0,
-        "time": "9:30 PM",
-        "quantity": 1,
-        "seat_number": [18],
-        "price": 900
-      });
-      myFunc.tbl_seat_reservation.add({
-        "seat_reservation_id": 0,
-        "time": "9:30 PM",
-        "quantity": 1,
-        "seat_number": [18],
-        "price": 900
-      });
+      // myFunc.tbl_seat_reservation.add({
+      //   "seat_reservation_id": 0,
+      //   "booking_id": 0,
+      //   "time": "9:30 PM",
+      //   "quantity": 1,
+      //   "seat_number": [18],
+      //   "price": 900
+      // });
+      // myFunc.tbl_seat_reservation.add({
+      //   "seat_reservation_id": 20,
+      //   "booking_id": 1,
+      //   "time": "3:30 AM",
+      //   "quantity": 2,
+      //   "seat_number": [6, 5],
+      //   "price": 1800
+      // });
       _filipay.put('tbl_seat_reservation', myFunc.tbl_seat_reservation);
     } else {
       final userReservation = _filipay.get('tbl_seat_reservation');

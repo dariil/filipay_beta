@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-// import '../widgets/background.dart';
-// import 'package:flutter_application_2/pages/mainPage.dart';
-// import 'package:flutter_application_2/widgets/appbar.dart';
+import 'package:hive_flutter/adapters.dart';
+import 'dart:math';
 import 'package:intl/intl.dart';
 import '../widgets/components.dart';
 import '../functions/functions.dart';
@@ -26,6 +25,18 @@ class _BookingPage extends State<BookingPage> {
   String _selectedOrigin = 'SELECT AN ORIGIN';
   String _selectedDestination = 'SELECT A DESTINATION';
   String _companyImage = 'assets/transportation/bicol-isarog-logo.png';
+
+  String generateRandomReferenceCode() {
+    const String chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    final Random rnd = Random();
+    String result = '';
+    for (int i = 0; i < 12; i++) {
+      result += chars[rnd.nextInt(chars.length)];
+    }
+    return result;
+  }
+
+  final _filipay = Hive.box("filipay");
 
   DateTime? _selectedDate;
 
@@ -84,12 +95,36 @@ class _BookingPage extends State<BookingPage> {
     );
 
     if (pickedDate != null && pickedDate != _selectedDate) {
+      _filipay.put('tbl_bookings', myFunc.tbl_bookings);
+      _filipay.put('tbl_seat_reservation', myFunc.tbl_seat_reservation);
+      final userBookings = _filipay.get('tbl_bookings');
+      final userReservation = _filipay.get('tbl_seat_reservation');
       setState(() {
+        myFunc.active_booking_id = userBookings.length;
         _selectedDate = pickedDate;
         myFunc.dateSelected =
             "${DateFormat('MM/dd/yyyy').format(_selectedDate!)}";
         myFunc.headerDateSelected =
             "${DateFormat('E, MMMM dd, yyyy').format(_selectedDate!)}";
+        userReservation.add({
+          "seat_reservation_id": userReservation.length,
+          "booking_id": myFunc.active_booking_id,
+          "time": null,
+          "quantity": null,
+          "seat_number": [],
+          "price": null,
+        });
+
+        userBookings.add({
+          "booking_id": myFunc.active_booking_id,
+          "seat_reservation_id": userReservation.length - 1,
+          "user_id": myFunc.current_user_id,
+          "reference_code": generateRandomReferenceCode(),
+          "route": "${_selectedOrigin} - ${_selectedDestination}",
+          "date": "${DateFormat('MM/dd/yyyy').format(_selectedDate!)}",
+          "status": "PENDING",
+        });
+
         Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => SeatReservation()),
@@ -304,6 +339,7 @@ class _BookingPage extends State<BookingPage> {
                                             onChanged: (String? newValue) {
                                               setState(() {
                                                 _selectedRoute = newValue!;
+                                                print(_selectedRoute);
                                               });
                                             },
                                           ),
@@ -377,6 +413,7 @@ class _BookingPage extends State<BookingPage> {
                                             onChanged: (String? newValue) {
                                               setState(() {
                                                 _selectedOrigin = newValue!;
+                                                print(_selectedOrigin);
                                               });
                                             },
                                           ),
@@ -453,6 +490,7 @@ class _BookingPage extends State<BookingPage> {
                                                 setState(() {
                                                   _selectedDestination =
                                                       newValue!;
+                                                  print(_selectedDestination);
                                                 });
                                               },
                                             ),
@@ -523,7 +561,7 @@ class _BookingPage extends State<BookingPage> {
                             width: 200,
                             child: ElevatedButton(
                               onPressed: () {
-                                _selectDate(context); // Show calendar
+                                _selectDate(context);
                               },
                               child: Text(
                                 'RESERVE A SEAT',
@@ -540,7 +578,7 @@ class _BookingPage extends State<BookingPage> {
                               ),
                             ),
                           ),
-                          SizedBox(height: 5), // Add space between buttons
+                          SizedBox(height: 5),
                         ],
                       ),
                     ],

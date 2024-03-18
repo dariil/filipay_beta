@@ -102,6 +102,14 @@ class pageFunctions {
   set tbl_seat_reservation(List<Map<dynamic, dynamic>> value) {
     _tbl_seat_reservation = value;
   }
+
+  static int? _active_booking_id;
+
+  set active_booking_id(int value) {
+    _active_booking_id = value;
+  }
+
+  int get active_booking_id => _active_booking_id!;
 }
   // Future<void> _getAllData() async {
   //   final userList = _filipay.get('tbl_users');
