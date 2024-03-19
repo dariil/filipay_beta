@@ -25,8 +25,11 @@ class _SeatReservationState extends State<SeatReservation> {
   int selectedSeatCount = 0;
   double price = 0.0;
   pageFunctions myFunc = pageFunctions();
+  List<int> selectedSeats = [];
 
   List<Widget> generateSeats(int count) {
+    final userBookings = _filipay.get('tbl_bookings');
+    final userReservation = _filipay.get('tbl_seat_reservation');
     List<Widget> seats = [];
     List<Widget> rowSeats = [];
 
@@ -35,7 +38,32 @@ class _SeatReservationState extends State<SeatReservation> {
     double seatHeight = 25.0;
 
     for (int i = 0; i < count; i++) {
-      bool isAvailable = i % 3 != 0;
+      bool isSeatAvailable(int seatNumber, String currentDate) {
+        // Check if seat is available for the given date
+        bool isAvailable = true;
+        for (var reservation in userReservation) {
+          if (reservation['time'] == currentDate &&
+              reservation['seat_number'].contains(seatNumber)) {
+            isAvailable = false;
+            break;
+          }
+        }
+        // Check if seat is booked for the given date
+        for (var booking in userBookings) {
+          if (booking['date'] == currentDate &&
+              booking['seat_reservation_id'] != null &&
+              userReservation[booking['seat_reservation_id']]['seat_number']
+                  .contains(seatNumber)) {
+            isAvailable = false;
+            break;
+          }
+        }
+        return isAvailable;
+      }
+
+      String currentDate =
+          myFunc.dateSelected; // Change this to the selected date
+      bool isAvailable = isSeatAvailable(seatNumber, currentDate);
 
       Color seatColor = isAvailable ? Color(0xff53a1d8) : Color(0xffb5e0fe);
 
@@ -48,9 +76,11 @@ class _SeatReservationState extends State<SeatReservation> {
                 if (seatSelected[i]) {
                   selectedSeatCount++;
                   price += 900;
+                  selectedSeats.add(i + 1); // Add selected seat number
                 } else {
                   selectedSeatCount--;
                   price -= 900;
+                  selectedSeats.remove(i + 1); // Remove deselected seat number
                 }
               });
             }
@@ -163,32 +193,55 @@ class _SeatReservationState extends State<SeatReservation> {
           context,
           () {
             Navigator.pop(context);
-            setState(() {
+            if (myFunc.reservedTime == "N/A") {
               setTrue();
-              Future.delayed(Duration(seconds: 2), () {
+              Future.delayed(Duration(seconds: 1), () {
                 setState(() {
                   _isLoading = false;
+                });
+                myComponents.error(context, "No time selected",
+                    "Please select a time and try again.");
+              });
+            } else if (selectedSeatCount < 1) {
+              setTrue();
+              Future.delayed(Duration(seconds: 1), () {
+                setState(() {
+                  _isLoading = false;
+                });
+                myComponents.error(context, "No seat(s) selected",
+                    "Please select a seat and try again.");
+              });
+            } else {
+              setState(() {
+                setTrue();
+                Future.delayed(Duration(seconds: 2), () {
+                  setState(() {
+                    _isLoading = false;
 
-                  /// ADD HERE
-                  int index = userReservation.indexWhere((user) =>
-                      user['booking_id'] == (myFunc.active_booking_id));
-                  userReservation[index]['time'] = myFunc.reservedTime;
-                  userReservation[index]['quantity'] = selectedSeatCount;
-                  userReservation[index]['seat_number'] = [5, 6];
-                  userReservation[index]['price'] = price;
-                  _filipay.put(
-                      'tbl_seat_reservation', myFunc.tbl_seat_reservation);
+                    /// ADD HERE
+                    int index = userReservation.indexWhere((user) =>
+                        user['booking_id'] == (myFunc.active_booking_id));
+                    userReservation[index]['time'] = myFunc.reservedTime;
+                    userReservation[index]['quantity'] = selectedSeatCount;
+                    userReservation[index]['seat_number'] = selectedSeats;
+                    userReservation[index]['price'] = price;
+                    _filipay.put(
+                        'tbl_seat_reservation', myFunc.tbl_seat_reservation);
 
-                  ///
-                  myComponents.bookSuccessful(
-                      context,
-                      "Alabang Starmall-Naga, Camarines Sur",
-                      "Friday 05/07/2021 11:30 pm",
-                      price);
-                  myFunc.active_booking_id = 0;
+                    ///
+                    myComponents.bookSuccessful(
+                        context,
+                        "Alabang Starmall-Naga, Camarines Sur",
+                        "Friday 05/07/2021 11:30 pm",
+                        price);
+                    myFunc.active_booking_id = -1;
+                    myFunc.reservedTime = "N/A";
+                    myFunc.dateSelected = "N/A";
+                    myFunc.headerDateSelected = "N/A";
+                  });
                 });
               });
-            });
+            }
           },
           () {
             Navigator.pop(context);

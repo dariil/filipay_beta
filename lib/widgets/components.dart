@@ -579,22 +579,10 @@ class pageComponents {
       builder: (BuildContext context) {
         return AlertDialog(
           content: Container(
-            height: MediaQuery.of(context).size.height * 0.25,
+            height: MediaQuery.of(context).size.height * 0.30,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Align(
-                  alignment: Alignment.topRight,
-                  child: GestureDetector(
-                    onTap: () {
-                      Navigator.pop(context);
-                    },
-                    child: Icon(
-                      Icons.cancel_sharp,
-                      color: Color.fromRGBO(24, 69, 125, 1.0),
-                    ),
-                  ),
-                ),
                 Text(
                   alertTitle,
                   style: TextStyle(
@@ -851,7 +839,7 @@ class pageComponents {
       builder: (BuildContext context) {
         return AlertDialog(
           content: Container(
-            height: MediaQuery.of(context).size.height * 0.25,
+            height: MediaQuery.of(context).size.height * 0.30,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -893,22 +881,10 @@ class pageComponents {
       builder: (BuildContext context) {
         return AlertDialog(
           content: Container(
-            height: MediaQuery.of(context).size.height * 0.25,
+            height: MediaQuery.of(context).size.height * 0.30,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Align(
-                  alignment: Alignment.topRight,
-                  child: GestureDetector(
-                    onTap: () {
-                      Navigator.pop(context);
-                    },
-                    child: Icon(
-                      Icons.cancel_sharp,
-                      color: Color.fromRGBO(24, 69, 125, 1.0),
-                    ),
-                  ),
-                ),
                 SizedBox(
                   height: 10.0,
                 ),
@@ -946,14 +922,17 @@ class pageComponents {
                         ),
                       ),
                     ),
-                    TextButton(
-                      onPressed: onOkPressed,
-                      child: Text(
-                        "CONTINUE",
-                        style: TextStyle(
-                          color: Color.fromRGBO(24, 69, 125, 1.0),
-                          fontSize: 16.0,
-                          fontWeight: FontWeight.w700,
+                    FittedBox(
+                      fit: BoxFit.scaleDown,
+                      child: TextButton(
+                        onPressed: onOkPressed,
+                        child: Text(
+                          "CONTINUE",
+                          style: TextStyle(
+                            color: Color.fromRGBO(24, 69, 125, 1.0),
+                            fontSize: 16.0,
+                            fontWeight: FontWeight.w700,
+                          ),
                         ),
                       ),
                     )
@@ -974,22 +953,10 @@ class pageComponents {
       builder: (BuildContext context) {
         return AlertDialog(
           content: Container(
-            height: MediaQuery.of(context).size.height * 0.25,
+            height: MediaQuery.of(context).size.height * 0.30,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Align(
-                  alignment: Alignment.topRight,
-                  child: GestureDetector(
-                    onTap: () {
-                      Navigator.pop(context);
-                    },
-                    child: Icon(
-                      Icons.cancel_sharp,
-                      color: Color.fromRGBO(24, 69, 125, 1.0),
-                    ),
-                  ),
-                ),
                 Text(
                   "Booking Successful!",
                   style: TextStyle(
