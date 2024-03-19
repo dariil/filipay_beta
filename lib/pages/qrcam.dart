@@ -7,6 +7,7 @@ import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'mainPage.dart';
 import '../widgets/components.dart';
 import '../functions/functions.dart';
+import 'qrPay.dart';
 
 class QRCam extends StatefulWidget {
   const QRCam({Key? key}) : super(key: key);
@@ -215,7 +216,7 @@ class _QRCamState extends State<QRCam> {
         if (result != null) {
           Navigator.of(context).pushReplacement(
             MaterialPageRoute(
-              builder: (context) => MainPage(),
+              builder: (context) => qrPay(),
             ),
           );
         }

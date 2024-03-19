@@ -3,7 +3,9 @@ import 'package:hive_flutter/hive_flutter.dart';
 class pageFunctions {
   final _filipay = Hive.box("filipay");
   void initState() {
+    // ignore: unused_local_variable
     final userList = _filipay.get('tbl_users');
+    // ignore: unused_local_variable
     final userProfileList = _filipay.get('tbl_user_profile');
   }
 
