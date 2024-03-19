@@ -37,30 +37,24 @@ class _SeatReservationState extends State<SeatReservation> {
     double seatWidth = 25.0;
     double seatHeight = 25.0;
 
-    for (int i = 0; i < count; i++) {
-      bool isSeatAvailable(int seatNumber, String currentDate) {
-        // Check if seat is available for the given date
-        bool isAvailable = true;
-        for (var reservation in userReservation) {
-          if (reservation['time'] == currentDate &&
-              reservation['seat_number'].contains(seatNumber)) {
-            isAvailable = false;
-            break;
-          }
+    bool isSeatAvailable(int seatNumber, String currentDate) {
+      bool isAvailable = true;
+      // Check if seat is booked for the given date
+      for (var booking in userBookings) {
+        if (booking['date'] == currentDate &&
+            userReservation[booking['seat_reservation_id']]['time'] ==
+                myFunc.reservedTime &&
+            booking['seat_reservation_id'] != null &&
+            userReservation[booking['seat_reservation_id']]['seat_number']
+                .contains(seatNumber)) {
+          isAvailable = false;
+          break;
         }
-        // Check if seat is booked for the given date
-        for (var booking in userBookings) {
-          if (booking['date'] == currentDate &&
-              booking['seat_reservation_id'] != null &&
-              userReservation[booking['seat_reservation_id']]['seat_number']
-                  .contains(seatNumber)) {
-            isAvailable = false;
-            break;
-          }
-        }
-        return isAvailable;
       }
+      return isAvailable;
+    }
 
+    for (int i = 0; i < count; i++) {
       String currentDate =
           myFunc.dateSelected; // Change this to the selected date
       bool isAvailable = isSeatAvailable(seatNumber, currentDate);
@@ -345,6 +339,7 @@ class _SeatReservationState extends State<SeatReservation> {
                             setState(() {
                               myFunc.reservedTime = "$formattedTime";
                               print(myFunc.reservedTime);
+                              generateSeats(47);
                             });
                           },
                         ),
