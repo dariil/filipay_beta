@@ -56,13 +56,6 @@ class pageFunctions {
     _reservedTime = value;
   }
 
-  static List<Map<dynamic, dynamic>> _tbl_users = [];
-  List<Map<dynamic, dynamic>> get tbl_users => _tbl_users;
-
-  set tbl_users(List<Map<dynamic, dynamic>> value) {
-    _tbl_users = value;
-  }
-
   static int? _user_id;
   int get user_id => _user_id!;
 
@@ -70,11 +63,25 @@ class pageFunctions {
     _user_id = value;
   }
 
+  static List<Map<dynamic, dynamic>> _tbl_users = [];
+  List<Map<dynamic, dynamic>> get tbl_users => _tbl_users;
+
+  set tbl_users(List<Map<dynamic, dynamic>> value) {
+    _tbl_users = value;
+  }
+
   static List<Map<dynamic, dynamic>> _tbl_user_profile = [];
   List<Map<dynamic, dynamic>> get tbl_user_profile => _tbl_user_profile;
 
   set tbl_user_profile(List<Map<dynamic, dynamic>> value) {
     _tbl_user_profile = value;
+  }
+
+  static List<Map<dynamic, dynamic>> _tbl_recent_login = [];
+  List<Map<dynamic, dynamic>> get tbl_recent_login => _tbl_recent_login;
+
+  set tbl_recent_login(List<Map<dynamic, dynamic>> value) {
+    _tbl_recent_login = value;
   }
 
   static int? _user_profile_id;

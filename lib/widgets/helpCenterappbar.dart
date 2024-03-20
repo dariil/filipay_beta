@@ -1,8 +1,6 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'package:flutter/material.dart';
-import 'package:filipay_beta/pages/helpCenterPage.dart';
-import 'package:filipay_beta/pages/mainPage.dart';
 
 class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;

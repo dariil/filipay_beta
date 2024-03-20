@@ -177,7 +177,7 @@ class _SeatReservationState extends State<SeatReservation> {
   }
 
   void loadingConnect() {
-    final userBookings = _filipay.get('tbl_bookings');
+    // final userBookings = _filipay.get('tbl_bookings');
     final userReservation = _filipay.get('tbl_seat_reservation');
     setTrue();
     Future.delayed(Duration(seconds: 1), () {

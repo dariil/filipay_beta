@@ -17,6 +17,35 @@ class _qrPayState extends State<qrPay> {
   TextEditingController _controller = TextEditingController();
   pageFunctions myFunc = pageFunctions();
   pageComponents myComponents = pageComponents();
+  bool isLoading = false;
+
+  void confirmPayment() {
+    myComponents.bookConfirmation(
+      context,
+      () {
+        setState(() {
+          setTrue();
+        });
+        Navigator.pop(context);
+        Future.delayed(Duration(seconds: 3), () {
+          setState(() {
+            isLoading = false;
+          });
+          myComponents.paymentSuccessful(context);
+        });
+      },
+      () {
+        Navigator.pop(context);
+      },
+      "Confirm Payment Amount",
+      "Are you sure you want to confirm this payment?",
+    );
+  }
+
+  void setTrue() {
+    isLoading = true;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -75,9 +104,7 @@ class _qrPayState extends State<qrPay> {
               onPressed: () {
                 _focusNode.unfocus();
                 if (_formKey.currentState!.validate()) {
-                  // setTrue();
-                  // loadingConnect();
-                  // loadAmount = double.parse(_controller.text);
+                  confirmPayment();
                 }
               },
               text: 'CONFIRM',
@@ -85,6 +112,12 @@ class _qrPayState extends State<qrPay> {
               padding: EdgeInsets.symmetric(horizontal: 40.0, vertical: 20.0),
               BorderRadius: BorderRadius.circular(15.0),
             ),
+          ),
+          Center(
+            child: isLoading
+                ? myComponents.simulateLoading(
+                    context: context, loadText: "Please wait...")
+                : Text(''),
           ),
         ]),
       ),

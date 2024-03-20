@@ -46,6 +46,17 @@ class _LoginPageState extends State<LoginPage> {
     return false;
   }
 
+  bool checkRecentLogs() {
+    final recentUser = _filipay.get('tbl_recent_login');
+    if (recentUser == null || (recentUser as List).isEmpty) {
+      print("Empty");
+      return false;
+    } else {
+      print("Not Empty");
+      return true;
+    }
+  }
+
   Future<void> login() async {
     bool success = await _loginUser(emailController.text, passController.text);
     if (success) {
@@ -245,31 +256,31 @@ class _LoginPageState extends State<LoginPage> {
                               ),
                               SizedBox(
                                 width: MediaQuery.of(context).size.width * 0.8,
-                                child: Stack(
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    Align(
-                                      alignment: Alignment.center,
-                                      child: Padding(
-                                        padding: EdgeInsets.only(top: 5.2),
-                                        child: Divider(
-                                          color: Colors.black,
-                                          thickness: 1.0,
-                                        ),
+                                    Expanded(
+                                      child: Divider(
+                                        color: Colors.black,
+                                        thickness: 1.0,
                                       ),
                                     ),
-                                    Align(
-                                      alignment: Alignment.center,
-                                      child: Container(
-                                        width: 50.0,
-                                        decoration: BoxDecoration(
-                                          color: Colors.white,
-                                        ),
-                                        child: Text("OR",
-                                            textAlign: TextAlign.center,
-                                            style: TextStyle(
-                                              fontWeight: FontWeight.w200,
-                                              fontSize: 18.0,
-                                            )),
+                                    Container(
+                                      width: 50.0,
+                                      decoration: BoxDecoration(
+                                        color: Colors.transparent,
+                                      ),
+                                      child: Text("OR",
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.w200,
+                                            fontSize: 18.0,
+                                          )),
+                                    ),
+                                    Expanded(
+                                      child: Divider(
+                                        color: Colors.black,
+                                        thickness: 1.0,
                                       ),
                                     ),
                                   ],
@@ -277,6 +288,21 @@ class _LoginPageState extends State<LoginPage> {
                               ),
                             ],
                           )),
+                    ),
+                    Container(
+                      margin: EdgeInsets.symmetric(vertical: 10.0),
+                      child: checkRecentLogs()
+                          ? GestureDetector(
+                              onTap: () {
+                                checkRecentLogs();
+                              },
+                              child: Image(
+                                width: 45.0,
+                                height: 45.0,
+                                image: AssetImage(
+                                    "assets/general/fingerprint.png"),
+                              ))
+                          : Text(''),
                     ),
                     Padding(
                       padding:

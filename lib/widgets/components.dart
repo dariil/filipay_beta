@@ -1,3 +1,4 @@
+import 'package:filipay_beta/pages/mainPage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -116,7 +117,7 @@ class pageComponents {
         backgroundColor: buttonColor,
       ),
       onPressed: () {
-        _getAllBookingInfo();
+        _getAllData();
       },
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -896,6 +897,7 @@ class pageComponents {
                     fontWeight: FontWeight.w900,
                     color: Color(0xffef8b06),
                   ),
+                  textAlign: TextAlign.center,
                 ),
                 SizedBox(
                   height: 10.0,
@@ -1067,6 +1069,120 @@ class pageComponents {
     );
   }
 
+  void paymentSuccessful(BuildContext context) {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+              content: Container(
+            height: MediaQuery.of(context).size.height * 0.65,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Text(
+                  "Payment Successful!",
+                  style: TextStyle(
+                    fontSize: 30.0,
+                    fontWeight: FontWeight.w700,
+                    color: Color(0xff003366),
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                SizedBox(
+                  height: 50.0,
+                ),
+                Text(
+                  "Total Amount",
+                  style: TextStyle(
+                    fontSize: 16.0,
+                    fontWeight: FontWeight.w400,
+                    color: Colors.black,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                Text(
+                  "₱${50.0}",
+                  style: TextStyle(
+                    fontSize: 28.0,
+                    fontWeight: FontWeight.w900,
+                    color: Colors.black,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                SizedBox(
+                  height: 10.0,
+                ),
+                Text(
+                  "Amount: ₱${50.0}",
+                  style: TextStyle(
+                    fontSize: 14.0,
+                    fontWeight: FontWeight.w400,
+                    color: Colors.black,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                Text(
+                  "Discount: ₱${0.0}",
+                  style: TextStyle(
+                    fontSize: 14.0,
+                    fontWeight: FontWeight.w400,
+                    color: Colors.black,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                SizedBox(
+                  height: 30.0,
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                  child: Divider(
+                    thickness: 2.0,
+                  ),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text("Reference ID:"),
+                    Container(
+                        width: 120.0,
+                        child: Text(
+                          "19036766422024",
+                          overflow: TextOverflow.ellipsis,
+                        )),
+                  ],
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text("Pay Time:"),
+                    Container(
+                        width: 120.0,
+                        child: Text(
+                          "March 19, 2024 | 2:10 PM",
+                          overflow: TextOverflow.ellipsis,
+                        )),
+                  ],
+                ),
+                SizedBox(height: 50.0),
+                mainButtons.mainButton(
+                    context: context,
+                    onPressed: () {
+                      Navigator.pop(context);
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => MainPage()),
+                      );
+                    },
+                    text: "THANK YOU!",
+                    BackgroundColor: Color(0xff29328f),
+                    padding: EdgeInsets.symmetric(horizontal: 10.0),
+                    BorderRadius: BorderRadius.circular(8.0)),
+              ],
+            ),
+          ));
+        });
+  }
+
   void generateQR(BuildContext context) {
     showDialog(
       context: context,
@@ -1137,90 +1253,21 @@ class pageComponents {
   }
 
   void logout(BuildContext context) {
-    final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-
-    showDialog(
+    ArtSweetAlert.show(
       context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          content: IntrinsicHeight(
-            child: SizedBox(
-              width: MediaQuery.of(context).size.width * 1,
-              // height: 500,
-              child: Form(
-                key: _formKey,
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(
-                    vertical: 8.0,
-                    horizontal: 8.0,
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      Image(
-                        image: AssetImage('assets/general/filipay-logo.png'),
-                        width: 150,
-                      ),
-                      Text("Enter password to logout",
-                          style: TextStyle(
-                            fontSize: 14.0,
-                          )),
-                      SizedBox(
-                        width: double.infinity,
-                        child: logoutFormField(),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 10.0),
-                        child: ElevatedButton(
-                          onPressed: () {
-                            // Perform login action
-                            if (_formKey.currentState!.validate()) {
-                              ArtSweetAlert.show(
-                                context: context,
-                                artDialogArgs: ArtDialogArgs(
-                                  showCancelBtn: true,
-                                  type: ArtSweetAlertType.info,
-                                  confirmButtonText: "Logout",
-                                  title: "Confirm Logout",
-                                  text: "Are you sure you want to logout?",
-                                  onConfirm: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => LoginPage()),
-                                    );
-                                  },
-                                ),
-                              );
-                            }
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Color.fromRGBO(135, 189, 230, 1.0),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10.0),
-                            ),
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 5.0, vertical: 15.0),
-                            elevation: 5,
-                            textStyle: const TextStyle(
-                              fontSize: 16.0,
-                            ),
-                          ),
-                          child: const Text(
-                            'VERIFY',
-                            style: TextStyle(color: Colors.white),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-          ),
-        );
-      },
+      artDialogArgs: ArtDialogArgs(
+        showCancelBtn: true,
+        type: ArtSweetAlertType.info,
+        confirmButtonText: "Logout",
+        title: "Confirm Logout",
+        text: "Are you sure you want to logout?",
+        onConfirm: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => LoginPage()),
+          );
+        },
+      ),
     );
   }
 }

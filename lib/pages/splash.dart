@@ -78,6 +78,16 @@ class _SplashState extends State<Splash> with SingleTickerProviderStateMixin {
           List<Map<dynamic, dynamic>>.from(userProfileList);
     }
 
+    if (!_filipay.containsKey('tbl_recent_login')) {
+      // myFunc.tbl_recent_login.add({
+      //   "recent_user_id": 0,
+      // });
+      _filipay.put('tbl_recent_login', myFunc.tbl_recent_login);
+    } else {
+      final recentUser = _filipay.get('tbl_recent_login');
+      myFunc.tbl_recent_login = List<Map<dynamic, dynamic>>.from(recentUser);
+    }
+
     if (!_filipay.containsKey('tbl_bookings')) {
       // myFunc.tbl_bookings.add({
       //   "booking_id": 0,

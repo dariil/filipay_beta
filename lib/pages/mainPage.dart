@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
+import 'package:hive_flutter/adapters.dart';
 import '../widgets/components.dart';
 import 'drawer.dart';
 import 'qrcam.dart';
@@ -17,8 +18,11 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
-  pageFunctions sample = pageFunctions();
+  final _filipay = Hive.box("filipay");
+  pageFunctions myFunc = pageFunctions();
+
   bool isPayAhead = true;
+  bool _alertDialogShown = false;
   String? fff;
   double balance = 55350.00;
 
@@ -39,6 +43,25 @@ class _MainPageState extends State<MainPage> {
       //   context,
       //   MaterialPageRoute(builder: (context) => EnterAmountPage()),
       // );
+    });
+  }
+
+  bool checkRecentLogs() {
+    final recentUser = _filipay.get('tbl_recent_login');
+    if (recentUser == null || (recentUser as List).isEmpty) {
+      print("Empty");
+      return true;
+    } else {
+      print("Not Empty");
+      return false;
+    }
+  }
+
+  void enableBiometrics() {
+    _filipay.put('tbl_recent_login', myFunc.tbl_recent_login);
+    final recentUser = _filipay.get('tbl_recent_login');
+    recentUser.add({
+      "recent_user_id": myFunc.current_user_id,
     });
   }
 
@@ -91,7 +114,7 @@ class _MainPageState extends State<MainPage> {
               ),
               GestureDetector(
                 onTap: () {
-                  sample.transportMode = 'QR Reader';
+                  myFunc.transportMode = 'QR Reader';
                   Navigator.of(context).push(
                     MaterialPageRoute(
                       builder: (context) => QRCam(),
@@ -380,6 +403,87 @@ class _MainPageState extends State<MainPage> {
             ],
           ),
         ),
+        checkRecentLogs()
+            ? FutureBuilder(
+                future: Future.delayed(Duration(seconds: 2)),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return SizedBox(); // Show a loading indicator while waiting
+                  } else {
+                    // Your logic here
+                    print('Do something after 2 seconds');
+                    if (!_alertDialogShown) {
+                      _alertDialogShown =
+                          true; // Set flag to true to indicate AlertDialog shown
+                      WidgetsBinding.instance.addPostFrameCallback((_) {
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              content: Container(
+                                height:
+                                    MediaQuery.of(context).size.height * 0.28,
+                                child: Column(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    Text(
+                                      "Enable biometrics authentication?",
+                                      textAlign: TextAlign.left,
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.w700,
+                                        fontSize: 18,
+                                      ),
+                                    ),
+                                    Text(
+                                      "Use your biometric to sign and confirm payments. You can always set it up later in Settings.",
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.w400,
+                                        fontSize: 16,
+                                      ),
+                                      textAlign: TextAlign.left,
+                                    ),
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.end,
+                                      children: [
+                                        TextButton(
+                                            onPressed: () {
+                                              Navigator.pop(context);
+                                            },
+                                            child: Text(
+                                              "Not now",
+                                              style: TextStyle(
+                                                fontSize: 15.0,
+                                              ),
+                                            )),
+                                        TextButton(
+                                            onPressed: () {
+                                              enableBiometrics();
+                                              Navigator.pop(context);
+                                            },
+                                            child: Text(
+                                              "Enable",
+                                              style: TextStyle(
+                                                color: Colors.blue,
+                                                fontSize: 15.0,
+                                                fontWeight: FontWeight.w700,
+                                              ),
+                                            )),
+                                      ],
+                                    )
+                                  ],
+                                ),
+                              ),
+                            );
+                          },
+                        );
+                      });
+                    }
+                    return SizedBox(); // Placeholder widget after showing AlertDialog
+                  }
+                },
+              )
+            : SizedBox(),
       ]),
     );
   }

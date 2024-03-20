@@ -4,7 +4,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
-import 'mainPage.dart';
 import '../widgets/components.dart';
 import '../functions/functions.dart';
 import 'qrPay.dart';
@@ -238,3 +237,9 @@ class _QRCamState extends State<QRCam> {
     super.dispose();
   }
 }
+
+// void main() {
+//   runApp(MaterialApp(
+//     home: qrPay(),
+//   ));
+// }
