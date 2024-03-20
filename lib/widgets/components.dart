@@ -1253,6 +1253,8 @@ class pageComponents {
   }
 
   void logout(BuildContext context) {
+    _filipay.put('tbl_recent_login', pageFunc.tbl_recent_login);
+    final recentUser = _filipay.get('tbl_recent_login');
     ArtSweetAlert.show(
       context: context,
       artDialogArgs: ArtDialogArgs(
@@ -1262,6 +1264,8 @@ class pageComponents {
         title: "Confirm Logout",
         text: "Are you sure you want to logout?",
         onConfirm: () {
+          recentUser.removeWhere(
+              (user) => user['recent_user_id'] == pageFunc.current_user_id);
           Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => LoginPage()),
