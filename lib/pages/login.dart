@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:hive_flutter/adapters.dart';
 import '../widgets/components.dart';
 import 'signup.dart';
 import '../functions/functions.dart';
 import 'pin.dart';
+import 'package:local_auth/local_auth.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -14,6 +16,19 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  late final LocalAuthentication auth = LocalAuthentication();
+  // bool _supportState = false;
+
+  // void initState() {
+  //   super.initState();
+  //   auth = LocalAuthentication();
+  //   auth.isDeviceSupported().then(
+  //         (bool isSupprted) => setState(() {
+  //           _supportState = isSupprted;
+  //         }),
+  //       );
+  // }
+
   TextEditingController emailController = TextEditingController();
   TextEditingController passController = TextEditingController();
   bool _obscureText = true;
@@ -84,6 +99,36 @@ class _LoginPageState extends State<LoginPage> {
           });
         });
       });
+    }
+  }
+
+  Future<void> _authenticate() async {
+    final recentUser = _filipay.get('tbl_recent_login');
+    try {
+      bool authenticated = await auth.authenticate(
+          localizedReason: "Scan fingerprint to log in.",
+          options: const AuthenticationOptions(
+            stickyAuth: true,
+            biometricOnly: true,
+          ));
+      print("Authenticated: $authenticated");
+      setState(() {
+        _isLoading = true;
+      });
+      Future.delayed(Duration(seconds: 2), () {
+        setState(() {
+          _isLoading = false;
+          myFunc.loginPin = true;
+          myFunc.current_user_id = recentUser[0]['recent_user_id'];
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => CreatePin()),
+          );
+        });
+      });
+      // CreatePin();
+    } on PlatformException catch (e) {
+      print(e);
     }
   }
 
@@ -235,10 +280,6 @@ class _LoginPageState extends State<LoginPage> {
                                       onPressed: () {
                                         if (_formKey.currentState!.validate()) {
                                           login();
-                                          // _loginUser(emailController.text,
-                                          //     passController.text) ;
-                                          // if (_loginUser(emailController.text,
-                                          //     passController)) {}
                                         }
                                       },
                                       text: 'LOGIN',
@@ -295,6 +336,7 @@ class _LoginPageState extends State<LoginPage> {
                           ? GestureDetector(
                               onTap: () {
                                 checkRecentLogs();
+                                _authenticate();
                               },
                               child: Image(
                                 width: 45.0,

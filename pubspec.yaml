@@ -11,6 +11,9 @@ dependencies:
   cupertino_icons: ^1.0.2
   flutter:
     sdk: flutter
+  flutter_local_authentication: ^1.2.0
+  local_auth: ^2.2.0
+  gradient_borders: ^1.0.0
   hive_flutter: ^1.1.0
   image_picker: ^1.0.7
   intl: ^0.19.0
@@ -20,7 +23,6 @@ dependencies:
   slider_button: ^2.1.0
   text_divider: ^1.0.0
   time_range: ^1.1.0
-  gradient_borders: ^1.0.0
 
 # flutter_launcher_icons:
 #   android: "launcher_icon"
