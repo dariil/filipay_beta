@@ -47,13 +47,20 @@ class _LoginPageState extends State<LoginPage> {
   final _filipay = Hive.box("filipay");
 
   Future<bool> _loginUser(String email, String password) async {
+    _filipay.put('tbl_recent_login', myFunc.tbl_recent_login);
     final userList = _filipay.get('tbl_users');
-
+    final recentUser = _filipay.get('tbl_recent_login');
     for (var user in userList) {
       if (user['user_email'] == email && user['user_pass'] == password) {
         print('Login successful for ${user['user_email']}');
         int index = userList.indexWhere((user) => user['user_email'] == email);
         myFunc.current_user_id = userList[index]['user_id'];
+        if (recentUser != null || (recentUser as List).isNotEmpty) {
+          if (myFunc.current_user_id != recentUser[0]['recent_user_id']) {
+            recentUser.clear();
+          }
+        }
+
         return true;
       }
     }
@@ -126,7 +133,6 @@ class _LoginPageState extends State<LoginPage> {
           );
         });
       });
-      // CreatePin();
     } on PlatformException catch (e) {
       print(e);
     }

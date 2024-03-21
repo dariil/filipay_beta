@@ -29,9 +29,11 @@ class _RegisterPageState extends State<RegisterPage> {
   Future<void> _initializedData() async {
     _filipay.put('tbl_users', myFunc.tbl_users);
     _filipay.put('tbl_user_profile', myFunc.tbl_user_profile);
+    _filipay.put('tbl_recent_login', myFunc.tbl_recent_login);
 
     final userList = _filipay.get('tbl_users');
     final userProfileList = _filipay.get('tbl_user_profile');
+    final recentUser = _filipay.get('tbl_recent_login');
 
     myFunc.user_id = myFunc.tbl_users.length;
     myFunc.current_user_id = myFunc.user_id;
@@ -58,10 +60,10 @@ class _RegisterPageState extends State<RegisterPage> {
       "cash_limits": 0.0,
     });
 
-    print(userList[0]['user_email']);
-    print("TESTING!");
+    recentUser.clear();
     _filipay.put('tbl_users', myFunc.tbl_users);
     _filipay.put('tbl_user_profile', myFunc.tbl_user_profile);
+    _filipay.put('tbl_recent_login', myFunc.tbl_recent_login);
   }
 
   void _togglePassword() {
