@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import '../functions/functions.dart';
+import '../functions/myEncryption.dart';
 
 class Splash extends StatefulWidget {
   const Splash({super.key});
@@ -13,6 +14,7 @@ class Splash extends StatefulWidget {
 
 class _SplashState extends State<Splash> with SingleTickerProviderStateMixin {
   pageFunctions myFunc = pageFunctions();
+  MyEncryptionDecryption encrpytionMethod = MyEncryptionDecryption();
   final _filipay = Hive.box("filipay");
   late AnimationController _controller;
   late Animation<double> _animation;
@@ -46,13 +48,22 @@ class _SplashState extends State<Splash> with SingleTickerProviderStateMixin {
 
   Future<void> _initializedData() async {
     if (!_filipay.containsKey('tbl_users')) {
+      var ecryptedPin = MyEncryptionDecryption.encryptAES('8888').toString();
+      var decryptedPin = MyEncryptionDecryption.decryptAES(ecryptedPin).toString();
+      var ecryptedPassword = MyEncryptionDecryption.encryptAES('user').toString();
+      var decryptedPassword = MyEncryptionDecryption.decryptAES(ecryptedPassword).toString();
       myFunc.tbl_users.add({
         "user_id": 0,
         "user_email": "testmail@email.com",
-        "user_pass": "user",
-        "user_pin": 8888,
+        "user_pass": ecryptedPassword,
+        "user_pin": ecryptedPin,
       });
       _filipay.put('tbl_users', myFunc.tbl_users);
+      final userList = _filipay.get('tbl_users');
+      print("Encrypted Password: ${userList[0]['user_pass']}");
+      print('Decrypted Password: $decryptedPassword');
+      print("Encrypted PIN: ${userList[0]['user_pin']}");
+      print('Decrypted PIN: $decryptedPin');
     } else {
       final userList = _filipay.get('tbl_users');
       myFunc.tbl_users = List<Map<dynamic, dynamic>>.from(userList);
@@ -74,8 +85,7 @@ class _SplashState extends State<Splash> with SingleTickerProviderStateMixin {
       _filipay.put('tbl_user_profile', myFunc.tbl_user_profile);
     } else {
       final userProfileList = _filipay.get('tbl_user_profile');
-      myFunc.tbl_user_profile =
-          List<Map<dynamic, dynamic>>.from(userProfileList);
+      myFunc.tbl_user_profile = List<Map<dynamic, dynamic>>.from(userProfileList);
     }
 
     if (!_filipay.containsKey('tbl_recent_login')) {
@@ -133,15 +143,13 @@ class _SplashState extends State<Splash> with SingleTickerProviderStateMixin {
       _filipay.put('tbl_seat_reservation', myFunc.tbl_seat_reservation);
     } else {
       final userReservation = _filipay.get('tbl_seat_reservation');
-      myFunc.tbl_seat_reservation =
-          List<Map<dynamic, dynamic>>.from(userReservation);
+      myFunc.tbl_seat_reservation = List<Map<dynamic, dynamic>>.from(userReservation);
     }
   }
 
   @override
   void dispose() {
-    SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
-        overlays: SystemUiOverlay.values);
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: SystemUiOverlay.values);
     _controller.dispose();
     super.dispose();
   }

@@ -4,6 +4,7 @@ import '../widgets/components.dart';
 import '../functions/functions.dart';
 import 'login.dart';
 import 'pin.dart';
+import '../functions/myEncryption.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
@@ -37,11 +38,12 @@ class _RegisterPageState extends State<RegisterPage> {
 
     myFunc.user_id = myFunc.tbl_users.length;
     myFunc.current_user_id = myFunc.user_id;
+    var ecryptedPassword = MyEncryptionDecryption.encryptAES(passController.text).toString();
 
     userList.add({
       "user_id": myFunc.user_id,
       "user_email": emailControler.text,
-      "user_pass": passController.text,
+      "user_pass": ecryptedPassword,
       "user_pin": 0000,
     });
 
@@ -92,8 +94,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
                       Image(
-                        image: AssetImage(
-                            "assets/general/filipay-logo-w-name.png"),
+                        image: AssetImage("assets/general/filipay-logo-w-name.png"),
                         width: 115,
                         height: 115,
                       ),
@@ -130,8 +131,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                       ),
                                     ),
                                     TextFormFieldsWidget(
-                                      thisTextInputType:
-                                          TextInputType.emailAddress,
+                                      thisTextInputType: TextInputType.emailAddress,
                                       emailController: emailControler,
                                     ),
                                     Text(
@@ -143,11 +143,9 @@ class _RegisterPageState extends State<RegisterPage> {
                                     SizedBox(
                                       width: double.infinity,
                                       child: PasswordFormFieldWidget(
-                                        thisTextInputType:
-                                            TextInputType.visiblePassword,
+                                        thisTextInputType: TextInputType.visiblePassword,
                                         controller: passController,
-                                        confirmPasswordController:
-                                            confirmPassController,
+                                        confirmPasswordController: confirmPassController,
                                       ),
                                     ),
                                     Text(
@@ -159,11 +157,9 @@ class _RegisterPageState extends State<RegisterPage> {
                                     SizedBox(
                                       width: double.infinity,
                                       child: PasswordFormFieldWidget(
-                                        thisTextInputType:
-                                            TextInputType.visiblePassword,
+                                        thisTextInputType: TextInputType.visiblePassword,
                                         controller: confirmPassController,
-                                        confirmPasswordController:
-                                            passController,
+                                        confirmPasswordController: passController,
                                       ),
                                     ),
                                   ],
@@ -174,8 +170,7 @@ class _RegisterPageState extends State<RegisterPage> {
                               ),
                               Center(
                                 child: Padding(
-                                  padding: EdgeInsets.symmetric(
-                                      horizontal: 20.0, vertical: 8.0),
+                                  padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 8.0),
                                   child: SizedBox(
                                     height: 50,
                                     width: double.infinity,
@@ -186,20 +181,15 @@ class _RegisterPageState extends State<RegisterPage> {
                                           _initializedData();
                                           Navigator.push(
                                             context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    CreatePin()),
+                                            MaterialPageRoute(builder: (context) => CreatePin()),
                                           );
                                         }
 
-                                        if (passController.text !=
-                                            confirmPassController.text) {}
+                                        if (passController.text != confirmPassController.text) {}
                                       },
                                       text: 'SIGN UP',
-                                      BackgroundColor:
-                                          Color.fromRGBO(47, 50, 145, 1.0),
-                                      padding: EdgeInsets.symmetric(
-                                          horizontal: 16.0, vertical: 8.0),
+                                      BackgroundColor: Color.fromRGBO(47, 50, 145, 1.0),
+                                      padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
                                       BorderRadius: BorderRadius.circular(10.0),
                                     ),
                                   ),
@@ -292,8 +282,7 @@ class PasswordFormFieldWidget extends StatefulWidget {
   final TextEditingController confirmPasswordController;
 
   @override
-  State<PasswordFormFieldWidget> createState() =>
-      _PasswordFormFieldWidgetState();
+  State<PasswordFormFieldWidget> createState() => _PasswordFormFieldWidgetState();
 }
 
 class _PasswordFormFieldWidgetState extends State<PasswordFormFieldWidget> {
@@ -332,10 +321,7 @@ class _PasswordFormFieldWidgetState extends State<PasswordFormFieldWidget> {
 }
 
 class TextFormFieldsWidget extends StatelessWidget {
-  TextFormFieldsWidget(
-      {super.key,
-      required this.thisTextInputType,
-      required this.emailController});
+  TextFormFieldsWidget({super.key, required this.thisTextInputType, required this.emailController});
   final TextInputType thisTextInputType;
   final TextEditingController emailController;
   @override

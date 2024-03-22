@@ -7,6 +7,7 @@ import '../widgets/components.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 import '../functions/functions.dart';
 import 'accountSetup.dart';
+import '../functions/myEncryption.dart';
 
 class CreatePin extends StatefulWidget {
   const CreatePin({super.key});
@@ -30,11 +31,11 @@ class _CreatePinState extends State<CreatePin> {
   String loginButtonText = "ENTER";
   bool hasError = false;
   bool _isLoading = false;
-  String currentText = "";
-  int? newPin;
-  int? confirmPin;
-  int? pinEnter;
-  int? userPin;
+  var currentText;
+  var newPin;
+  var confirmPin;
+  var pinEnter;
+  var userPin;
 
   final _filipay = Hive.box("filipay");
 
@@ -87,8 +88,7 @@ class _CreatePinState extends State<CreatePin> {
     print("\n\nTHIS IS WORKING\n\n");
     // _filipay.put('tbl_users', pinPage.tbl_users);
     final userList = _filipay.get('tbl_users');
-    int index = userList
-        .indexWhere((user) => user['user_id'] == pinPage.current_user_id);
+    int index = userList.indexWhere((user) => user['user_id'] == pinPage.current_user_id);
     userPin = userList[index]['user_pin'];
   }
 
@@ -100,9 +100,9 @@ class _CreatePinState extends State<CreatePin> {
       final userList = _filipay.get('tbl_users');
       setState(() {
         _isLoading = false;
-        int index = userList
-            .indexWhere((user) => user['user_id'] == pinPage.current_user_id);
-        userList[index]['user_pin'] = confirmPin;
+        int index = userList.indexWhere((user) => user['user_id'] == pinPage.current_user_id);
+        var ecryptedText = MyEncryptionDecryption.encryptAES(confirmPin).toString();
+        userList[index]['user_pin'] = ecryptedText;
         print(pinPage.current_user_id);
         userPin = userList[index]['user_pin'];
         print(userList[index]['user_pin']);
@@ -119,11 +119,11 @@ class _CreatePinState extends State<CreatePin> {
       final userList = _filipay.get('tbl_users');
       setState(() {
         _isLoading = false;
-        int index = userList
-            .indexWhere((user) => user['user_id'] == pinPage.current_user_id);
-        userList[index]['user_pin'] = confirmPin;
+        int index = userList.indexWhere((user) => user['user_id'] == pinPage.current_user_id);
+        var encryptPin = MyEncryptionDecryption.encryptAES(confirmPin).toString();
+        userList[index]['user_pin'] = encryptPin;
         print(pinPage.current_user_id);
-        userPin = userList[index]['user_pin'];
+        userPin = userList[index]['user_pin'].toString();
         Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => AccountSetup()),
@@ -181,8 +181,7 @@ class _CreatePinState extends State<CreatePin> {
       Future.delayed(Duration(seconds: 2), () {
         setState(() {
           _isLoading = false;
-          myComponents.error(context, "PIN Mismatched!",
-              "The current pin mismatched the pin that you have entered before. Please try again.");
+          myComponents.error(context, "PIN Mismatched!", "The current pin mismatched the pin that you have entered before. Please try again.");
         });
       });
     });
@@ -194,8 +193,7 @@ class _CreatePinState extends State<CreatePin> {
       Future.delayed(Duration(seconds: 2), () {
         setState(() {
           _isLoading = false;
-          myComponents.error(context, "Incorrect Pin!",
-              "The pin that you have entered is incorrect. Please try again.");
+          myComponents.error(context, "Incorrect Pin!", "The pin that you have entered is incorrect. Please try again.");
         });
       });
     });
@@ -207,14 +205,13 @@ class _CreatePinState extends State<CreatePin> {
     final userList = _filipay.get('tbl_users');
     final userProfileList = _filipay.get('tbl_user_profile');
 
-    int userProfileListIndex = userProfileList
-        .indexWhere((user) => user['user_id'] == pinPage.current_user_id);
-    int index = userList
-        .indexWhere((user) => user['user_id'] == pinPage.current_user_id);
-    userPin = userList[index]['user_pin'];
+    int userProfileListIndex = userProfileList.indexWhere((user) => user['user_id'] == pinPage.current_user_id);
+    int index = userList.indexWhere((user) => user['user_id'] == pinPage.current_user_id);
+    userPin = userList[index]['user_pin'].toString();
+    var decryptPin = MyEncryptionDecryption.decryptAES(userPin).toString();
     _isLoading = true;
     Future.delayed(Duration(seconds: 2), () {
-      if (pinEnter != userPin) {
+      if (pinEnter.toString() != decryptPin) {
         _isLoading = false;
         setState(() {
           incorrectPin();
@@ -270,14 +267,11 @@ class _CreatePinState extends State<CreatePin> {
         width: MediaQuery.of(context).size.width * 1,
         child: Stack(
           children: [
-            Align(
-                alignment: Alignment.bottomCenter,
-                child: myComponents.background()),
+            Align(alignment: Alignment.bottomCenter, child: myComponents.background()),
             if (pinPage.pinMode)
               Center(
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(
-                      vertical: 0.0, horizontal: 20.0),
+                  padding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 20.0),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -326,19 +320,15 @@ class _CreatePinState extends State<CreatePin> {
                               fontSize: 20.0,
                               fontWeight: FontWeight.bold,
                             ),
-                            inputFormatters: [
-                              FilteringTextInputFormatter.digitsOnly
-                            ],
+                            inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                             pinTheme: PinTheme(
                               shape: PinCodeFieldShape.circle,
                               fieldWidth: 50,
                               inactiveColor: Color.fromRGBO(224, 224, 224, 1.0),
                               selectedColor: Color.fromRGBO(0, 174, 237, 1.0),
                               activeFillColor: Color.fromRGBO(0, 174, 237, 1.0),
-                              selectedFillColor:
-                                  Color.fromRGBO(0, 174, 237, 1.0),
-                              inactiveFillColor:
-                                  Color.fromRGBO(224, 224, 224, 1.0),
+                              selectedFillColor: Color.fromRGBO(0, 174, 237, 1.0),
+                              inactiveFillColor: Color.fromRGBO(224, 224, 224, 1.0),
                               activeColor: Color.fromRGBO(0, 174, 237, 1.0),
                             ),
                             onCompleted: (v) {
@@ -357,8 +347,7 @@ class _CreatePinState extends State<CreatePin> {
                               debugPrint("Allowing to paste $text");
                               return true;
                             },
-                            animationDuration:
-                                const Duration(milliseconds: 300),
+                            animationDuration: const Duration(milliseconds: 300),
                             keyboardType: TextInputType.number,
                           ),
                         ),
@@ -366,9 +355,7 @@ class _CreatePinState extends State<CreatePin> {
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 50.0),
                         child: Text(
-                          hasError
-                              ? "Please fill up all the cells properly"
-                              : "",
+                          hasError ? "Please fill up all the cells properly" : "",
                           style: const TextStyle(
                             color: Colors.red,
                             fontSize: 16,
@@ -386,18 +373,16 @@ class _CreatePinState extends State<CreatePin> {
                             setState(() {
                               hasError = true;
                             });
-                          } else if (currentText.length == 4 &&
-                              buttonText_change == 'CONFIRM') {
+                          } else if (currentText.length == 4 && buttonText_change == 'CONFIRM') {
                             setState(
                               () {
                                 hasError = false;
-                                newPin = int.parse(currentText);
+                                newPin = currentText.toString();
                                 loadingEnterNew();
                               },
                             );
-                          } else if (currentText.length == 4 &&
-                              buttonText_change == 'ENTER') {
-                            confirmPin = int.parse(currentText);
+                          } else if (currentText.length == 4 && buttonText_change == 'ENTER') {
+                            confirmPin = currentText.toString();
                             if (confirmPin != newPin) {
                               pinMismatch();
                             } else {
@@ -413,8 +398,7 @@ class _CreatePinState extends State<CreatePin> {
                         },
                         text: buttonText_change,
                         BackgroundColor: Color.fromRGBO(82, 161, 217, 1.0),
-                        padding: EdgeInsets.symmetric(
-                            horizontal: 130.0, vertical: 20.0),
+                        padding: EdgeInsets.symmetric(horizontal: 130.0, vertical: 20.0),
                         BorderRadius: BorderRadius.circular(8.0),
                       ),
                     ],
@@ -424,8 +408,7 @@ class _CreatePinState extends State<CreatePin> {
             else if (pinPage.loginPin)
               Center(
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(
-                      vertical: 0.0, horizontal: 20.0),
+                  padding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 20.0),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -474,19 +457,15 @@ class _CreatePinState extends State<CreatePin> {
                               fontSize: 20.0,
                               fontWeight: FontWeight.bold,
                             ),
-                            inputFormatters: [
-                              FilteringTextInputFormatter.digitsOnly
-                            ],
+                            inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                             pinTheme: PinTheme(
                               shape: PinCodeFieldShape.circle,
                               fieldWidth: 50,
                               inactiveColor: Color.fromRGBO(224, 224, 224, 1.0),
                               selectedColor: Color.fromRGBO(0, 174, 237, 1.0),
                               activeFillColor: Color.fromRGBO(0, 174, 237, 1.0),
-                              selectedFillColor:
-                                  Color.fromRGBO(0, 174, 237, 1.0),
-                              inactiveFillColor:
-                                  Color.fromRGBO(224, 224, 224, 1.0),
+                              selectedFillColor: Color.fromRGBO(0, 174, 237, 1.0),
+                              inactiveFillColor: Color.fromRGBO(224, 224, 224, 1.0),
                               activeColor: Color.fromRGBO(0, 174, 237, 1.0),
                             ),
                             onCompleted: (v) {
@@ -505,8 +484,7 @@ class _CreatePinState extends State<CreatePin> {
                               debugPrint("Allowing to paste $text");
                               return true;
                             },
-                            animationDuration:
-                                const Duration(milliseconds: 300),
+                            animationDuration: const Duration(milliseconds: 300),
                             keyboardType: TextInputType.number,
                           ),
                         ),
@@ -514,9 +492,7 @@ class _CreatePinState extends State<CreatePin> {
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 50.0),
                         child: Text(
-                          hasError
-                              ? "Please fill up all the cells properly"
-                              : "",
+                          hasError ? "Please fill up all the cells properly" : "",
                           style: const TextStyle(
                             color: Colors.red,
                             fontSize: 16,
@@ -534,12 +510,11 @@ class _CreatePinState extends State<CreatePin> {
                             setState(() {
                               hasError = true;
                             });
-                          } else if (currentText.length == 4 &&
-                              loginButtonText == 'ENTER') {
+                          } else if (currentText.length == 4 && loginButtonText == 'ENTER') {
                             setState(
                               () {
                                 hasError = false;
-                                pinEnter = int.parse(currentText);
+                                pinEnter = currentText.toString();
                                 // loginEnter();
                                 _pinLogin();
                               },
@@ -548,8 +523,7 @@ class _CreatePinState extends State<CreatePin> {
                         },
                         text: loginButtonText,
                         BackgroundColor: Color.fromRGBO(82, 161, 217, 1.0),
-                        padding: EdgeInsets.symmetric(
-                            horizontal: 130.0, vertical: 20.0),
+                        padding: EdgeInsets.symmetric(horizontal: 130.0, vertical: 20.0),
                         BorderRadius: BorderRadius.circular(8.0),
                       ),
                     ],
@@ -559,8 +533,7 @@ class _CreatePinState extends State<CreatePin> {
             else
               Center(
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(
-                      vertical: 0.0, horizontal: 20.0),
+                  padding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 20.0),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -609,19 +582,15 @@ class _CreatePinState extends State<CreatePin> {
                               fontSize: 20.0,
                               fontWeight: FontWeight.bold,
                             ),
-                            inputFormatters: [
-                              FilteringTextInputFormatter.digitsOnly
-                            ],
+                            inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                             pinTheme: PinTheme(
                               shape: PinCodeFieldShape.circle,
                               fieldWidth: 50,
                               inactiveColor: Color.fromRGBO(224, 224, 224, 1.0),
                               selectedColor: Color.fromRGBO(0, 174, 237, 1.0),
                               activeFillColor: Color.fromRGBO(0, 174, 237, 1.0),
-                              selectedFillColor:
-                                  Color.fromRGBO(0, 174, 237, 1.0),
-                              inactiveFillColor:
-                                  Color.fromRGBO(224, 224, 224, 1.0),
+                              selectedFillColor: Color.fromRGBO(0, 174, 237, 1.0),
+                              inactiveFillColor: Color.fromRGBO(224, 224, 224, 1.0),
                               activeColor: Color.fromRGBO(0, 174, 237, 1.0),
                             ),
                             onCompleted: (v) {
@@ -640,8 +609,7 @@ class _CreatePinState extends State<CreatePin> {
                               debugPrint("Allowing to paste $text");
                               return true;
                             },
-                            animationDuration:
-                                const Duration(milliseconds: 300),
+                            animationDuration: const Duration(milliseconds: 300),
                             keyboardType: TextInputType.number,
                           ),
                         ),
@@ -649,9 +617,7 @@ class _CreatePinState extends State<CreatePin> {
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 50.0),
                         child: Text(
-                          hasError
-                              ? "Please fill up all the cells properly"
-                              : "",
+                          hasError ? "Please fill up all the cells properly" : "",
                           style: const TextStyle(
                             color: Colors.red,
                             fontSize: 16,
@@ -669,18 +635,16 @@ class _CreatePinState extends State<CreatePin> {
                             setState(() {
                               hasError = true;
                             });
-                          } else if (currentText.length == 4 &&
-                              buttonText == 'CREATE') {
+                          } else if (currentText.length == 4 && buttonText == 'CREATE') {
                             setState(
                               () {
                                 hasError = false;
                                 loadingCreate();
-                                newPin = int.parse(currentText);
+                                newPin = currentText.toString();
                               },
                             );
-                          } else if (currentText.length == 4 &&
-                              buttonText == 'CONFIRM') {
-                            confirmPin = int.parse(currentText);
+                          } else if (currentText.length == 4 && buttonText == 'CONFIRM') {
+                            confirmPin = currentText.toString();
                             if (confirmPin != newPin) {
                               pinMismatch();
                             } else {
@@ -691,11 +655,12 @@ class _CreatePinState extends State<CreatePin> {
                                 },
                               );
                             }
-                          } else if (currentText.length == 4 &&
-                              buttonText == 'ENTER') {
-                            pinEnter = int.parse(currentText);
+                          } else if (currentText.length == 4 && buttonText == 'ENTER') {
+                            pinEnter = currentText;
+                            var decryptedPin = MyEncryptionDecryption.decryptAES(userPin).toString();
+                            // var pinEnter = MyEncryptionDecryption.decryptAES(currentText).toString();
                             currentUserPin();
-                            if (pinEnter != userPin) {
+                            if (pinEnter.toString() != decryptedPin.toString()) {
                               incorrectPin();
                             } else {
                               setState(
@@ -709,8 +674,7 @@ class _CreatePinState extends State<CreatePin> {
                         },
                         text: buttonText,
                         BackgroundColor: Color.fromRGBO(82, 161, 217, 1.0),
-                        padding: EdgeInsets.symmetric(
-                            horizontal: 130.0, vertical: 20.0),
+                        padding: EdgeInsets.symmetric(horizontal: 130.0, vertical: 20.0),
                         BorderRadius: BorderRadius.circular(8.0),
                       ),
                     ],
@@ -718,10 +682,7 @@ class _CreatePinState extends State<CreatePin> {
                 ),
               ),
             Center(
-              child: _isLoading
-                  ? myComponents.simulateLoading(
-                      context: context, loadText: "Processing")
-                  : Text(''),
+              child: _isLoading ? myComponents.simulateLoading(context: context, loadText: "Processing") : Text(''),
             ),
           ],
         ),

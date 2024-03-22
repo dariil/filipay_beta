@@ -7,6 +7,7 @@ import 'signup.dart';
 import '../functions/functions.dart';
 import 'pin.dart';
 import 'package:local_auth/local_auth.dart';
+import '../functions/myEncryption.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -17,6 +18,7 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   late final LocalAuthentication auth = LocalAuthentication();
+  MyEncryptionDecryption encrpytionMethod = MyEncryptionDecryption();
   // bool _supportState = false;
 
   // void initState() {
@@ -49,18 +51,18 @@ class _LoginPageState extends State<LoginPage> {
   Future<bool> _loginUser(String email, String password) async {
     _filipay.put('tbl_recent_login', myFunc.tbl_recent_login);
     final userList = _filipay.get('tbl_users');
-    final recentUser = _filipay.get('tbl_recent_login');
+    //final recentUser = _filipay.get('tbl_recent_login');
     for (var user in userList) {
-      if (user['user_email'] == email && user['user_pass'] == password) {
+      var decryptEmail = MyEncryptionDecryption.decryptAES(user['user_pass']).toString();
+      if (user['user_email'] == email && decryptEmail == password) {
         print('Login successful for ${user['user_email']}');
         int index = userList.indexWhere((user) => user['user_email'] == email);
         myFunc.current_user_id = userList[index]['user_id'];
-        if (recentUser != null || (recentUser as List).isNotEmpty) {
-          if (myFunc.current_user_id != recentUser[0]['recent_user_id']) {
-            recentUser.clear();
-          }
-        }
-
+        // if (recentUser != null || (recentUser as List).isNotEmpty) {
+        //   if (myFunc.current_user_id != recentUser[0]['recent_user_id']) {
+        //     recentUser.clear();
+        //   }
+        // }
         return true;
       }
     }
@@ -101,8 +103,7 @@ class _LoginPageState extends State<LoginPage> {
         Future.delayed(Duration(seconds: 2), () {
           setState(() {
             _isLoading = false;
-            myComponents.error(context, "Invalid credentials!",
-                "Incorrect email or password. Please try again.");
+            myComponents.error(context, "Invalid credentials!", "Incorrect email or password. Please try again.");
           });
         });
       });
@@ -152,8 +153,7 @@ class _LoginPageState extends State<LoginPage> {
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     Image(
-                      image:
-                          AssetImage("assets/general/filipay-logo-w-name.png"),
+                      image: AssetImage("assets/general/filipay-logo-w-name.png"),
                       width: 115,
                       height: 115,
                     ),
@@ -179,8 +179,7 @@ class _LoginPageState extends State<LoginPage> {
                                         "Transport User Details",
                                         style: TextStyle(
                                           fontSize: 20.0,
-                                          color:
-                                              Color.fromRGBO(5, 80, 120, 1.0),
+                                          color: Color.fromRGBO(5, 80, 120, 1.0),
                                           fontWeight: FontWeight.w900,
                                         ),
                                       ),
@@ -193,8 +192,7 @@ class _LoginPageState extends State<LoginPage> {
                                       ),
                                     ),
                                     TextFormFieldsWidget(
-                                      thisTextInputType:
-                                          TextInputType.emailAddress,
+                                      thisTextInputType: TextInputType.emailAddress,
                                       controller: emailController,
                                     ),
                                     GestureDetector(
@@ -206,8 +204,7 @@ class _LoginPageState extends State<LoginPage> {
                                         child: Text(
                                           "Use Mobile Number Instead",
                                           style: TextStyle(
-                                            color:
-                                                Color.fromRGBO(5, 80, 120, 1.0),
+                                            color: Color.fromRGBO(5, 80, 120, 1.0),
                                             fontSize: 10.0,
                                             fontStyle: FontStyle.italic,
                                           ),
@@ -223,8 +220,7 @@ class _LoginPageState extends State<LoginPage> {
                                     SizedBox(
                                       width: double.infinity,
                                       child: PasswordFormFieldWidget(
-                                        thisTextInputType:
-                                            TextInputType.visiblePassword,
+                                        thisTextInputType: TextInputType.visiblePassword,
                                         controller: passController,
                                       ),
                                     ),
@@ -237,8 +233,7 @@ class _LoginPageState extends State<LoginPage> {
                                         child: Text(
                                           "Forgot Password?",
                                           style: TextStyle(
-                                            color:
-                                                Color.fromRGBO(5, 80, 120, 1.0),
+                                            color: Color.fromRGBO(5, 80, 120, 1.0),
                                             fontSize: 10.0,
                                             fontStyle: FontStyle.italic,
                                           ),
@@ -259,8 +254,7 @@ class _LoginPageState extends State<LoginPage> {
                                   ),
                                   TextButton(
                                     onPressed: () {
-                                      Navigator.of(context)
-                                          .push(MaterialPageRoute(
+                                      Navigator.of(context).push(MaterialPageRoute(
                                         builder: (context) => RegisterPage(),
                                       ));
                                     },
@@ -276,8 +270,7 @@ class _LoginPageState extends State<LoginPage> {
                               ),
                               Center(
                                 child: Padding(
-                                  padding: EdgeInsets.symmetric(
-                                      horizontal: 80.0, vertical: 8.0),
+                                  padding: EdgeInsets.symmetric(horizontal: 80.0, vertical: 8.0),
                                   child: SizedBox(
                                     height: 60,
                                     width: double.infinity,
@@ -289,10 +282,8 @@ class _LoginPageState extends State<LoginPage> {
                                         }
                                       },
                                       text: 'LOGIN',
-                                      BackgroundColor:
-                                          Color.fromRGBO(47, 50, 145, 1.0),
-                                      padding: EdgeInsets.symmetric(
-                                          horizontal: 16.0, vertical: 8.0),
+                                      BackgroundColor: Color.fromRGBO(47, 50, 145, 1.0),
+                                      padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
                                       BorderRadius: BorderRadius.circular(50.0),
                                     ),
                                   ),
@@ -347,14 +338,12 @@ class _LoginPageState extends State<LoginPage> {
                               child: Image(
                                 width: 45.0,
                                 height: 45.0,
-                                image: AssetImage(
-                                    "assets/general/fingerprint.png"),
+                                image: AssetImage("assets/general/fingerprint.png"),
                               ))
                           : Text(''),
                     ),
                     Padding(
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 50.0, vertical: 8.0),
+                      padding: EdgeInsets.symmetric(horizontal: 50.0, vertical: 8.0),
                       child: myComponents.otherSignupBtn(
                         context: context,
                         imagePath: "assets/general/facebook-logo.png",
@@ -365,8 +354,7 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                     ),
                     Padding(
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 50.0, vertical: 8.0),
+                      padding: EdgeInsets.symmetric(horizontal: 50.0, vertical: 8.0),
                       child: myComponents.otherSignupBtn(
                         context: context,
                         imagePath: "assets/general/google-icon.png",
@@ -383,10 +371,7 @@ class _LoginPageState extends State<LoginPage> {
               ),
             ),
             Center(
-              child: _isLoading
-                  ? myComponents.simulateLoading(
-                      context: context, loadText: "Processing")
-                  : Text(''),
+              child: _isLoading ? myComponents.simulateLoading(context: context, loadText: "Processing") : Text(''),
             ),
           ],
         ),
@@ -396,14 +381,12 @@ class _LoginPageState extends State<LoginPage> {
 }
 
 class PasswordFormFieldWidget extends StatefulWidget {
-  PasswordFormFieldWidget(
-      {super.key, required this.thisTextInputType, required this.controller});
+  PasswordFormFieldWidget({super.key, required this.thisTextInputType, required this.controller});
   final TextInputType thisTextInputType;
   final TextEditingController controller;
 
   @override
-  State<PasswordFormFieldWidget> createState() =>
-      _PasswordFormFieldWidgetState();
+  State<PasswordFormFieldWidget> createState() => _PasswordFormFieldWidgetState();
 }
 
 class _PasswordFormFieldWidgetState extends State<PasswordFormFieldWidget> {
@@ -437,8 +420,7 @@ class _PasswordFormFieldWidgetState extends State<PasswordFormFieldWidget> {
 }
 
 class TextFormFieldsWidget extends StatelessWidget {
-  TextFormFieldsWidget(
-      {super.key, required this.thisTextInputType, required this.controller});
+  TextFormFieldsWidget({super.key, required this.thisTextInputType, required this.controller});
   final TextInputType thisTextInputType;
   final TextEditingController controller;
   @override
