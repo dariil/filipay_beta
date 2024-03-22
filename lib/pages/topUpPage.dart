@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import '../widgets/components.dart';
+import '../functions/functions.dart';
 
 class TopUpPage extends StatefulWidget {
   const TopUpPage({super.key});
@@ -13,6 +14,7 @@ class TopUpPage extends StatefulWidget {
 
 class _TopUpPageState extends State<TopUpPage> {
   pageComponents myComponents = pageComponents();
+  pageFunctions myFunc = pageFunctions();
 
   String cardNumber = "SN XXXXXXXXX";
   bool isConnected = false;
@@ -44,7 +46,7 @@ class _TopUpPageState extends State<TopUpPage> {
         connected();
         myComponents.alert(context, () {
           Navigator.of(context).pop();
-        }, "Successful!", "Your total balance is 100 FILIPAY Credits.");
+        }, "Successful!", "Your total balance is ${myFunc.remaining_balance} FILIPAY Credits.");
       });
     });
   }
@@ -150,10 +152,7 @@ class _TopUpPageState extends State<TopUpPage> {
                   label: "via ONLINE",
                   imagename: "site-alt.png",
                   thisFunction: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => SelectAmountPage()));
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => SelectAmountPage()));
                   },
                 ),
                 topupbutton(
@@ -178,10 +177,7 @@ class _TopUpPageState extends State<TopUpPage> {
         ]),
       ),
       Center(
-        child: _isLoading
-            ? myComponents.simulateConnectLoading(
-                context: context, loadText: "Please wait...")
-            : Text(''),
+        child: _isLoading ? myComponents.simulateConnectLoading(context: context, loadText: "Please wait...") : Text(''),
       ),
       myComponents.headerPageLabel(context, ""),
     ])));
@@ -189,11 +185,7 @@ class _TopUpPageState extends State<TopUpPage> {
 }
 
 class topupbutton extends StatelessWidget {
-  const topupbutton(
-      {super.key,
-      required this.label,
-      required this.imagename,
-      required this.thisFunction});
+  const topupbutton({super.key, required this.label, required this.imagename, required this.thisFunction});
   final String label;
   final String imagename;
   final void Function() thisFunction;
@@ -213,10 +205,7 @@ class topupbutton extends StatelessWidget {
                 children: [
                   GestureDetector(
                     onTap: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => SelectAmountPage()));
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => SelectAmountPage()));
                     },
                     child: Container(
                       decoration: BoxDecoration(

@@ -84,8 +84,7 @@ class pageComponents {
       print("date: ${userBookings[i]['date']}");
       print("status: ${userBookings[i]['status']}");
       print("\n\n");
-      print(
-          "seat reservation id: ${userReservation[i]['seat_reservation_id']}");
+      print("seat reservation id: ${userReservation[i]['seat_reservation_id']}");
       print("booking id: ${userReservation[i]['booking_id']}");
       print("time: ${userReservation[i]['time']}");
       print("quantity: ${userReservation[i]['quantity']}");
@@ -144,12 +143,7 @@ class pageComponents {
     );
   }
 
-  Padding transportaionMode(
-      {required double padding,
-      required BuildContext context,
-      required page,
-      required String modeText,
-      required String path}) {
+  Padding transportaionMode({required double padding, required BuildContext context, required page, required String modeText, required String path}) {
     return Padding(
       padding: EdgeInsets.all(8.0),
       child: Column(
@@ -157,8 +151,7 @@ class pageComponents {
           GestureDetector(
             onTap: () {
               pageFunc.transportMode = modeText;
-              Navigator.push(
-                  context, MaterialPageRoute(builder: (context) => page));
+              Navigator.push(context, MaterialPageRoute(builder: (context) => page));
             },
             child: Container(
               decoration: BoxDecoration(
@@ -193,20 +186,14 @@ class pageComponents {
     );
   }
 
-  Padding topUpMode(
-      {required double padding,
-      required BuildContext context,
-      required page,
-      required String modeText,
-      required String path}) {
+  Padding topUpMode({required double padding, required BuildContext context, required page, required String modeText, required String path}) {
     return Padding(
       padding: EdgeInsets.all(8.0),
       child: Column(
         children: [
           GestureDetector(
             onTap: () {
-              Navigator.push(
-                  context, MaterialPageRoute(builder: (context) => page));
+              Navigator.push(context, MaterialPageRoute(builder: (context) => page));
             },
             child: Padding(
               padding: EdgeInsets.all(8.0),
@@ -234,11 +221,7 @@ class pageComponents {
     );
   }
 
-  ListTile drawerItems(
-      {required BuildContext context,
-      required String imagePath,
-      required String drawerItemText,
-      required destinationPage}) {
+  ListTile drawerItems({required BuildContext context, required String imagePath, required String drawerItemText, required destinationPage}) {
     return ListTile(
       leading: Image(width: 25, height: 25, image: AssetImage(imagePath)),
       title: Text(
@@ -251,10 +234,7 @@ class pageComponents {
     );
   }
 
-  Padding otherDrawerItems(
-      {required BuildContext context,
-      required String text,
-      required destinationPage}) {
+  Padding otherDrawerItems({required BuildContext context, required String text, required destinationPage}) {
     return Padding(
       padding: EdgeInsets.only(left: 18.0),
       child: TextButton(
@@ -272,8 +252,7 @@ class pageComponents {
     );
   }
 
-  Stack simulateLoading(
-      {required BuildContext context, required String loadText}) {
+  Stack simulateLoading({required BuildContext context, required String loadText}) {
     return Stack(
       alignment: Alignment.center,
       children: [
@@ -313,8 +292,7 @@ class pageComponents {
     );
   }
 
-  Stack simulateConnectLoading(
-      {required BuildContext context, required String loadText}) {
+  Stack simulateConnectLoading({required BuildContext context, required String loadText}) {
     return Stack(
       alignment: Alignment.center,
       children: [
@@ -331,8 +309,7 @@ class pageComponents {
             borderRadius: BorderRadius.circular(15.0),
           ),
           child: Padding(
-            padding:
-                const EdgeInsets.symmetric(horizontal: 50.0, vertical: 20.0),
+            padding: const EdgeInsets.symmetric(horizontal: 50.0, vertical: 20.0),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
@@ -452,8 +429,7 @@ class pageComponents {
     );
   }
 
-  Column bookingDetails(BuildContext context, String amount,
-      String referenceCode, String route, String date, String time) {
+  Column bookingDetails(BuildContext context, String amount, String referenceCode, String route, String date, String time) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
@@ -530,10 +506,7 @@ class pageComponents {
     );
   }
 
-  Container userType(
-      {required String text,
-      required BoxDecoration decoration,
-      required Color textColor}) {
+  Container userType({required String text, required BoxDecoration decoration, required Color textColor}) {
     return Container(
       margin: const EdgeInsets.all(8.0),
       width: 80.0,
@@ -573,8 +546,7 @@ class pageComponents {
         ));
   }
 
-  void alert(BuildContext context, Function() onOkPressed, String alertTitle,
-      String alertDescription) {
+  void alert(BuildContext context, Function() onOkPressed, String alertTitle, String alertDescription) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -642,15 +614,11 @@ class pageComponents {
                   children: [
                     Text(
                       "PHP",
-                      style: TextStyle(
-                          color: Color(0xff18467e),
-                          fontSize: 22.0,
-                          fontWeight: FontWeight.w600),
+                      style: TextStyle(color: Color(0xff18467e), fontSize: 22.0, fontWeight: FontWeight.w600),
                     ),
                     Text(
                       "${loadAmount}",
-                      style: TextStyle(
-                          fontSize: 28.0, fontWeight: FontWeight.w700),
+                      style: TextStyle(fontSize: 28.0, fontWeight: FontWeight.w700),
                     ),
                   ],
                 ),
@@ -720,10 +688,7 @@ class pageComponents {
                   },
                   label: Text(
                     "Slide to confirm",
-                    style: TextStyle(
-                        color: Color(0xff4a4a4a),
-                        fontWeight: FontWeight.w500,
-                        fontSize: 17),
+                    style: TextStyle(color: Color(0xff4a4a4a), fontWeight: FontWeight.w500, fontSize: 17),
                   ),
                   icon: Icon(
                     Icons.arrow_forward_ios_rounded,
@@ -738,8 +703,7 @@ class pageComponents {
     );
   }
 
-  void loadConfirmed(BuildContext context, Function() onOkPressed,
-      String alertTitle, String alertDescription, double loadAmount) {
+  void loadConfirmed(BuildContext context, Function() onOkPressed, String alertTitle, String alertDescription, double loadAmount) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -797,8 +761,7 @@ class pageComponents {
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(5.0),
                           border: Border.all(
-                            color: Color.fromRGBO(
-                                13, 93, 158, 1.0), // Border color
+                            color: Color.fromRGBO(13, 93, 158, 1.0), // Border color
                             width: 5,
                           ),
                           color: Colors.white,
@@ -875,8 +838,7 @@ class pageComponents {
     );
   }
 
-  void bookConfirmation(BuildContext context, Function() onOkPressed,
-      Function() onCancelPressed, String alertTitle, String alertDescription) {
+  void bookConfirmation(BuildContext context, Function() onOkPressed, Function() onCancelPressed, String alertTitle, String alertDescription) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -948,8 +910,7 @@ class pageComponents {
     );
   }
 
-  void bookSuccessful(
-      BuildContext context, String route, String schedule, double fare) {
+  void bookSuccessful(BuildContext context, String route, String schedule, double fare) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -1047,8 +1008,7 @@ class pageComponents {
                     onPressed: () {
                       Navigator.pop(context);
                       Navigator.of(context).pushReplacement(
-                        MaterialPageRoute(
-                            builder: (context) => MyBookingsPage()),
+                        MaterialPageRoute(builder: (context) => MyBookingsPage()),
                       );
                     },
                     child: Text(
@@ -1069,7 +1029,7 @@ class pageComponents {
     );
   }
 
-  void paymentSuccessful(BuildContext context) {
+  void paymentSuccessful(BuildContext context, int amount) {
     showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -1101,7 +1061,7 @@ class pageComponents {
                   textAlign: TextAlign.center,
                 ),
                 Text(
-                  "₱${50.0}",
+                  "₱${amount}",
                   style: TextStyle(
                     fontSize: 28.0,
                     fontWeight: FontWeight.w900,
@@ -1113,7 +1073,7 @@ class pageComponents {
                   height: 10.0,
                 ),
                 Text(
-                  "Amount: ₱${50.0}",
+                  "Amount: ₱${amount}",
                   style: TextStyle(
                     fontSize: 14.0,
                     fontWeight: FontWeight.w400,
@@ -1235,11 +1195,7 @@ class pageComponents {
                 child: mainButtons.mainButton(
               context: context,
               onPressed: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => WaitingConfirmationPage(
-                            title: "${pageFunc.transportMode}")));
+                Navigator.push(context, MaterialPageRoute(builder: (context) => WaitingConfirmationPage(title: "${pageFunc.transportMode}")));
               },
               text: "QR SCANNED",
               BackgroundColor: Color(0xff18467e),
@@ -1264,8 +1220,7 @@ class pageComponents {
         title: "Confirm Logout",
         text: "Are you sure you want to logout?",
         onConfirm: () {
-          recentUser.removeWhere(
-              (user) => user['recent_user_id'] == pageFunc.current_user_id);
+          recentUser.removeWhere((user) => user['recent_user_id'] == pageFunc.current_user_id);
           Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => LoginPage()),

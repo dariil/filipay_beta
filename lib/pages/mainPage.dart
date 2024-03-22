@@ -24,7 +24,6 @@ class _MainPageState extends State<MainPage> {
   bool isPayAhead = true;
   bool _alertDialogShown = false;
   String? fff;
-  double balance = 55350.00;
 
   void switchPanelPOTG() {
     setState(() {
@@ -89,23 +88,17 @@ class _MainPageState extends State<MainPage> {
                     switchPanelPA(),
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: isPayAhead
-                        ? Color.fromRGBO(39, 50, 115, 1.0)
-                        : Colors.white,
+                    backgroundColor: isPayAhead ? Color.fromRGBO(39, 50, 115, 1.0) : Colors.white,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(5.0),
-                      side: BorderSide(
-                          color: Color.fromRGBO(39, 50, 115, 1.0), width: 2.0),
+                      side: BorderSide(color: Color.fromRGBO(39, 50, 115, 1.0), width: 2.0),
                     ),
-                    padding:
-                        EdgeInsets.symmetric(horizontal: 0.0, vertical: 1.0),
+                    padding: EdgeInsets.symmetric(horizontal: 0.0, vertical: 1.0),
                   ),
                   child: Text('PAY AHEAD',
                       style: TextStyle(
                         fontSize: 10.0,
-                        color: isPayAhead
-                            ? Colors.white
-                            : Color.fromRGBO(82, 161, 217, 1.0),
+                        color: isPayAhead ? Colors.white : Color.fromRGBO(82, 161, 217, 1.0),
                       )),
                 ),
               ),
@@ -150,24 +143,17 @@ class _MainPageState extends State<MainPage> {
                     switchPanelPOTG(),
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: isPayAhead
-                        ? Colors.white
-                        : Color.fromRGBO(39, 50, 115, 1.0),
+                    backgroundColor: isPayAhead ? Colors.white : Color.fromRGBO(39, 50, 115, 1.0),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(5.0),
-                      side: BorderSide(
-                          color: Color.fromRGBO(39, 50, 115, 1.0),
-                          width: 2.0), // Change the color and width here
+                      side: BorderSide(color: Color.fromRGBO(39, 50, 115, 1.0), width: 2.0), // Change the color and width here
                     ),
-                    padding:
-                        EdgeInsets.symmetric(horizontal: 0.0, vertical: 1.0),
+                    padding: EdgeInsets.symmetric(horizontal: 0.0, vertical: 1.0),
                   ),
                   child: Text('PAY ON THE GO',
                       style: TextStyle(
                         fontSize: 10.0,
-                        color: isPayAhead
-                            ? Color.fromRGBO(82, 161, 217, 1.0)
-                            : Colors.white,
+                        color: isPayAhead ? Color.fromRGBO(82, 161, 217, 1.0) : Colors.white,
                       )),
                 ),
               ),
@@ -186,11 +172,7 @@ class _MainPageState extends State<MainPage> {
               ),
               Text(
                 "Smile Always!",
-                style: TextStyle(
-                    fontSize: 30.0,
-                    fontWeight: FontWeight.w700,
-                    fontStyle: FontStyle.italic,
-                    color: Color.fromRGBO(240, 139, 7, 1.0)),
+                style: TextStyle(fontSize: 30.0, fontWeight: FontWeight.w700, fontStyle: FontStyle.italic, color: Color.fromRGBO(240, 139, 7, 1.0)),
               ),
               Container(
                 padding: EdgeInsets.fromLTRB(15.0, 15.0, 15.0, 20.0),
@@ -226,8 +208,7 @@ class _MainPageState extends State<MainPage> {
                           child: Padding(
                             padding: EdgeInsets.only(left: 5.0, right: 5.0),
                             child: Image(
-                              image:
-                                  AssetImage("assets/transportation/sedan.png"),
+                              image: AssetImage("assets/transportation/sedan.png"),
                               width: 40,
                               height: 40,
                             ),
@@ -251,16 +232,9 @@ class _MainPageState extends State<MainPage> {
                         children: [
                           Text(
                             "Available Balance",
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 14.0,
-                                fontWeight: FontWeight.w400),
+                            style: TextStyle(color: Colors.white, fontSize: 14.0, fontWeight: FontWeight.w400),
                           ),
-                          Text("₱${balance}",
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 30.0,
-                                  fontWeight: FontWeight.w700)),
+                          Text("₱${myFunc.remaining_balance}", style: TextStyle(color: Colors.white, fontSize: 30.0, fontWeight: FontWeight.w700)),
                         ],
                       ),
                       ElevatedButton(
@@ -291,107 +265,72 @@ class _MainPageState extends State<MainPage> {
                   Align(
                     alignment: Alignment.center,
                     child: Padding(
-                      padding:
-                          EdgeInsets.symmetric(vertical: 0.0, horizontal: 25.0),
+                      padding: EdgeInsets.symmetric(vertical: 0.0, horizontal: 25.0),
                       child: Container(
-                        decoration: BoxDecoration(
-                            color: Color.fromRGBO(44, 177, 230, 0.25),
-                            borderRadius: BorderRadius.circular(10.0)),
+                        decoration: BoxDecoration(color: Color.fromRGBO(44, 177, 230, 0.25), borderRadius: BorderRadius.circular(10.0)),
                         child: Padding(
-                          padding: EdgeInsets.symmetric(
-                              vertical: 5.0, horizontal: 0.0),
+                          padding: EdgeInsets.symmetric(vertical: 5.0, horizontal: 0.0),
                           child: isPayAhead
                               ? Column(
                                   children: [
-                                    Wrap(
-                                        alignment: WrapAlignment.center,
-                                        children: [
-                                          myComponents.transportaionMode(
-                                              padding: 10.0,
-                                              context: context,
-                                              page: QRCam(),
-                                              modeText: "Jeepney",
-                                              path:
-                                                  "assets/transportation/jeepney.png"),
-                                          myComponents.transportaionMode(
-                                              padding: 10.0,
-                                              context: context,
-                                              page: QRCam(),
-                                              modeText: "Bus",
-                                              path:
-                                                  "assets/transportation/Bus.png"),
-                                          myComponents.transportaionMode(
-                                              padding: 10.0,
-                                              context: context,
-                                              page: QRCam(),
-                                              modeText: "UV Express",
-                                              path:
-                                                  "assets/transportation/van.png"),
-                                          myComponents.transportaionMode(
-                                              padding: 10.0,
-                                              context: context,
-                                              page: QRCam(),
-                                              modeText: "Ship",
-                                              path:
-                                                  "assets/transportation/Ship.png"),
-                                          myComponents.transportaionMode(
-                                              padding: 10.0,
-                                              context: context,
-                                              page: QRCam(),
-                                              modeText: "Tricycle",
-                                              path:
-                                                  "assets/transportation/Trike.png"),
-                                          myComponents.transportaionMode(
-                                              padding: 10.0,
-                                              context: context,
-                                              page: QRCam(),
-                                              modeText: "Taxi",
-                                              path:
-                                                  "assets/transportation/taxi.png"),
-                                          myComponents.transportaionMode(
-                                              padding: 10.0,
-                                              context: context,
-                                              page: QRCam(),
-                                              modeText: "Plane",
-                                              path:
-                                                  "assets/transportation/Plane.png"),
-                                          myComponents.transportaionMode(
-                                              padding: 10.0,
-                                              context: context,
-                                              page: QRCam(),
-                                              modeText: "Train",
-                                              path:
-                                                  "assets/transportation/Train Icon.png"),
-                                        ]),
+                                    Wrap(alignment: WrapAlignment.center, children: [
+                                      myComponents.transportaionMode(
+                                          padding: 10.0,
+                                          context: context,
+                                          page: QRCam(),
+                                          modeText: "Jeepney",
+                                          path: "assets/transportation/jeepney.png"),
+                                      myComponents.transportaionMode(
+                                          padding: 10.0, context: context, page: QRCam(), modeText: "Bus", path: "assets/transportation/Bus.png"),
+                                      myComponents.transportaionMode(
+                                          padding: 10.0,
+                                          context: context,
+                                          page: QRCam(),
+                                          modeText: "UV Express",
+                                          path: "assets/transportation/van.png"),
+                                      myComponents.transportaionMode(
+                                          padding: 10.0, context: context, page: QRCam(), modeText: "Ship", path: "assets/transportation/Ship.png"),
+                                      myComponents.transportaionMode(
+                                          padding: 10.0,
+                                          context: context,
+                                          page: QRCam(),
+                                          modeText: "Tricycle",
+                                          path: "assets/transportation/Trike.png"),
+                                      myComponents.transportaionMode(
+                                          padding: 10.0, context: context, page: QRCam(), modeText: "Taxi", path: "assets/transportation/taxi.png"),
+                                      myComponents.transportaionMode(
+                                          padding: 10.0, context: context, page: QRCam(), modeText: "Plane", path: "assets/transportation/Plane.png"),
+                                      myComponents.transportaionMode(
+                                          padding: 10.0,
+                                          context: context,
+                                          page: QRCam(),
+                                          modeText: "Train",
+                                          path: "assets/transportation/Train Icon.png"),
+                                    ]),
                                   ],
                                 )
                               : Column(
                                   children: [
-                                    Wrap(
-                                        alignment: WrapAlignment.center,
-                                        children: [
-                                          myComponents.transportaionMode(
-                                              padding: 10.0,
-                                              context: context,
-                                              page: BookingPage(),
-                                              modeText: "Bus",
-                                              path:
-                                                  "assets/transportation/Bus.png"),
-                                          myComponents.transportaionMode(
-                                              padding: 10.0,
-                                              context: context,
-                                              page: BookingPage(),
-                                              modeText: "Ship",
-                                              path:
-                                                  "assets/transportation/Ship.png"),
-                                          myComponents.transportaionMode(
-                                              padding: 10.0,
-                                              context: context,
-                                              page: BookingPage(),
-                                              modeText: "Plane",
-                                              path:
-                                                  "assets/transportation/Plane.png"),
-                                        ]),
+                                    Wrap(alignment: WrapAlignment.center, children: [
+                                      myComponents.transportaionMode(
+                                          padding: 10.0,
+                                          context: context,
+                                          page: BookingPage(),
+                                          modeText: "Bus",
+                                          path: "assets/transportation/Bus.png"),
+                                      myComponents.transportaionMode(
+                                          padding: 10.0,
+                                          context: context,
+                                          page: BookingPage(),
+                                          modeText: "Ship",
+                                          path: "assets/transportation/Ship.png"),
+                                      myComponents.transportaionMode(
+                                          padding: 10.0,
+                                          context: context,
+                                          page: BookingPage(),
+                                          modeText: "Plane",
+                                          path: "assets/transportation/Plane.png"),
+                                    ]),
                                   ],
                                 ),
                         ),
@@ -413,19 +352,16 @@ class _MainPageState extends State<MainPage> {
                     // Your logic here
                     print('Do something after 2 seconds');
                     if (!_alertDialogShown) {
-                      _alertDialogShown =
-                          true; // Set flag to true to indicate AlertDialog shown
+                      _alertDialogShown = true; // Set flag to true to indicate AlertDialog shown
                       WidgetsBinding.instance.addPostFrameCallback((_) {
                         showDialog(
                           context: context,
                           builder: (BuildContext context) {
                             return AlertDialog(
                               content: Container(
-                                height:
-                                    MediaQuery.of(context).size.height * 0.28,
+                                height: MediaQuery.of(context).size.height * 0.28,
                                 child: Column(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
+                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                   children: [
                                     Text(
                                       "Enable biometrics authentication?",

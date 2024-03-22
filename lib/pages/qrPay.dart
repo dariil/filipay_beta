@@ -31,7 +31,8 @@ class _qrPayState extends State<qrPay> {
           setState(() {
             isLoading = false;
           });
-          myComponents.paymentSuccessful(context);
+          myComponents.paymentSuccessful(context, int.parse(_controller.text));
+          myFunc.remaining_balance = myFunc.remaining_balance - int.parse(_controller.text); //
         });
       },
       () {
@@ -114,10 +115,7 @@ class _qrPayState extends State<qrPay> {
             ),
           ),
           Center(
-            child: isLoading
-                ? myComponents.simulateLoading(
-                    context: context, loadText: "Please wait...")
-                : Text(''),
+            child: isLoading ? myComponents.simulateLoading(context: context, loadText: "Please wait...") : Text(''),
           ),
         ]),
       ),

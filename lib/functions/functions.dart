@@ -119,6 +119,14 @@ class pageFunctions {
   }
 
   int get active_booking_id => _active_booking_id!;
+
+  static int _remaining_balance = 35000;
+
+  set remaining_balance(int value) {
+    _remaining_balance = value;
+  }
+
+  int get remaining_balance => _remaining_balance;
 }
   // Future<void> _getAllData() async {
   //   final userList = _filipay.get('tbl_users');

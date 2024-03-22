@@ -42,11 +42,9 @@ class _SeatReservationState extends State<SeatReservation> {
       // Check if seat is booked for the given date
       for (var booking in userBookings) {
         if (booking['date'] == currentDate &&
-            userReservation[booking['seat_reservation_id']]['time'] ==
-                myFunc.reservedTime &&
+            userReservation[booking['seat_reservation_id']]['time'] == myFunc.reservedTime &&
             booking['seat_reservation_id'] != null &&
-            userReservation[booking['seat_reservation_id']]['seat_number']
-                .contains(seatNumber)) {
+            userReservation[booking['seat_reservation_id']]['seat_number'].contains(seatNumber)) {
           isAvailable = false;
           break;
         }
@@ -55,8 +53,7 @@ class _SeatReservationState extends State<SeatReservation> {
     }
 
     for (int i = 0; i < count; i++) {
-      String currentDate =
-          myFunc.dateSelected; // Change this to the selected date
+      String currentDate = myFunc.dateSelected; // Change this to the selected date
       bool isAvailable = isSeatAvailable(seatNumber, currentDate);
 
       Color seatColor = isAvailable ? Color(0xff53a1d8) : Color(0xffb5e0fe);
@@ -130,9 +127,7 @@ class _SeatReservationState extends State<SeatReservation> {
       if (shouldAddRow(column, i, count)) {
         seats.add(
           Container(
-            margin: EdgeInsets.only(
-                left: ((MediaQuery.of(context).size.width * 0.90 - 30.0) / 2 -
-                    80.0)),
+            margin: EdgeInsets.only(left: ((MediaQuery.of(context).size.width * 0.90 - 30.0) / 2 - 80.0)),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: rowSeats.reversed.toList(),
@@ -177,7 +172,7 @@ class _SeatReservationState extends State<SeatReservation> {
   }
 
   void loadingConnect() {
-    // final userBookings = _filipay.get('tbl_bookings');
+    final userBookings = _filipay.get('tbl_bookings');
     final userReservation = _filipay.get('tbl_seat_reservation');
     setTrue();
     Future.delayed(Duration(seconds: 1), () {
@@ -193,8 +188,7 @@ class _SeatReservationState extends State<SeatReservation> {
                 setState(() {
                   _isLoading = false;
                 });
-                myComponents.error(context, "No time selected",
-                    "Please select a time and try again.");
+                myComponents.error(context, "No time selected", "Please select a time and try again.");
               });
             } else if (selectedSeatCount < 1) {
               setTrue();
@@ -202,8 +196,7 @@ class _SeatReservationState extends State<SeatReservation> {
                 setState(() {
                   _isLoading = false;
                 });
-                myComponents.error(context, "No seat(s) selected",
-                    "Please select a seat and try again.");
+                myComponents.error(context, "No seat(s) selected", "Please select a seat and try again.");
               });
             } else {
               setState(() {
@@ -213,21 +206,18 @@ class _SeatReservationState extends State<SeatReservation> {
                     _isLoading = false;
 
                     /// ADD HERE
-                    int index = userReservation.indexWhere((user) =>
-                        user['booking_id'] == (myFunc.active_booking_id));
+                    int index = userReservation.indexWhere((user) => user['booking_id'] == (myFunc.active_booking_id));
                     userReservation[index]['time'] = myFunc.reservedTime;
                     userReservation[index]['quantity'] = selectedSeatCount;
                     userReservation[index]['seat_number'] = selectedSeats;
                     userReservation[index]['price'] = price;
-                    _filipay.put(
-                        'tbl_seat_reservation', myFunc.tbl_seat_reservation);
+                    _filipay.put('tbl_seat_reservation', myFunc.tbl_seat_reservation);
+
+                    int routeIndexFinder = userBookings.indexWhere((user) => user['booking_id'] == (myFunc.active_booking_id));
+                    String route = userBookings[routeIndexFinder]['route'];
 
                     ///
-                    myComponents.bookSuccessful(
-                        context,
-                        "Alabang Starmall-Naga, Camarines Sur",
-                        "Friday 05/07/2021 11:30 pm",
-                        price);
+                    myComponents.bookSuccessful(context, "${route}", "${myFunc.headerDateSelected}", price);
                     myFunc.active_booking_id = -1;
                     myFunc.reservedTime = "N/A";
                     myFunc.dateSelected = "N/A";
@@ -261,8 +251,7 @@ class _SeatReservationState extends State<SeatReservation> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  myComponents.headerPageLabel(
-                      context, "${myFunc.headerDateSelected}"),
+                  myComponents.headerPageLabel(context, "${myFunc.headerDateSelected}"),
                   SizedBox(
                     height: 10.0,
                   ),
@@ -307,20 +296,15 @@ class _SeatReservationState extends State<SeatReservation> {
                           left: BorderSide(width: 1.0, color: Colors.grey),
                           right: BorderSide(width: 1.0, color: Colors.grey),
                         ),
-                        borderRadius: BorderRadius.only(
-                            bottomLeft: Radius.circular(10.0),
-                            bottomRight: Radius.circular(10.0))),
+                        borderRadius: BorderRadius.only(bottomLeft: Radius.circular(10.0), bottomRight: Radius.circular(10.0))),
                     width: MediaQuery.of(context).size.width * 0.90,
                     height: 100.0,
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         TimeRange(
-                          textStyle: TextStyle(
-                              fontWeight: FontWeight.normal,
-                              color: Colors.black87),
-                          activeTextStyle: TextStyle(
-                              fontWeight: FontWeight.bold, color: Colors.white),
+                          textStyle: TextStyle(fontWeight: FontWeight.normal, color: Colors.black87),
+                          activeTextStyle: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
                           borderColor: orange,
                           backgroundColor: Colors.transparent,
                           activeBackgroundColor: dark,
@@ -328,13 +312,10 @@ class _SeatReservationState extends State<SeatReservation> {
                           lastTime: TimeOfDay(hour: 24, minute: 30),
                           timeStep: 180,
                           timeBlock: 30,
-                          onRangeCompleted: (range) =>
-                              setState(() => print(range)),
+                          onRangeCompleted: (range) => setState(() => print(range)),
                           onFirstTimeSelected: (startHour) {
-                            DateTime dateTime = DateTime(
-                                2022, 1, 1, startHour.hour, startHour.minute);
-                            String formattedTime =
-                                DateFormat('hh:mm a').format(dateTime);
+                            DateTime dateTime = DateTime(2022, 1, 1, startHour.hour, startHour.minute);
+                            String formattedTime = DateFormat('hh:mm a').format(dateTime);
                             // setState(() => print("$formattedTime"));
                             setState(() {
                               myFunc.reservedTime = "$formattedTime";
@@ -393,8 +374,7 @@ class _SeatReservationState extends State<SeatReservation> {
                   ),
                   SizedBox(height: 10.0),
                   Container(
-                    padding:
-                        EdgeInsets.symmetric(horizontal: 7.0, vertical: 5.0),
+                    padding: EdgeInsets.symmetric(horizontal: 7.0, vertical: 5.0),
                     width: MediaQuery.of(context).size.width * 0.9,
                     decoration: BoxDecoration(
                         border: Border.all(
@@ -448,14 +428,10 @@ class _SeatReservationState extends State<SeatReservation> {
                     width: MediaQuery.of(context).size.width * 0.9,
                     // height: MediaQuery.of(context).size.height * 0.7,
                     decoration: BoxDecoration(
-                      border: Border.all(
-                          width: 1.0,
-                          style: BorderStyle.solid,
-                          color: Colors.grey),
+                      border: Border.all(width: 1.0, style: BorderStyle.solid, color: Colors.grey),
                       borderRadius: BorderRadius.circular(10.0),
                     ),
-                    padding:
-                        EdgeInsets.symmetric(horizontal: 20.0, vertical: 20.0),
+                    padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 20.0),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
@@ -511,8 +487,7 @@ class _SeatReservationState extends State<SeatReservation> {
                     },
                     text: "CONFIRM",
                     BackgroundColor: Color(0xff2e3191),
-                    padding:
-                        EdgeInsets.symmetric(horizontal: 130.0, vertical: 20.0),
+                    padding: EdgeInsets.symmetric(horizontal: 130.0, vertical: 20.0),
                     BorderRadius: BorderRadius.circular(8.0),
                   ),
                   SizedBox(height: 20.0),
@@ -520,10 +495,7 @@ class _SeatReservationState extends State<SeatReservation> {
               ),
             ),
             Center(
-              child: _isLoading
-                  ? myComponents.simulateLoading(
-                      context: context, loadText: "Please wait...")
-                  : Text(''),
+              child: _isLoading ? myComponents.simulateLoading(context: context, loadText: "Please wait...") : Text(''),
             ),
           ],
         ),
