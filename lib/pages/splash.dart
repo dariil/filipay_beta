@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import '../functions/functions.dart';
 import '../functions/myEncryption.dart';
+// import 'package:encrypt/encrypt.dart' as encrypt;
 
 class Splash extends StatefulWidget {
   const Splash({super.key});
@@ -18,6 +19,7 @@ class _SplashState extends State<Splash> with SingleTickerProviderStateMixin {
   final _filipay = Hive.box("filipay");
   late AnimationController _controller;
   late Animation<double> _animation;
+  // static final iv = encrypt.IV.fromLength(16);
 
   @override
   void initState() {
@@ -47,6 +49,16 @@ class _SplashState extends State<Splash> with SingleTickerProviderStateMixin {
   }
 
   Future<void> _initializedData() async {
+    // if (!_filipay.containsKey('iv_storage')) {
+    //   myFunc.iv_storage.add({
+    //     'iv': iv,
+    //   });
+    //   _filipay.put('iv_storage', myFunc.iv_storage);
+    // } else {
+    //   final iv_storage = _filipay.get('iv_storage');
+    //   myFunc.iv_storage = List<Map<dynamic, dynamic>>.from(iv_storage);
+    // }
+
     if (!_filipay.containsKey('tbl_users')) {
       var ecryptedPin = MyEncryptionDecryption.encryptAES('8888').toString();
       var decryptedPin = MyEncryptionDecryption.decryptAES(ecryptedPin).toString();

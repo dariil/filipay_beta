@@ -53,7 +53,7 @@ class _LoginPageState extends State<LoginPage> {
     final userList = _filipay.get('tbl_users');
     //final recentUser = _filipay.get('tbl_recent_login');
     for (var user in userList) {
-      var decryptEmail = MyEncryptionDecryption.decryptAES(user['user_pass']).toString();
+      String decryptEmail = MyEncryptionDecryption.decryptAES(user['user_pass']).toString();
       if (user['user_email'] == email && decryptEmail == password) {
         print('Login successful for ${user['user_email']}');
         int index = userList.indexWhere((user) => user['user_email'] == email);

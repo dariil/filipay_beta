@@ -7,6 +7,7 @@ environment:
   sdk: ">=3.3.0 <4.0.0"
 
 dependencies:
+  shared_preferences: ^2.2.2
   crypto: ^3.0.3
   encrypt: ^5.0.3
   art_sweetalert: ^0.0.5
@@ -25,6 +26,7 @@ dependencies:
   slider_button: ^2.1.0
   text_divider: ^1.0.0
   time_range: ^1.1.0
+  # flutter_secure_storage: ^9.0.0
 
 # flutter_launcher_icons:
 #   android: "launcher_icon"

@@ -112,6 +112,13 @@ class pageFunctions {
     _tbl_seat_reservation = value;
   }
 
+  // static List<Map<dynamic, dynamic>> _iv_storage = [];
+  // List<Map<dynamic, dynamic>> get iv_storage => _iv_storage;
+
+  // set iv_storage(List<Map<dynamic, dynamic>> value) {
+  //   _iv_storage = value;
+  // }
+
   static int? _active_booking_id;
 
   set active_booking_id(int value) {
