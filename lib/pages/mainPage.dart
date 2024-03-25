@@ -3,7 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
-import 'package:hive_flutter/adapters.dart';
+import 'package:hive/hive.dart';
 import '../widgets/components.dart';
 import 'drawer.dart';
 import 'qrcam.dart';
@@ -18,12 +18,20 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
-  final _filipay = Hive.box("filipay");
-  pageFunctions myFunc = pageFunctions();
+  final Box _filipay = Hive.box('filipay');
 
-  bool isPayAhead = true;
+  pageFunctions myFunc = pageFunctions();
   bool _alertDialogShown = false;
+  bool isPayAhead = true;
   String? fff;
+  double balance = 0.0;
+
+  @override
+  void initState() {
+    super.initState();
+    // Retrieve balance from Hive box
+    balance = myFunc.getBalance();
+  }
 
   void switchPanelPOTG() {
     setState(() {
@@ -234,7 +242,7 @@ class _MainPageState extends State<MainPage> {
                             "Available Balance",
                             style: TextStyle(color: Colors.white, fontSize: 14.0, fontWeight: FontWeight.w400),
                           ),
-                          Text("₱${myFunc.remaining_balance}", style: TextStyle(color: Colors.white, fontSize: 30.0, fontWeight: FontWeight.w700)),
+                          Text("₱${balance}", style: TextStyle(color: Colors.white, fontSize: 30.0, fontWeight: FontWeight.w700)),
                         ],
                       ),
                       ElevatedButton(

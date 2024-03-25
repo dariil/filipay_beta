@@ -1,21 +1,19 @@
 import 'package:flutter/material.dart';
 import '../widgets/components.dart';
 import 'drawer.dart';
-
+import 'eWallet.dart';
 import 'dart:async';
 
 class EnterAmountPage extends StatefulWidget {
-  const EnterAmountPage({super.key});
+  const EnterAmountPage({Key? key}) : super(key: key);
 
   @override
   State<EnterAmountPage> createState() => _EnterAmountPageState();
 }
 
 class _EnterAmountPageState extends State<EnterAmountPage> {
-  double loadAmount = 500.00;
+  double loadAmount = 0.0;
   bool _isLoading = false;
-  String username = "[name]";
-  double limit = 10000;
   final FocusNode _focusNode = FocusNode();
 
   void setTrue() {
@@ -25,6 +23,7 @@ class _EnterAmountPageState extends State<EnterAmountPage> {
   }
 
   void loadingConnect() {
+    setTrue();
     Future.delayed(Duration(seconds: 1), () {
       setState(() {
         _isLoading = false;
@@ -32,23 +31,20 @@ class _EnterAmountPageState extends State<EnterAmountPage> {
           context,
           () {
             Navigator.pop(context);
-            setState(() {
-              setTrue();
-              Future.delayed(Duration(seconds: 2), () {
-                setState(() {
-                  _isLoading = false;
-                  myComponents.loadConfirmed(context, () {
-                    Navigator.pop(context);
-                    Navigator.pop(context);
-                  }, "LOADING CONFIRMED", "Cash In", loadAmount);
-                  //myComponents.error(context, "ERROR!", "Hello, ${username}! You only have a Top Up limit of ${limit}. Please reenter a valid amount to proceed.");
-                  //myComponents.error(context, "ERROR!", "No connection. Please check your internet connectivity and try again.");
-                  //myComponents.error(context, "ERROR!", "Please try again later.");
-                });
+            setTrue();
+            Future.delayed(Duration(seconds: 2), () {
+              setState(() {
+                _isLoading = false;
+                myComponents.loadConfirmed(context, () {
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(builder: (context) => EWalletPage()),
+                  );
+                }, "LOADING CONFIRMED", "Cash In", loadAmount);
               });
             });
           },
-          "${loadAmount}",
+          loadAmount,
         );
       });
     });
@@ -61,39 +57,47 @@ class _EnterAmountPageState extends State<EnterAmountPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        key: scaffoldKey,
-        appBar: myComponents.appBar(scaffoldKey: scaffoldKey),
-        drawer: NavDrawer(),
-        body: SafeArea(
-            child: Stack(children: [
-          myComponents.headerPageLabel(context, ""),
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: myComponents.background(),
-          ),
-          Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Container(
-                padding: EdgeInsets.symmetric(horizontal: 50.0),
-                child: Center(
-                  child: Text(
-                    "Enter Amount",
-                    style: TextStyle(
-                      color: Color(0xff18467e),
-                      fontSize: 30.0,
-                      fontWeight: FontWeight.w400,
+      key: scaffoldKey,
+      appBar: myComponents.appBar(scaffoldKey: scaffoldKey),
+      drawer: NavDrawer(),
+      body: SafeArea(
+        child: Stack(
+          children: [
+            myComponents.headerPageLabel(context, ""),
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: myComponents.background(),
+            ),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                  padding: EdgeInsets.symmetric(horizontal: 50.0),
+                  child: Center(
+                    child: Text(
+                      "Enter Amount",
+                      style: TextStyle(
+                        color: Color(0xff18467e),
+                        fontSize: 30.0,
+                        fontWeight: FontWeight.w400,
+                      ),
                     ),
                   ),
                 ),
-              ),
-              Form(
+                Form(
                   key: _formKey,
                   child: Column(
                     children: [
                       Container(
                         padding: EdgeInsets.symmetric(horizontal: 40.0),
-                        child: AmountField(focusNode: _focusNode),
+                        child: AmountField(
+                          focusNode: _focusNode,
+                          onAmountChanged: (amount) {
+                            setState(() {
+                              loadAmount = amount;
+                            });
+                          },
+                        ),
                       ),
                       SizedBox(height: 30.0),
                       Padding(
@@ -104,45 +108,61 @@ class _EnterAmountPageState extends State<EnterAmountPage> {
                             _focusNode.unfocus();
                             if (_formKey.currentState!.validate()) {
                               setTrue();
-                              loadingConnect();
+                              loadingConnect(); // Remove loadAmount argument
                             }
                           },
                           text: 'CONFIRM',
                           BackgroundColor: Color.fromRGBO(47, 50, 145, 1.0),
-                          padding: EdgeInsets.symmetric(
-                              horizontal: 40.0, vertical: 20.0),
+                          padding: EdgeInsets.symmetric(horizontal: 40.0, vertical: 20.0),
                           BorderRadius: BorderRadius.circular(15.0),
                         ),
                       ),
                     ],
-                  )),
-            ],
-          ),
-          Center(
-            child: _isLoading
-                ? myComponents.simulateLoading(
-                    context: context, loadText: "Processing")
-                : Text(''),
-          ),
-          // Center(
-          //   child: showSlider ? myComponents.slider(context: context, loadText: "TESTING") : Text(''),
-          // ),
-        ])));
+                  ),
+                ),
+              ],
+            ),
+            Center(
+              child: _isLoading ? myComponents.simulateLoading(context: context, loadText: "Processing") : Text(''),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }
 
-class AmountField extends StatelessWidget {
+class AmountField extends StatefulWidget {
   final FocusNode focusNode;
+  final Function(double) onAmountChanged;
 
   const AmountField({
     Key? key,
     required this.focusNode,
+    required this.onAmountChanged,
   }) : super(key: key);
+
+  @override
+  _AmountFieldState createState() => _AmountFieldState();
+}
+
+class _AmountFieldState extends State<AmountField> {
+  TextEditingController _controller = TextEditingController();
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
-      focusNode: focusNode,
+      focusNode: widget.focusNode,
+      controller: _controller,
+      onChanged: (value) {
+        widget.onAmountChanged(double.tryParse(value) ?? 0.0);
+      },
       validator: (value) {
         if (value!.isEmpty) {
           return 'Please enter a valid amount';
@@ -156,7 +176,6 @@ class AmountField extends StatelessWidget {
           borderSide: BorderSide(color: Color(0xff53a1d8), width: 3),
         ),
         enabledBorder: OutlineInputBorder(
-          // Border style when the field is enabled
           borderRadius: BorderRadius.circular(10.0),
           borderSide: BorderSide(color: Color(0xff53a1d8), width: 3),
         ),

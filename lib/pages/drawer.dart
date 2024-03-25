@@ -9,10 +9,11 @@ import 'transactionHistoryPage.dart';
 import 'package:image_picker/image_picker.dart';
 import 'TOSPage.dart';
 import 'privacyPolicyPage.dart';
+import '../functions/functions.dart';
 import 'helpCenterPage.dart';
 
 class NavDrawer extends StatefulWidget {
-  const NavDrawer({super.key});
+  const NavDrawer({Key? key});
 
   @override
   State<NavDrawer> createState() => _NavDrawerState();
@@ -20,32 +21,44 @@ class NavDrawer extends StatefulWidget {
 
 class _NavDrawerState extends State<NavDrawer> {
   pageComponents myPageComponents = pageComponents();
-
+  final pageFunctions _functions = pageFunctions();
   final ImagePicker _picker = ImagePicker();
+
   Future<void> _pickImage(BuildContext context) async {
     final image = await _picker.pickImage(source: ImageSource.gallery);
 
     if (image != null) {
-      // Handle the picked image file
+      // Handle the picked image
     }
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Drawer(
-        // width: 270,
-        child: SingleChildScrollView(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          buildHeader(context),
-          buildMenuItems(context),
-        ],
-      ),
-    ));
+  void initState() {
+    super.initState();
   }
 
-  Widget buildHeader(BuildContext context) => Container(
+  @override
+  Widget build(BuildContext context) {
+    int userId = _functions.current_user_id;
+    String selectedOption = _functions.getAccountType(userId);
+
+    String firstName = _functions.getFirstName(userId);
+    String lastName = _functions.getLastName(userId);
+
+    return Drawer(
+      child: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            buildHeader(context, firstName, lastName, selectedOption),
+            buildMenuItems(context),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget buildHeader(BuildContext context, String firstName, String lastName, String selectedOption) => Container(
         color: Color.fromRGBO(82, 161, 217, 1.0),
         padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
         child: Container(
@@ -64,8 +77,7 @@ class _NavDrawerState extends State<NavDrawer> {
                     ),
                     child: CircleAvatar(
                       radius: 35,
-                      backgroundImage:
-                          AssetImage("assets/general/undraw_Drink_coffee.png"),
+                      backgroundImage: AssetImage("assets/general/undraw_Drink_coffee.png"),
                     ),
                   ),
                   Positioned(
@@ -103,7 +115,7 @@ class _NavDrawerState extends State<NavDrawer> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "Jhon Dela Cruz",
+                    "$firstName $lastName",
                     style: TextStyle(
                       fontWeight: FontWeight.w900,
                       fontSize: 20.0,
@@ -119,7 +131,7 @@ class _NavDrawerState extends State<NavDrawer> {
                     ),
                   ),
                   Text(
-                    "Standard",
+                    '${selectedOption.substring(0, 1).toUpperCase()}${selectedOption.substring(1).toLowerCase()}',
                     style: TextStyle(
                       fontWeight: FontWeight.w500,
                       fontSize: 14.0,
@@ -132,22 +144,15 @@ class _NavDrawerState extends State<NavDrawer> {
           ),
         ),
       );
-
   Widget buildMenuItems(BuildContext context) => Container(
         padding: EdgeInsets.only(top: 14.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             myPageComponents.drawerItems(
-                context: context,
-                imagePath: "assets/general/home-regular.png",
-                drawerItemText: "Home Page",
-                destinationPage: MainPage()),
+                context: context, imagePath: "assets/general/home-regular.png", drawerItemText: "Home Page", destinationPage: MainPage()),
             myPageComponents.drawerItems(
-                context: context,
-                imagePath: "assets/general/wallet-regular.png",
-                drawerItemText: "E-Wallet",
-                destinationPage: EWalletPage()),
+                context: context, imagePath: "assets/general/wallet-regular.png", drawerItemText: "E-Wallet", destinationPage: EWalletPage()),
             myPageComponents.drawerItems(
                 context: context,
                 imagePath: "assets/general/receipt-regular.png",
@@ -166,10 +171,7 @@ class _NavDrawerState extends State<NavDrawer> {
                 drawerItemText: "Help Center",
                 destinationPage: HelpCenterPage(title: "Help Center")),
             myPageComponents.drawerItems(
-                context: context,
-                imagePath: "assets/general/error-regular.png",
-                drawerItemText: "Emergency",
-                destinationPage: LoginPage()),
+                context: context, imagePath: "assets/general/error-regular.png", drawerItemText: "Emergency", destinationPage: LoginPage()),
             myPageComponents.drawerItems(
                 context: context,
                 imagePath: "assets/general/book-bookmark-regular.png",
@@ -193,14 +195,8 @@ class _NavDrawerState extends State<NavDrawer> {
             SizedBox(
               height: 14,
             ),
-            myPageComponents.otherDrawerItems(
-                context: context,
-                text: "Terms of Service",
-                destinationPage: TOS()),
-            myPageComponents.otherDrawerItems(
-                context: context,
-                text: "Privacy Policy",
-                destinationPage: PrivacyPolicy()),
+            myPageComponents.otherDrawerItems(context: context, text: "Terms of Service", destinationPage: TOS()),
+            myPageComponents.otherDrawerItems(context: context, text: "Privacy Policy", destinationPage: PrivacyPolicy()),
             // myPageComponents.otherDrawerItems(
             //     context: context,
             //     text: "Log Out",

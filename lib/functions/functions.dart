@@ -112,12 +112,12 @@ class pageFunctions {
     _tbl_seat_reservation = value;
   }
 
-  // static List<Map<dynamic, dynamic>> _iv_storage = [];
-  // List<Map<dynamic, dynamic>> get iv_storage => _iv_storage;
+  static List<Map<dynamic, dynamic>> _user_ewallet = [];
+  List<Map<dynamic, dynamic>> get user_ewallet => _user_ewallet;
 
-  // set iv_storage(List<Map<dynamic, dynamic>> value) {
-  //   _iv_storage = value;
-  // }
+  set user_ewallet(List<Map<dynamic, dynamic>> value) {
+    _user_ewallet = value;
+  }
 
   static int? _active_booking_id;
 
@@ -134,8 +134,33 @@ class pageFunctions {
   }
 
   int get remaining_balance => _remaining_balance;
+
+  String getFirstName(int userId) {
+    final userProfile = _filipay.get('tbl_user_profile');
+    final user = userProfile.firstWhere((user) => user['user_id'] == userId);
+    return user['firstname'];
+  }
+
+  String getLastName(int userId) {
+    final userProfile = _filipay.get('tbl_user_profile');
+    final user = userProfile.firstWhere((user) => user['user_id'] == userId);
+    return user['lastname'];
+  }
+
+  String getAccountType(int userId) {
+    final userProfile = _filipay.get('tbl_user_profile');
+    final user = userProfile.firstWhere((user) => user['user_id'] == userId, orElse: () => {});
+    return user.containsKey('user_type') ? user['user_type'] : 'Default Account Type';
+  }
+
+  double getBalance() {
+    return _filipay.get('balance_${_currently_logged_user}', defaultValue: 0.0);
+  }
+
+  static List<Map<String, dynamic>> _user_transactionHistory = [];
+  List<Map<String, dynamic>> get transactionHistory => _user_transactionHistory;
+
+  void addTransaction(Map<String, dynamic> transactionDetails) {
+    _user_transactionHistory.add(transactionDetails);
+  }
 }
-  // Future<void> _getAllData() async {
-  //   final userList = _filipay.get('tbl_users');
-  //   _user_id = userList.length;
-  // }

@@ -7,6 +7,9 @@ import 'package:art_sweetalert/art_sweetalert.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:slider_button/slider_button.dart';
 import 'package:qr_flutter/qr_flutter.dart';
+import 'dart:math';
+import 'package:intl/intl.dart';
+import 'dart:convert';
 import '../functions/functions.dart';
 import '../pages/bookings.dart';
 import '../pages/waitingConfirmationPage.dart';
@@ -366,6 +369,9 @@ class pageComponents {
   }
 
   AppBar appBar({scaffoldKey}) {
+    int userId = pageFunc.current_user_id;
+    String selectedOption = pageFunc.getAccountType(userId);
+    String firstName = pageFunc.getFirstName(userId);
     return AppBar(
       backgroundColor: Color.fromRGBO(44, 177, 230, 1.0),
       centerTitle: true,
@@ -386,7 +392,7 @@ class pageComponents {
         Container(
           width: 150.0,
           child: Text(
-            "Hello, Daryll",
+            "Hello, $firstName",
             overflow: TextOverflow.ellipsis,
             style: TextStyle(
               color: Color.fromRGBO(39, 50, 115, 1.0),
@@ -598,14 +604,19 @@ class pageComponents {
     );
   }
 
-  void slider(BuildContext context, Function() onOkPressed, String loadAmount) {
+  void slider(BuildContext context, Function() onOkPressed, double loadAmount) {
+    // Define service fee
+    double serviceFee = 5.00;
+
+    // Calculate total amount
+    double totalAmount = loadAmount + serviceFee;
+
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
           content: Container(
             height: MediaQuery.of(context).size.height * 0.40,
-            // width: MediaQuery.of(context).size.height * 1,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -614,22 +625,22 @@ class pageComponents {
                   children: [
                     Text(
                       "PHP",
-                      style: TextStyle(color: Color(0xff18467e), fontSize: 22.0, fontWeight: FontWeight.w600),
+                      style: TextStyle(
+                        color: Color(0xff18467e),
+                        fontSize: 22.0,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                     Text(
                       "${loadAmount}",
-                      style: TextStyle(fontSize: 28.0, fontWeight: FontWeight.w700),
+                      style: TextStyle(
+                        fontSize: 28.0,
+                        fontWeight: FontWeight.w700,
+                      ),
                     ),
                   ],
                 ),
                 Divider(),
-                // Text(
-                //   "---------------",
-                //   style: TextStyle(
-                //       fontSize: 35.0,
-                //       color: Colors.grey,
-                //       fontWeight: FontWeight.w800),
-                // ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -639,7 +650,7 @@ class pageComponents {
                         fontWeight: FontWeight.w300,
                       ),
                     ),
-                    Text("Driver"),
+                    Text("Online"),
                   ],
                 ),
                 Row(
@@ -651,7 +662,7 @@ class pageComponents {
                         fontWeight: FontWeight.w300,
                       ),
                     ),
-                    Text("5.00"),
+                    Text("${serviceFee.toStringAsFixed(2)}"),
                   ],
                 ),
                 Row(
@@ -664,7 +675,7 @@ class pageComponents {
                       ),
                     ),
                     Text(
-                      "105.00",
+                      "${totalAmount.toStringAsFixed(2)}",
                     ),
                   ],
                 ),
@@ -672,29 +683,34 @@ class pageComponents {
                   height: 50.0,
                 ),
                 Center(
-                    child: SliderButton(
-                  shimmer: true,
-                  vibrationFlag: true,
-                  width: 230,
-                  height: 60.0,
-                  radius: 25,
-                  buttonColor: Color(0xffef8b06),
-                  backgroundColor: Color(0xffe0e0e0),
-                  highlightedColor: Colors.black,
-                  baseColor: Colors.red,
-                  action: () async {
-                    onOkPressed();
-                    return true;
-                  },
-                  label: Text(
-                    "Slide to confirm",
-                    style: TextStyle(color: Color(0xff4a4a4a), fontWeight: FontWeight.w500, fontSize: 17),
+                  child: SliderButton(
+                    shimmer: true,
+                    vibrationFlag: true,
+                    width: 230,
+                    height: 60.0,
+                    radius: 25,
+                    buttonColor: Color(0xffef8b06),
+                    backgroundColor: Color(0xffe0e0e0),
+                    highlightedColor: Colors.black,
+                    baseColor: Colors.red,
+                    action: () async {
+                      onOkPressed();
+                      return true;
+                    },
+                    label: Text(
+                      "Slide to confirm",
+                      style: TextStyle(
+                        color: Color(0xff4a4a4a),
+                        fontWeight: FontWeight.w500,
+                        fontSize: 17,
+                      ),
+                    ),
+                    icon: Icon(
+                      Icons.arrow_forward_ios_rounded,
+                      color: Colors.white,
+                    ),
                   ),
-                  icon: Icon(
-                    Icons.arrow_forward_ios_rounded,
-                    color: Colors.white,
-                  ),
-                ))
+                )
               ],
             ),
           ),
@@ -703,7 +719,21 @@ class pageComponents {
     );
   }
 
-  void loadConfirmed(BuildContext context, Function() onOkPressed, String alertTitle, String alertDescription, double loadAmount) {
+  void loadConfirmed(
+    BuildContext context,
+    Function() onOkPressed,
+    String alertTitle,
+    String alertDescription,
+    double loadAmount,
+  ) {
+    // Generate reference code, format date and ti
+    String referenceCode = "FP${Random().nextInt(999999).toString().padLeft(6, '0')}";
+    DateTime utcTime = DateTime.now().toUtc();
+    Duration philippinesOffset = Duration(hours: 8);
+    DateTime philippinesTime = utcTime.add(philippinesOffset);
+    String formattedDate = DateFormat('yyyy-MM-dd').format(philippinesTime);
+    String formattedTime = DateFormat('h:mm a').format(philippinesTime);
+
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -713,6 +743,9 @@ class pageComponents {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
+                SizedBox(
+                  height: 10,
+                ),
                 Text(
                   alertTitle,
                   style: TextStyle(
@@ -733,22 +766,49 @@ class pageComponents {
                 SizedBox(
                   height: 10.0,
                 ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      "Amount: ",
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
+                    Text(
+                      "₱${loadAmount.toStringAsFixed(2)}", // Display the amount
+                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Color.fromRGBO(13, 93, 158, 1.0)),
+                      textAlign: TextAlign.center,
+                    ),
+                  ],
+                ),
                 Text(
-                  "Amount:",
+                  "Reference Code: $referenceCode",
                   style: TextStyle(
-                    fontSize: 14,
+                    fontSize: 16,
                     fontWeight: FontWeight.w400,
                   ),
                   textAlign: TextAlign.center,
                 ),
                 Text(
-                  "₱${loadAmount}",
+                  "Date: $formattedDate",
                   style: TextStyle(
-                    fontSize: 30,
+                    fontSize: 16,
                     fontWeight: FontWeight.w400,
-                    color: Color(0xff17335a),
                   ),
                   textAlign: TextAlign.center,
+                ),
+                Text(
+                  "Time: $formattedTime",
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w400,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                SizedBox(
+                  height: 15,
                 ),
                 FittedBox(
                   fit: BoxFit.scaleDown,
@@ -767,7 +827,7 @@ class pageComponents {
                           color: Colors.white,
                         ),
                         child: QrImageView(
-                          data: 'QWERTYUIOP',
+                          data: referenceCode,
                           version: QrVersions.auto,
                           size: 200.0,
                         ),
@@ -775,17 +835,47 @@ class pageComponents {
                     ),
                   ),
                 ),
-                Align(
-                  alignment: Alignment.bottomCenter,
-                  child: TextButton(
-                    onPressed: onOkPressed,
-                    child: Text(
-                      "OK",
-                      style: TextStyle(
-                        color: Color.fromRGBO(24, 69, 125, 1.0),
-                        fontSize: 16.0,
-                        fontWeight: FontWeight.w700,
-                      ),
+                SizedBox(
+                  height: 10.0,
+                ),
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop(); // Close the dialog
+                    onOkPressed(); // Call the function passed as parameter
+                    try {
+                      int _currently_logged_user = pageFunc.current_user_id;
+                      Map<dynamic, dynamic> transactionDetails = {
+                        'userId': _currently_logged_user,
+                        'amount': loadAmount,
+                        'Payment Method': 'Online',
+                        'referenceCode': referenceCode,
+                        'date': formattedDate,
+                        'time': formattedTime,
+                      };
+
+                      // Add the transaction details to the Hive box 'filipay'
+                      List<Map<dynamic, dynamic>> userTransactions = _filipay.get(
+                        'user_transactions_$_currently_logged_user',
+                        defaultValue: [],
+                      ).cast<Map<dynamic, dynamic>>(); // Cast to the correct type
+                      userTransactions.add(transactionDetails);
+                      _filipay.put(
+                        'user_transactions_$_currently_logged_user',
+                        userTransactions,
+                      );
+
+                      // Print the updated transaction history
+                      print('User Transactions: $userTransactions');
+                    } catch (e) {
+                      print('Error storing user transactions: $e');
+                    }
+                  },
+                  child: Text(
+                    'OK',
+                    style: TextStyle(
+                      color: Color.fromRGBO(24, 69, 125, 1.0),
+                      fontSize: 16.0,
+                      fontWeight: FontWeight.w700,
                     ),
                   ),
                 ),

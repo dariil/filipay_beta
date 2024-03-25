@@ -2,7 +2,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import '../widgets/components.dart';
+import 'package:hive/hive.dart';
 import 'enterAmount.dart';
+import 'eWallet.dart';
+import '../functions/functions.dart';
 import 'drawer.dart';
 
 class SelectAmountPage extends StatefulWidget {
@@ -13,18 +16,37 @@ class SelectAmountPage extends StatefulWidget {
 }
 
 class _SelectAmountPageState extends State<SelectAmountPage> {
-  double loadAmount = 500.00;
+  final Box _filipay = Hive.box('filipay');
+  pageFunctions _functions = pageFunctions();
+
+  double balance = 0.0;
+
   bool _isLoading = false;
   String username = "[name]";
   double limit = 10000;
   final FocusNode _focusNode = FocusNode();
 
-  void loadingEnter() {
+  void loadingEnter(double amount) {
+    // Set loadAmount when entering the amount manually
+    double loadAmount = amount;
     setState(() {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => EnterAmountPage()),
-      );
+      Navigator.push(context, MaterialPageRoute(builder: (context) => EnterAmountPage()));
+    });
+  }
+
+  void initState() {
+    super.initState();
+    int _currently_logged_user = _functions.current_user_id;
+    balance = _filipay.get('balance_$_currently_logged_user', defaultValue: 0.0);
+  }
+
+  void updateBalance(double amount) {
+    setState(() {
+      balance += amount;
+      // Retrieve current user's ID
+      int _currently_logged_user = _functions.current_user_id;
+      // Update balance in Hive box using current user's ID
+      _filipay.put('balance_$_currently_logged_user', balance);
     });
   }
 
@@ -34,8 +56,11 @@ class _SelectAmountPageState extends State<SelectAmountPage> {
     });
   }
 
-  void loadingConnect() {
+  void loadingConnect(double loadAmount) {
     setTrue();
+    setState(() {
+      _isLoading = true;
+    });
     Future.delayed(Duration(seconds: 1), () {
       setState(() {
         _isLoading = false;
@@ -43,22 +68,23 @@ class _SelectAmountPageState extends State<SelectAmountPage> {
           context,
           () {
             Navigator.pop(context);
-            setState(() {
-              setTrue();
-              Future.delayed(Duration(seconds: 2), () {
-                setState(() {
-                  _isLoading = false;
-                  myComponents.loadConfirmed(context, () {
-                    Navigator.pop(context);
-                  }, "LOADING CONFIRMED", "Cash In", loadAmount);
-                  //myComponents.error(context, "ERROR!", "Hello, ${username}! You only have a Top Up limit of ${limit}. Please reenter a valid amount to proceed.");
-                  //myComponents.error(context, "ERROR!", "No connection. Please check your internet connectivity and try again.");
-                  //myComponents.error(context, "ERROR!", "Please try again later.");
-                });
+            setTrue();
+            Future.delayed(Duration(seconds: 2), () {
+              setState(() {
+                _isLoading = false;
+                // Update balance when confirmation is completed
+                updateBalance(loadAmount); // This line updates the balance
+                myComponents.loadConfirmed(context, () {
+                  // Navigate to the eWallet page after confirmation
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(builder: (context) => EWalletPage()),
+                  );
+                }, "LOADING CONFIRMED", "Cash In", loadAmount);
               });
             });
           },
-          "${loadAmount}",
+          loadAmount,
         );
       });
     });
@@ -74,76 +100,66 @@ class _SelectAmountPageState extends State<SelectAmountPage> {
       {
         'text': '10',
         'onPressed': () {
-          loadAmount = 10;
-          // loadingConnect();
+          double loadAmount = 10;
           _controller.text = "${loadAmount}";
         },
       },
       {
         'text': '20',
         'onPressed': () {
-          loadAmount = 20;
-          // loadingConnect();
+          double loadAmount = 20;
           _controller.text = "${loadAmount}";
         },
       },
       {
         'text': '30',
         'onPressed': () {
-          loadAmount = 30;
-          // loadingConnect();
+          double loadAmount = 30;
           _controller.text = "${loadAmount}";
         },
       },
       {
         'text': '40',
         'onPressed': () {
-          loadAmount = 40;
-          // loadingConnect();
+          double loadAmount = 40;
           _controller.text = "${loadAmount}";
         },
       },
       {
         'text': '50',
         'onPressed': () {
-          loadAmount = 50;
+          double loadAmount = 50;
           _controller.text = "${loadAmount}";
         },
       },
       {
         'text': '100',
         'onPressed': () {
-          loadAmount = 100;
+          double loadAmount = 100;
           _controller.text = "${loadAmount}";
         },
       },
       {
         'text': '250',
         'onPressed': () {
-          loadAmount = 250;
+          double loadAmount = 250;
           _controller.text = "${loadAmount}";
         },
       },
       {
         'text': '500',
         'onPressed': () {
-          loadAmount = 500;
+          double loadAmount = 500;
           _controller.text = "${loadAmount}";
         },
       },
       {
         'text': '1000',
         'onPressed': () {
-          loadAmount = 1000;
+          double loadAmount = 1000;
           _controller.text = "${loadAmount}";
         },
       },
-      // {
-      //   'text': 'Enter Amount',
-      //   'onPressed': () {
-      //     loadingEnter();
-      //   },
-      // },
     ];
     return Scaffold(
         key: scaffoldKey,
@@ -175,78 +191,70 @@ class _SelectAmountPageState extends State<SelectAmountPage> {
               Form(
                 key: _formKey,
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 20.0, vertical: 5.0),
-                  child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          "Enter desired load amount",
-                        ),
-                        AmountField(
-                          focusNode: _focusNode,
-                          controller: _controller,
-                        ),
-                        SizedBox(height: 30.0),
-                        Text(
-                          "Or you can also choose from the amount selection below?",
-                        ),
-                        SizedBox(height: 10.0),
-                        GridView.builder(
-                          shrinkWrap: true, // Add this line
-                          gridDelegate:
-                              const SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 3,
-                            mainAxisSpacing: 15.0,
-                            crossAxisSpacing: 15.0,
-                            childAspectRatio:
-                                1.5, // Aspect ratio of each grid item
-                          ),
-                          itemCount: buttonData.length,
-                          itemBuilder: (BuildContext context, int index) {
-                            return mainButtons.loadButtons(
-                              context: context,
-                              onPressed: buttonData[index]['onPressed'],
-                              text: buttonData[index]['text'],
-                              BackgroundColor: Colors.white,
-                              textColor: Color(0xff53a1d8),
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: 10.0, vertical: 10.0),
-                              radius: BorderRadius.circular(8.0),
-                            );
+                  padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 5.0),
+                  child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                    Text(
+                      "Enter desired load amount",
+                    ),
+                    AmountField(
+                      focusNode: _focusNode,
+                      controller: _controller,
+                    ),
+                    SizedBox(height: 30.0),
+                    Text(
+                      "Or you can also choose from the amount selection below?",
+                    ),
+                    SizedBox(height: 10.0),
+                    GridView.builder(
+                      shrinkWrap: true, // Add this line
+                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 3,
+                        mainAxisSpacing: 15.0,
+                        crossAxisSpacing: 15.0,
+                        childAspectRatio: 1.5, // Aspect ratio of each grid item
+                      ),
+                      itemCount: buttonData.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        return mainButtons.loadButtons(
+                          context: context,
+                          onPressed: () {
+                            buttonData[index]['onPressed']();
                           },
-                        ),
-                        SizedBox(height: 30.0),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 80.0),
-                          child: mainButtons.mainButton(
-                            context: context,
-                            onPressed: () {
-                              _focusNode.unfocus();
-                              if (_formKey.currentState!.validate()) {
-                                setTrue();
-                                loadingConnect();
-                                loadAmount = double.parse(_controller.text);
-                              }
-                            },
-                            text: 'CONFIRM',
-                            BackgroundColor: Color.fromRGBO(47, 50, 145, 1.0),
-                            padding: EdgeInsets.symmetric(
-                                horizontal: 40.0, vertical: 20.0),
-                            BorderRadius: BorderRadius.circular(15.0),
-                          ),
-                        ),
-                        SizedBox(height: 20.0),
-                      ]),
+                          text: buttonData[index]['text'],
+                          BackgroundColor: Colors.white,
+                          textColor: Color(0xff53a1d8),
+                          padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0),
+                          radius: BorderRadius.circular(8.0),
+                        );
+                      },
+                    ),
+                    SizedBox(height: 30.0),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 80.0),
+                      child: mainButtons.mainButton(
+                        context: context,
+                        onPressed: () {
+                          _focusNode.unfocus();
+                          if (_formKey.currentState!.validate()) {
+                            setTrue();
+                            // Call loadingConnect only when confirm button is pressed
+                            loadingConnect(double.parse(_controller.text));
+                          }
+                        },
+                        text: 'CONFIRM',
+                        BackgroundColor: Color.fromRGBO(47, 50, 145, 1.0),
+                        padding: EdgeInsets.symmetric(horizontal: 40.0, vertical: 20.0),
+                        BorderRadius: BorderRadius.circular(15.0),
+                      ),
+                    ),
+                    SizedBox(height: 20.0),
+                  ]),
                 ),
               ),
             ]),
           ),
           Center(
-            child: _isLoading
-                ? myComponents.simulateLoading(
-                    context: context, loadText: "Processing")
-                : Text(''),
+            child: _isLoading ? myComponents.simulateLoading(context: context, loadText: "Processing") : Text(''),
           ),
         ])));
   }

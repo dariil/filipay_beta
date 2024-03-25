@@ -88,24 +88,38 @@ class _AccountSetupState extends State<AccountSetup> {
     print("\n\nTHIS IS WORKING\n\n");
     final userProfileList = _filipay.get('tbl_user_profile');
 
-    int userProfileListIndex = userProfileList
-        .indexWhere((user) => user['user_id'] == myFunc.current_user_id);
+    int userProfileListIndex = userProfileList.indexWhere((user) => user['user_id'] == myFunc.current_user_id);
 
-    firstNameController.text =
-        userProfileList[userProfileListIndex]['firstname'];
-    middleNameController.text =
-        userProfileList[userProfileListIndex]['middlename'];
+    selectedOption = userProfileList[userProfileListIndex]['user_type'];
+
+    switch (selectedOption) {
+      case "STANDARD":
+        standard();
+        break;
+      case "STUDENT":
+        student();
+        break;
+      case "SENIOR CITIZEN":
+        senior();
+        break;
+      case "PWD":
+        pwd();
+        break;
+      default:
+        standard();
+    }
+
+    firstNameController.text = userProfileList[userProfileListIndex]['firstname'];
+    middleNameController.text = userProfileList[userProfileListIndex]['middlename'];
     lastNameController.text = userProfileList[userProfileListIndex]['lastname'];
-    dateofbirthController.text =
-        userProfileList[userProfileListIndex]['date_of_birth'];
+    dateofbirthController.text = userProfileList[userProfileListIndex]['date_of_birth'];
     addressController.text = userProfileList[userProfileListIndex]['address'];
   }
 
   void finishSetup() {
     final userProfileList = _filipay.get('tbl_user_profile');
 
-    int userProfileListIndex = userProfileList
-        .indexWhere((user) => user['user_id'] == myFunc.current_user_id);
+    int userProfileListIndex = userProfileList.indexWhere((user) => user['user_id'] == myFunc.current_user_id);
 
     if (userProfileList[userProfileListIndex]['firstname'] == "" ||
         userProfileList[userProfileListIndex]['middlename'] == "" ||
@@ -113,24 +127,17 @@ class _AccountSetupState extends State<AccountSetup> {
         userProfileList[userProfileListIndex]['date_of_birth'] == "" ||
         userProfileList[userProfileListIndex]['address'] == "" ||
         userProfileList[userProfileListIndex]['user_type'] == "N/A") {
-      myComponents.error(context, "Account setup incomplete",
-          "You need to setup your account first. Please fill al the fields to complete setup.");
-    } else if (firstNameController.text !=
-            userProfileList[userProfileListIndex]['firstname'] ||
-        middleNameController.text !=
-            userProfileList[userProfileListIndex]['middlename'] ||
-        lastNameController.text !=
-            userProfileList[userProfileListIndex]['lastname'] ||
-        dateofbirthController.text !=
-            userProfileList[userProfileListIndex]['date_of_birth'] ||
-        addressController.text !=
-            userProfileList[userProfileListIndex]['address']) {
+      myComponents.error(context, "Account setup incomplete", "You need to setup your account first. Please fill al the fields to complete setup.");
+    } else if (firstNameController.text != userProfileList[userProfileListIndex]['firstname'] ||
+        middleNameController.text != userProfileList[userProfileListIndex]['middlename'] ||
+        lastNameController.text != userProfileList[userProfileListIndex]['lastname'] ||
+        dateofbirthController.text != userProfileList[userProfileListIndex]['date_of_birth'] ||
+        addressController.text != userProfileList[userProfileListIndex]['address']) {
       myComponents.alert(context, () {
         Navigator.of(context).pushReplacement(MaterialPageRoute(
           builder: (context) => MainPage(),
         ));
-      }, "Unsaved Changes",
-          "You have unsaved changes. Click OK to exit without saving?");
+      }, "Unsaved Changes", "You have unsaved changes. Click OK to exit without saving?");
     } else {
       Navigator.of(context).pushReplacement(MaterialPageRoute(
         builder: (context) => MainPage(),
@@ -140,16 +147,16 @@ class _AccountSetupState extends State<AccountSetup> {
 
   Future<void> saveChanges(BuildContext context) async {
     final userProfileList = _filipay.get('tbl_user_profile');
-    int userProfileListIndex = userProfileList
-        .indexWhere((user) => user['user_id'] == myFunc.current_user_id);
+    int userProfileListIndex = userProfileList.indexWhere((user) => user['user_id'] == myFunc.current_user_id);
 
     if (firstNameController.text.isEmpty ||
         middleNameController.text.isEmpty ||
         lastNameController.text.isEmpty ||
         dateofbirthController.text.isEmpty ||
-        addressController.text.isEmpty) {
-      myComponents.error(context, "Fields cannot be empty",
-          "Make sure to fill all text fields. Please try again.");
+        addressController.text.isEmpty ||
+        selectedOption == "NONE") {
+      // Ensure an option is selected
+      myComponents.error(context, "Fields cannot be empty", "Make sure to fill all text fields and select a user type. Please try again.");
     } else {
       myComponents.bookConfirmation(context, () {
         Navigator.pop(context);
@@ -157,18 +164,12 @@ class _AccountSetupState extends State<AccountSetup> {
           _isLoading = true;
           Future.delayed(Duration(seconds: 2), () {
             setState(() {
-              userProfileList[userProfileListIndex]['firstname'] =
-                  firstNameController.text;
-              userProfileList[userProfileListIndex]['middlename'] =
-                  middleNameController.text;
-              userProfileList[userProfileListIndex]['lastname'] =
-                  lastNameController.text;
-              userProfileList[userProfileListIndex]['date_of_birth'] =
-                  dateofbirthController.text;
-              userProfileList[userProfileListIndex]['address'] =
-                  addressController.text;
-              userProfileList[userProfileListIndex]['user_type'] =
-                  selectedOption;
+              userProfileList[userProfileListIndex]['firstname'] = firstNameController.text;
+              userProfileList[userProfileListIndex]['middlename'] = middleNameController.text;
+              userProfileList[userProfileListIndex]['lastname'] = lastNameController.text;
+              userProfileList[userProfileListIndex]['date_of_birth'] = dateofbirthController.text;
+              userProfileList[userProfileListIndex]['address'] = addressController.text;
+              userProfileList[userProfileListIndex]['user_type'] = selectedOption; // Save selected user type
               _filipay.put('tbl_users', myFunc.tbl_users);
               _filipay.put('tbl_user_profile', myFunc.tbl_user_profile);
               _isLoading = false;
@@ -242,8 +243,7 @@ class _AccountSetupState extends State<AccountSetup> {
                       if (value == 'change_pass') {
                         Navigator.push(
                           context,
-                          MaterialPageRoute(
-                              builder: (context) => ChangePasswordPage()),
+                          MaterialPageRoute(builder: (context) => ChangePasswordPage()),
                         );
                       } else if (value == 'change_pin') {
                         myFunc.pinMode = true;
@@ -253,8 +253,7 @@ class _AccountSetupState extends State<AccountSetup> {
                         );
                       }
                     },
-                    itemBuilder: (BuildContext context) =>
-                        <PopupMenuEntry<String>>[
+                    itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
                       PopupMenuItem<String>(
                         value: 'change_pass',
                         child: Text('Change Password'),
@@ -288,15 +287,13 @@ class _AccountSetupState extends State<AccountSetup> {
                                   decoration: BoxDecoration(
                                     shape: BoxShape.circle,
                                     border: Border.all(
-                                      color: Color.fromRGBO(
-                                          7, 64, 87, 1.0), // Border color
+                                      color: Color.fromRGBO(7, 64, 87, 1.0), // Border color
                                       width: 4, // Border width
                                     ),
                                   ),
                                   child: CircleAvatar(
                                     radius: 35,
-                                    backgroundImage: AssetImage(
-                                        "assets/general/undraw_Drink_coffee.png"),
+                                    backgroundImage: AssetImage("assets/general/undraw_Drink_coffee.png"),
                                   ),
                                 ),
                                 Positioned(
@@ -342,22 +339,18 @@ class _AccountSetupState extends State<AccountSetup> {
                             myComponents.coloredBackground(
                                 color: Color.fromRGBO(203, 233, 242, 1.0),
                                 childWidget: Column(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
-                                  crossAxisAlignment:
-                                      CrossAxisAlignment.stretch,
+                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                  crossAxisAlignment: CrossAxisAlignment.stretch,
                                   children: [
                                     Form(
                                       key: _formKey,
                                       child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
+                                        crossAxisAlignment: CrossAxisAlignment.start,
                                         children: [
                                           Text(
                                             "First Name",
                                             style: TextStyle(
-                                              color: Color.fromRGBO(
-                                                  5, 80, 120, 1.0),
+                                              color: Color.fromRGBO(5, 80, 120, 1.0),
                                             ),
                                           ),
                                           SetupAccountTextForm(
@@ -367,8 +360,7 @@ class _AccountSetupState extends State<AccountSetup> {
                                           Text(
                                             "Middle Name",
                                             style: TextStyle(
-                                              color: Color.fromRGBO(
-                                                  5, 80, 120, 1.0),
+                                              color: Color.fromRGBO(5, 80, 120, 1.0),
                                             ),
                                           ),
                                           SetupAccountTextForm(
@@ -393,45 +385,33 @@ class _AccountSetupState extends State<AccountSetup> {
                                           Text(
                                             "Date of Birth",
                                             style: TextStyle(
-                                              color: Color.fromRGBO(
-                                                  5, 80, 120, 1.0),
+                                              color: Color.fromRGBO(5, 80, 120, 1.0),
                                             ),
                                           ),
                                           isEditing
                                               ? Stack(
                                                   children: [
                                                     GestureDetector(
-                                                      onTap: () =>
-                                                          _selectDate(context),
+                                                      onTap: () => _selectDate(context),
                                                       child: TextFormField(
-                                                        controller:
-                                                            dateofbirthController,
+                                                        controller: dateofbirthController,
                                                         enabled: false,
                                                         style: TextStyle(
                                                           color: Colors.black,
                                                         ),
-                                                        decoration: myComponents
-                                                            .userInfoDecoration(
-                                                          BorderRadius.circular(
-                                                              20.0),
+                                                        decoration: myComponents.userInfoDecoration(
+                                                          BorderRadius.circular(20.0),
                                                           Color(0xff53a1d8),
                                                         ),
                                                       ),
                                                     ),
                                                     Align(
-                                                      alignment:
-                                                          Alignment.centerRight,
+                                                      alignment: Alignment.centerRight,
                                                       child: IconButton(
-                                                        icon: Icon(
-                                                            isEditing
-                                                                ? Icons.close
-                                                                : Icons.edit,
-                                                            color: Color(
-                                                                0xff53a1d8)),
+                                                        icon: Icon(isEditing ? Icons.close : Icons.edit, color: Color(0xff53a1d8)),
                                                         onPressed: () {
                                                           setState(() {
-                                                            isEditing =
-                                                                !isEditing;
+                                                            isEditing = !isEditing;
                                                           });
                                                         },
                                                       ),
@@ -441,33 +421,23 @@ class _AccountSetupState extends State<AccountSetup> {
                                               : Stack(
                                                   children: [
                                                     TextFormField(
-                                                      controller:
-                                                          dateofbirthController,
+                                                      controller: dateofbirthController,
                                                       enabled: false,
                                                       style: TextStyle(
                                                         color: Colors.black,
                                                       ),
-                                                      decoration: myComponents
-                                                          .userInfoDecoration(
-                                                        BorderRadius.circular(
-                                                            20.0),
+                                                      decoration: myComponents.userInfoDecoration(
+                                                        BorderRadius.circular(20.0),
                                                         Color(0xff53a1d8),
                                                       ),
                                                     ),
                                                     Align(
-                                                      alignment:
-                                                          Alignment.centerRight,
+                                                      alignment: Alignment.centerRight,
                                                       child: IconButton(
-                                                        icon: Icon(
-                                                            isEditing
-                                                                ? Icons.close
-                                                                : Icons.edit,
-                                                            color: Color(
-                                                                0xff53a1d8)),
+                                                        icon: Icon(isEditing ? Icons.close : Icons.edit, color: Color(0xff53a1d8)),
                                                         onPressed: () {
                                                           setState(() {
-                                                            isEditing =
-                                                                !isEditing;
+                                                            isEditing = !isEditing;
                                                           });
                                                         },
                                                       ),
@@ -477,8 +447,7 @@ class _AccountSetupState extends State<AccountSetup> {
                                           Text(
                                             "Address",
                                             style: TextStyle(
-                                              color: Color.fromRGBO(
-                                                  5, 80, 120, 1.0),
+                                              color: Color.fromRGBO(5, 80, 120, 1.0),
                                             ),
                                           ),
                                           SetupAccountTextForm(
@@ -506,15 +475,10 @@ class _AccountSetupState extends State<AccountSetup> {
                                         child: standardSelected
                                             ? myComponents.userType(
                                                 text: "STANDARD",
-                                                decoration: myComponents
-                                                    .selectedUserType(),
-                                                textColor: Color.fromRGBO(
-                                                    24, 69, 125, 1.0))
+                                                decoration: myComponents.selectedUserType(),
+                                                textColor: Color.fromRGBO(24, 69, 125, 1.0))
                                             : myComponents.userType(
-                                                text: "STANDARD",
-                                                decoration: myComponents
-                                                    .defaultUserType(),
-                                                textColor: Colors.white)),
+                                                text: "STANDARD", decoration: myComponents.defaultUserType(), textColor: Colors.white)),
                                     GestureDetector(
                                         onTap: () {
                                           student();
@@ -522,15 +486,10 @@ class _AccountSetupState extends State<AccountSetup> {
                                         child: studentSelected
                                             ? myComponents.userType(
                                                 text: "STUDENT",
-                                                decoration: myComponents
-                                                    .selectedUserType(),
-                                                textColor: Color.fromRGBO(
-                                                    24, 69, 125, 1.0))
+                                                decoration: myComponents.selectedUserType(),
+                                                textColor: Color.fromRGBO(24, 69, 125, 1.0))
                                             : myComponents.userType(
-                                                text: "STUDENT",
-                                                decoration: myComponents
-                                                    .defaultUserType(),
-                                                textColor: Colors.white)),
+                                                text: "STUDENT", decoration: myComponents.defaultUserType(), textColor: Colors.white)),
                                     GestureDetector(
                                         onTap: () {
                                           senior();
@@ -538,31 +497,19 @@ class _AccountSetupState extends State<AccountSetup> {
                                         child: seniorSelected
                                             ? myComponents.userType(
                                                 text: "SENIOR CITIZEN",
-                                                decoration: myComponents
-                                                    .selectedUserType(),
-                                                textColor: Color.fromRGBO(
-                                                    24, 69, 125, 1.0))
+                                                decoration: myComponents.selectedUserType(),
+                                                textColor: Color.fromRGBO(24, 69, 125, 1.0))
                                             : myComponents.userType(
-                                                text: "SENIOR CITIZEN",
-                                                decoration: myComponents
-                                                    .defaultUserType(),
-                                                textColor: Colors.white)),
+                                                text: "SENIOR CITIZEN", decoration: myComponents.defaultUserType(), textColor: Colors.white)),
                                     GestureDetector(
                                         onTap: () {
                                           pwd();
                                         },
                                         child: pwdSelected
                                             ? myComponents.userType(
-                                                text: "PWD",
-                                                decoration: myComponents
-                                                    .selectedUserType(),
-                                                textColor: Color.fromRGBO(
-                                                    24, 69, 125, 1.0))
+                                                text: "PWD", decoration: myComponents.selectedUserType(), textColor: Color.fromRGBO(24, 69, 125, 1.0))
                                             : myComponents.userType(
-                                                text: "PWD",
-                                                decoration: myComponents
-                                                    .defaultUserType(),
-                                                textColor: Colors.white)),
+                                                text: "PWD", decoration: myComponents.defaultUserType(), textColor: Colors.white)),
                                   ],
                                 ),
                               ),
@@ -581,10 +528,7 @@ class _AccountSetupState extends State<AccountSetup> {
                             Text(
                               "Get 20% discount on all public utility vehicles! Submit a valid ID.",
                               style: TextStyle(
-                                  fontSize: 18.0,
-                                  fontWeight: FontWeight.w700,
-                                  fontStyle: FontStyle.italic,
-                                  color: Color.fromRGBO(46, 156, 219, 1.0)),
+                                  fontSize: 18.0, fontWeight: FontWeight.w700, fontStyle: FontStyle.italic, color: Color.fromRGBO(46, 156, 219, 1.0)),
                               textAlign: TextAlign.center,
                             ),
                             SizedBox(
@@ -611,8 +555,7 @@ class _AccountSetupState extends State<AccountSetup> {
                                   ),
                                 ),
                                 Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 5.0),
+                                  padding: const EdgeInsets.symmetric(horizontal: 5.0),
                                   child: Text(
                                     "LIMITS AND VERIFICATIONS",
                                     style: TextStyle(
@@ -656,33 +599,25 @@ class _AccountSetupState extends State<AccountSetup> {
                             SizedBox(
                               height: 20.0,
                             ),
-                            Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(
-                                    "Cash in Limit",
-                                    style: TextStyle(
-                                        fontSize: 18.0,
-                                        fontWeight: FontWeight.w700,
-                                        color:
-                                            Color.fromRGBO(24, 69, 125, 1.0)),
-                                  ),
-                                  Text(
-                                    "1,000.00",
-                                    style: TextStyle(
-                                      fontSize: 18.0,
-                                      fontWeight: FontWeight.w400,
-                                    ),
-                                  ),
-                                ]),
+                            Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+                              Text(
+                                "Cash in Limit",
+                                style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.w700, color: Color.fromRGBO(24, 69, 125, 1.0)),
+                              ),
+                              Text(
+                                "1,000.00",
+                                style: TextStyle(
+                                  fontSize: 18.0,
+                                  fontWeight: FontWeight.w400,
+                                ),
+                              ),
+                            ]),
                             SizedBox(
                               height: 20.0,
                             ),
                             ElevatedButton(
                               style: ElevatedButton.styleFrom(
-                                backgroundColor:
-                                    Color.fromRGBO(0, 174, 237, 1.0),
+                                backgroundColor: Color.fromRGBO(0, 174, 237, 1.0),
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(10.0),
                                 ),
@@ -715,8 +650,7 @@ class _AccountSetupState extends State<AccountSetup> {
                               },
                               text: 'SAVE',
                               BackgroundColor: Color.fromRGBO(47, 50, 145, 1.0),
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: 40.0, vertical: 10.0),
+                              padding: EdgeInsets.symmetric(horizontal: 40.0, vertical: 10.0),
                               BorderRadius: BorderRadius.circular(25.0),
                             ),
                             SizedBox(
@@ -728,10 +662,7 @@ class _AccountSetupState extends State<AccountSetup> {
                     ),
                   ),
                   Center(
-                    child: _isLoading
-                        ? myComponents.simulateLoading(
-                            context: context, loadText: "Processing")
-                        : Text(''),
+                    child: _isLoading ? myComponents.simulateLoading(context: context, loadText: "Processing") : Text(''),
                   ),
                 ],
               ),
