@@ -13,6 +13,7 @@ dependencies:
   encrypt: ^5.0.3
   flutter:
     sdk: flutter
+  flutter_dotenv: ^5.1.0
   flutter_local_authentication: ^1.2.0
   gradient_borders: ^1.0.0
   hive_flutter: ^1.1.0
@@ -43,6 +44,7 @@ flutter:
     - assets/general/
     - assets/transportation/
     - assets/e-wallet/
+    - .env
 
 fonts:
   - family: Schyler
