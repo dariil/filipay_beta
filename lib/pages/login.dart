@@ -1,3 +1,4 @@
+import 'package:filipay_beta/functions/httpRequest.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
@@ -8,6 +9,12 @@ import '../functions/functions.dart';
 import 'pin.dart';
 import 'package:local_auth/local_auth.dart';
 import '../functions/myEncryption.dart';
+import '../functions/token.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import '../functions/token.dart';
+import 'package:logger/logger.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -17,19 +24,15 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  globalToken myToken = globalToken();
   late final LocalAuthentication auth = LocalAuthentication();
   MyEncryptionDecryption encrpytionMethod = MyEncryptionDecryption();
   // bool _supportState = false;
 
-  // void initState() {
-  //   super.initState();
-  //   auth = LocalAuthentication();
-  //   auth.isDeviceSupported().then(
-  //         (bool isSupprted) => setState(() {
-  //           _supportState = isSupprted;
-  //         }),
-  //       );
-  // }
+  void initState() {
+    super.initState();
+    print("THIS IS THE GLOBAL TOKEN: ${myToken.getToken}");
+  }
 
   TextEditingController emailController = TextEditingController();
   TextEditingController passController = TextEditingController();
@@ -45,7 +48,7 @@ class _LoginPageState extends State<LoginPage> {
 
   pageComponents myComponents = pageComponents();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-
+  httprequestService httpService = httprequestService();
   final _filipay = Hive.box("filipay");
 
   Future<bool> _loginUser(String email, String password) async {
@@ -78,6 +81,51 @@ class _LoginPageState extends State<LoginPage> {
     } else {
       print("Not Empty");
       return true;
+    }
+  }
+
+  Future<void> loginReq() async {
+    String LoginAPI = dotenv.get("LOGIN_REQUEST", fallback: "");
+    try {
+      var response = await http.post(
+        Uri.parse(LoginAPI),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ${myToken.getToken}', // Replace YOUR_TOKEN_HERE with the actual token
+        },
+        body: jsonEncode({
+          'email': emailController.text,
+          'password': passController.text,
+        }),
+      );
+
+      if (response.statusCode == 200) {
+        var responseData = jsonDecode(response.body);
+        // var token = responseData['response']['token'];
+        print(responseData);
+        // print('\n\n\n${responseData['response']['pin']}');
+        var logger = Logger();
+        logger.d('${responseData['response']['pin']}');
+        myFunc.serverPin = responseData['response']['pin'];
+
+        setState(() {
+          _isLoading = true;
+        });
+        Future.delayed(Duration(seconds: 2), () {
+          setState(() {
+            _isLoading = false;
+            myFunc.loginPin = true;
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => CreatePin()),
+            );
+          });
+        });
+      } else {
+        print('Login failed with status: ${response.statusCode}.');
+      }
+    } catch (e) {
+      print('Error during login: $e');
     }
   }
 
@@ -276,9 +324,27 @@ class _LoginPageState extends State<LoginPage> {
                                     width: double.infinity,
                                     child: mainButtons.mainButton(
                                       context: context,
-                                      onPressed: () {
+                                      onPressed: () async {
                                         if (_formKey.currentState!.validate()) {
-                                          login();
+                                          myComponents.showLoading(context, "Logging in");
+                                          Map<String, dynamic> isLoginResponse = await httpService.Login({
+                                            "email": emailController.text,
+                                            "password": passController.text,
+                                          });
+
+                                          if (isLoginResponse['messages']['code'].toString() == '0') {
+                                            Navigator.of(context).pop();
+
+                                            myFunc.loginPin = true;
+
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(builder: (context) => CreatePin()),
+                                            );
+                                          } else {
+                                            Navigator.of(context).pop();
+                                            myComponents.errorModal(context, "${isLoginResponse['messages']['message']}");
+                                          }
                                         }
                                       },
                                       text: 'LOGIN',

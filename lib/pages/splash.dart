@@ -4,6 +4,11 @@ import 'package:flutter/services.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import '../functions/functions.dart';
 import '../functions/myEncryption.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import '../functions/token.dart';
+import '../functions/myEncryption.dart';
 // import 'package:encrypt/encrypt.dart' as encrypt;
 
 class Splash extends StatefulWidget {
@@ -15,6 +20,7 @@ class Splash extends StatefulWidget {
 
 class _SplashState extends State<Splash> with SingleTickerProviderStateMixin {
   pageFunctions myFunc = pageFunctions();
+  globalToken myToken = globalToken();
   MyEncryptionDecryption encrpytionMethod = MyEncryptionDecryption();
   final _filipay = Hive.box("filipay");
   late AnimationController _controller;
@@ -46,19 +52,36 @@ class _SplashState extends State<Splash> with SingleTickerProviderStateMixin {
       }
     });
     _initializedData();
+    fetchToken();
+  }
+
+  // GET REQUEST
+  void fetchToken() async {
+    String getTokenAPI = dotenv.get("GET_TOKEN", fallback: "");
+    var url = Uri.parse(getTokenAPI);
+
+    // Encode your username and password using base64
+    var authCredentials = base64.encode(utf8.encode('${dotenv.env['username'].toString()}:${dotenv.env['password'].toString()}'));
+
+    // Add basic auth header to your request
+    var response = await http.get(
+      url,
+      headers: {'Authorization': 'Basic $authCredentials'},
+    );
+
+    if (response.statusCode == 200) {
+      var responseData = jsonDecode(response.body);
+      var token = responseData['response']['token'];
+      var expiresAt = responseData['response']['expiresAt'];
+      print('Token: $token');
+      print('Expires At: $expiresAt');
+      myToken.getToken = token;
+    } else {
+      print('Request failed with status: ${response.statusCode}.');
+    }
   }
 
   Future<void> _initializedData() async {
-    // if (!_filipay.containsKey('iv_storage')) {
-    //   myFunc.iv_storage.add({
-    //     'iv': iv,
-    //   });
-    //   _filipay.put('iv_storage', myFunc.iv_storage);
-    // } else {
-    //   final iv_storage = _filipay.get('iv_storage');
-    //   myFunc.iv_storage = List<Map<dynamic, dynamic>>.from(iv_storage);
-    // }
-
     if (!_filipay.containsKey('tbl_users')) {
       var ecryptedPin = MyEncryptionDecryption.encryptAES('8888').toString();
       var decryptedPin = MyEncryptionDecryption.decryptAES(ecryptedPin).toString();

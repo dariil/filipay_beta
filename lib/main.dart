@@ -4,9 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'pages/splash.dart';
 import 'functions/myEncryption.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 void main() async {
   await MyEncryptionDecryption.init();
+  await dotenv.load(fileName: '.env');
   // if (MyEncryptionDecryption.getIV().bytes.isEmpty) {
   //   MyEncryptionDecryption.generateAndSaveIV();
   // }

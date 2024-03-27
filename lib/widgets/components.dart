@@ -255,6 +255,46 @@ class pageComponents {
     );
   }
 
+  void showLoading(BuildContext context, String label) {
+    showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return PopScope(
+            canPop: false,
+            onPopInvoked: (didPop) {
+              // logic
+            },
+            child: AlertDialog(
+              contentPadding: EdgeInsets.zero,
+              content: Container(
+                height: MediaQuery.of(context).size.height * 0.3,
+                decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(10)),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      '${label.toUpperCase()}',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(color: Colors.blue, fontSize: 20, fontWeight: FontWeight.bold),
+                    ),
+                    Image.asset(
+                      'assets/general/loading.gif',
+                      width: MediaQuery.of(context).size.width * 0.4,
+                    ),
+                    Text(
+                      'Please wait...',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          );
+        });
+  }
+
   Stack simulateLoading({required BuildContext context, required String loadText}) {
     return Stack(
       alignment: Alignment.center,
@@ -1295,6 +1335,17 @@ class pageComponents {
           ],
         );
       },
+    );
+  }
+
+  void errorModal(BuildContext context, String label) {
+    ArtSweetAlert.show(
+      context: context,
+      artDialogArgs: ArtDialogArgs(
+        type: ArtSweetAlertType.danger,
+        title: "Error",
+        text: label.toUpperCase(),
+      ),
     );
   }
 

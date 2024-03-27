@@ -91,7 +91,7 @@ class pageFunctions {
     _user_profile_id = value;
   }
 
-  static int? _currently_logged_user;
+  static int? _currently_logged_user = 0;
   int get current_user_id => _currently_logged_user!;
 
   set current_user_id(int value) {
@@ -162,5 +162,13 @@ class pageFunctions {
 
   void addTransaction(Map<String, dynamic> transactionDetails) {
     _user_transactionHistory.add(transactionDetails);
+  }
+
+  static String _serverPin = "N/A";
+
+  String get serverPin => _serverPin;
+
+  set serverPin(String value) {
+    _serverPin = value;
   }
 }
