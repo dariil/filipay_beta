@@ -2,17 +2,12 @@ import 'dart:async';
 import 'package:filipay_beta/pages/mainPage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-// import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import '../widgets/components.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 import '../functions/functions.dart';
 import 'accountSetup.dart';
 import '../functions/myEncryption.dart';
-// import 'package:http/http.dart' as http;
-// import 'dart:convert';
-// import 'package:flutter_dotenv/flutter_dotenv.dart';
-import '../functions/token.dart';
 
 class CreatePin extends StatefulWidget {
   const CreatePin({super.key});
@@ -24,7 +19,6 @@ class CreatePin extends StatefulWidget {
 class _CreatePinState extends State<CreatePin> {
   pageComponents myComponents = pageComponents();
   pageFunctions pinPage = pageFunctions();
-  globalToken myToken = globalToken();
 
   StreamController<ErrorAnimationType>? errorController;
   TextEditingController pinController = TextEditingController();
@@ -205,8 +199,6 @@ class _CreatePinState extends State<CreatePin> {
     });
   }
 
-  //////////////////////////////////////////////////////////////////////////////////////////
-
   Future<void> _pinLogin() async {
     // _filipay.put('tbl_users', pinPage.tbl_users);
     // _filipay.put('tbl_user_profile', pinPage.tbl_user_profile);
@@ -218,9 +210,8 @@ class _CreatePinState extends State<CreatePin> {
     userPin = userList[index]['user_pin'].toString();
     var decryptPin = MyEncryptionDecryption.decryptAES(userPin).toString();
     _isLoading = true;
-    var decPin = MyEncryptionDecryption.decryptAES(pinPage.serverPin).toString();
     Future.delayed(Duration(seconds: 2), () {
-      if (pinEnter != decPin) {
+      if (pinEnter.toString() != decryptPin) {
         _isLoading = false;
         setState(() {
           incorrectPin();
@@ -253,8 +244,6 @@ class _CreatePinState extends State<CreatePin> {
       }
     });
   }
-
-  //////////////////////////////////////////////////////////////////////////////////////////
 
   // Future<bool> _pinLogin(String email, String password) async {
   //   final userList = _filipay.get('tbl_users');

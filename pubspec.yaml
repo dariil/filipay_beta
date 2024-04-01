@@ -45,6 +45,7 @@ flutter:
     - assets/general/
     - assets/transportation/
     - assets/e-wallet/
+    - .env
 
 fonts:
   - family: Schyler

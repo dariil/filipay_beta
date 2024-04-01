@@ -38,6 +38,8 @@ class _AccountSetupState extends State<AccountSetup> {
   TextEditingController lastNameController = TextEditingController();
   TextEditingController dateofbirthController = TextEditingController();
   TextEditingController addressController = TextEditingController();
+  TextEditingController emailController = TextEditingController();
+  TextEditingController numberController = TextEditingController();
 
   pageComponents myComponents = pageComponents();
   pageFunctions myFunc = pageFunctions();
@@ -390,6 +392,26 @@ class _AccountSetupState extends State<AccountSetup> {
                                           SetupAccountTextForm(
                                             myComponents: myComponents,
                                             controller: lastNameController,
+                                          ),
+                                          Text(
+                                            "Email Address",
+                                            style: TextStyle(
+                                              color: Color.fromRGBO(5, 80, 120, 1.0),
+                                            ),
+                                          ),
+                                          SetupAccountTextForm(
+                                            myComponents: myComponents,
+                                            controller: emailController,
+                                          ),
+                                          Text(
+                                            "Mobile Number",
+                                            style: TextStyle(
+                                              color: Color.fromRGBO(5, 80, 120, 1.0),
+                                            ),
+                                          ),
+                                          SetupAccountTextForm(
+                                            myComponents: myComponents,
+                                            controller: numberController,
                                           ),
                                           Text(
                                             "Date of Birth",
