@@ -1,4 +1,5 @@
 import 'package:hive_flutter/hive_flutter.dart';
+import 'dart:math';
 
 class pageFunctions {
   final _filipay = Hive.box("filipay");
@@ -7,6 +8,15 @@ class pageFunctions {
     final userList = _filipay.get('tbl_users');
     // ignore: unused_local_variable
     final userProfileList = _filipay.get('tbl_user_profile');
+  }
+
+  String generateRandomId(int length) {
+    var random = Random();
+    var codeUnits = List.generate(
+      length,
+      (index) => random.nextInt(1114111 - 32) + 32,
+    );
+    return String.fromCharCodes(codeUnits);
   }
 
   static String _transportMode = "QR Reader";
@@ -56,10 +66,10 @@ class pageFunctions {
     _reservedTime = value;
   }
 
-  static int? _user_id;
-  int get user_id => _user_id!;
+  static String? _user_id;
+  String get user_id => _user_id!;
 
-  set user_id(int value) {
+  set user_id(String value) {
     _user_id = value;
   }
 
@@ -91,10 +101,10 @@ class pageFunctions {
     _user_profile_id = value;
   }
 
-  static int? _currently_logged_user = 0;
-  int get current_user_id => _currently_logged_user!;
+  static String _currently_logged_user = "";
+  String get current_user_id => _currently_logged_user;
 
-  set current_user_id(int value) {
+  set current_user_id(String value) {
     _currently_logged_user = value;
   }
 
@@ -135,23 +145,23 @@ class pageFunctions {
 
   int get remaining_balance => _remaining_balance;
 
-  String getFirstName(int userId) {
-    final userProfile = _filipay.get('tbl_user_profile');
-    final user = userProfile.firstWhere((user) => user['user_id'] == userId);
-    return user['firstname'];
-  }
+  // String getFirstName(String userId) {
+  //   final userProfile = _filipay.get('tbl_user_profile');
+  //   final user = userProfile.firstWhere((user) => user['user_id'] == userId);
+  //   return user['firstname'];
+  // }
 
-  String getLastName(int userId) {
-    final userProfile = _filipay.get('tbl_user_profile');
-    final user = userProfile.firstWhere((user) => user['user_id'] == userId);
-    return user['lastname'];
-  }
+  // String getLastName(String userId) {
+  //   final userProfile = _filipay.get('tbl_user_profile');
+  //   final user = userProfile.firstWhere((user) => user['user_id'] == userId);
+  //   return user['lastname'];
+  // }
 
-  String getAccountType(int userId) {
-    final userProfile = _filipay.get('tbl_user_profile');
-    final user = userProfile.firstWhere((user) => user['user_id'] == userId, orElse: () => {});
-    return user.containsKey('user_type') ? user['user_type'] : 'Default Account Type';
-  }
+  // String getAccountType(String userId) {
+  //   final userProfile = _filipay.get('tbl_user_profile');
+  //   final user = userProfile.firstWhere((user) => user['user_id'] == userId, orElse: () => {});
+  //   return user.containsKey('user_type') ? user['user_type'] : 'Default Account Type';
+  // }
 
   double getBalance() {
     return _filipay.get('balance_${_currently_logged_user}', defaultValue: 0.0);

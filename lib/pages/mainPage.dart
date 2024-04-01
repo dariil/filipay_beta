@@ -1,8 +1,5 @@
 import 'package:filipay_beta/pages/topUpPage.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
-import 'package:flutter/widgets.dart';
 import 'package:hive/hive.dart';
 import '../widgets/components.dart';
 import 'drawer.dart';
@@ -26,30 +23,21 @@ class _MainPageState extends State<MainPage> {
   String? fff;
   double balance = 0.0;
 
-  @override
-  void initState() {
-    super.initState();
-    // Retrieve balance from Hive box
-    balance = myFunc.getBalance();
-  }
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   balance = myFunc.getBalance();
+  // }
 
   void switchPanelPOTG() {
     setState(() {
       isPayAhead = false;
-      // Navigator.push(
-      //   context,
-      //   MaterialPageRoute(builder: (context) => EnterAmountPage()),
-      // );
     });
   }
 
   void switchPanelPA() {
     setState(() {
       isPayAhead = true;
-      // Navigator.push(
-      //   context,
-      //   MaterialPageRoute(builder: (context) => EnterAmountPage()),
-      // );
     });
   }
 
@@ -64,13 +52,13 @@ class _MainPageState extends State<MainPage> {
     }
   }
 
-  void enableBiometrics() {
-    _filipay.put('tbl_recent_login', myFunc.tbl_recent_login);
-    final recentUser = _filipay.get('tbl_recent_login');
-    recentUser.add({
-      "recent_user_id": myFunc.current_user_id,
-    });
-  }
+  // void enableBiometrics() {
+  //   _filipay.put('tbl_recent_login', myFunc.tbl_recent_login);
+  //   final recentUser = _filipay.get('tbl_recent_login');
+  //   recentUser.add({
+  //     "recent_user_id": myFunc.current_user_id,
+  //   });
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -402,7 +390,7 @@ class _MainPageState extends State<MainPage> {
                                             )),
                                         TextButton(
                                             onPressed: () {
-                                              enableBiometrics();
+                                              // enableBiometrics();
                                               Navigator.pop(context);
                                             },
                                             child: Text(

@@ -10,11 +10,11 @@ import 'pin.dart';
 import 'package:local_auth/local_auth.dart';
 import '../functions/myEncryption.dart';
 import '../functions/token.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
-import '../functions/token.dart';
-import 'package:logger/logger.dart';
+// import 'package:http/http.dart' as http;
+// import 'dart:convert';
+// import 'package:flutter_dotenv/flutter_dotenv.dart';
+// import '../functions/token.dart';
+// import 'package:logger/logger.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -51,27 +51,27 @@ class _LoginPageState extends State<LoginPage> {
   httprequestService httpService = httprequestService();
   final _filipay = Hive.box("filipay");
 
-  Future<bool> _loginUser(String email, String password) async {
-    _filipay.put('tbl_recent_login', myFunc.tbl_recent_login);
-    final userList = _filipay.get('tbl_users');
-    //final recentUser = _filipay.get('tbl_recent_login');
-    for (var user in userList) {
-      String decryptEmail = MyEncryptionDecryption.decryptAES(user['user_pass']).toString();
-      if (user['user_email'] == email && decryptEmail == password) {
-        print('Login successful for ${user['user_email']}');
-        int index = userList.indexWhere((user) => user['user_email'] == email);
-        myFunc.current_user_id = userList[index]['user_id'];
-        // if (recentUser != null || (recentUser as List).isNotEmpty) {
-        //   if (myFunc.current_user_id != recentUser[0]['recent_user_id']) {
-        //     recentUser.clear();
-        //   }
-        // }
-        return true;
-      }
-    }
-    print('Login failed');
-    return false;
-  }
+  // Future<bool> _loginUser(String email, String password) async {
+  //   _filipay.put('tbl_recent_login', myFunc.tbl_recent_login);
+  //   final userList = _filipay.get('tbl_users');
+  //   //final recentUser = _filipay.get('tbl_recent_login');
+  //   for (var user in userList) {
+  //     String decryptEmail = MyEncryptionDecryption.decryptAES(user['user_pass']).toString();
+  //     if (user['user_email'] == email && decryptEmail == password) {
+  //       print('Login successful for ${user['user_email']}');
+  //       int index = userList.indexWhere((user) => user['user_email'] == email);
+  //       myFunc.current_user_id = userList[index]['user_id'];
+  //       // if (recentUser != null || (recentUser as List).isNotEmpty) {
+  //       //   if (myFunc.current_user_id != recentUser[0]['recent_user_id']) {
+  //       //     recentUser.clear();
+  //       //   }
+  //       // }
+  //       return true;
+  //     }
+  //   }
+  //   print('Login failed');
+  //   return false;
+  // }
 
   bool checkRecentLogs() {
     final recentUser = _filipay.get('tbl_recent_login');
@@ -84,79 +84,79 @@ class _LoginPageState extends State<LoginPage> {
     }
   }
 
-  Future<void> loginReq() async {
-    String LoginAPI = dotenv.get("LOGIN_REQUEST", fallback: "");
-    try {
-      var response = await http.post(
-        Uri.parse(LoginAPI),
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer ${myToken.getToken}', // Replace YOUR_TOKEN_HERE with the actual token
-        },
-        body: jsonEncode({
-          'email': emailController.text,
-          'password': passController.text,
-        }),
-      );
+  // Future<void> loginReq() async {
+  //   String LoginAPI = dotenv.get("LOGIN_REQUEST", fallback: "");
+  //   try {
+  //     var response = await http.post(
+  //       Uri.parse(LoginAPI),
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //         'Authorization': 'Bearer ${myToken.getToken}', // Replace YOUR_TOKEN_HERE with the actual token
+  //       },
+  //       body: jsonEncode({
+  //         'email': emailController.text,
+  //         'password': passController.text,
+  //       }),
+  //     );
 
-      if (response.statusCode == 200) {
-        var responseData = jsonDecode(response.body);
-        // var token = responseData['response']['token'];
-        print(responseData);
-        // print('\n\n\n${responseData['response']['pin']}');
-        var logger = Logger();
-        logger.d('${responseData['response']['pin']}');
-        myFunc.serverPin = responseData['response']['pin'];
+  //     if (response.statusCode == 200) {
+  //       var responseData = jsonDecode(response.body);
+  //       // var token = responseData['response']['token'];
+  //       print(responseData);
+  //       // print('\n\n\n${responseData['response']['pin']}');
+  //       var logger = Logger();
+  //       logger.d('${responseData['response']['pin']}');
+  //       myFunc.serverPin = responseData['response']['pin'];
 
-        setState(() {
-          _isLoading = true;
-        });
-        Future.delayed(Duration(seconds: 2), () {
-          setState(() {
-            _isLoading = false;
-            myFunc.loginPin = true;
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => CreatePin()),
-            );
-          });
-        });
-      } else {
-        print('Login failed with status: ${response.statusCode}.');
-      }
-    } catch (e) {
-      print('Error during login: $e');
-    }
-  }
+  //       setState(() {
+  //         _isLoading = true;
+  //       });
+  //       Future.delayed(Duration(seconds: 2), () {
+  //         setState(() {
+  //           _isLoading = false;
+  //           myFunc.loginPin = true;
+  //           Navigator.push(
+  //             context,
+  //             MaterialPageRoute(builder: (context) => CreatePin()),
+  //           );
+  //         });
+  //       });
+  //     } else {
+  //       print('Login failed with status: ${response.statusCode}.');
+  //     }
+  //   } catch (e) {
+  //     print('Error during login: $e');
+  //   }
+  // }
 
-  Future<void> login() async {
-    bool success = await _loginUser(emailController.text, passController.text);
-    if (success) {
-      setState(() {
-        _isLoading = true;
-      });
-      Future.delayed(Duration(seconds: 2), () {
-        setState(() {
-          _isLoading = false;
-          myFunc.loginPin = true;
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => CreatePin()),
-          );
-        });
-      });
-    } else {
-      setState(() {
-        _isLoading = true;
-        Future.delayed(Duration(seconds: 2), () {
-          setState(() {
-            _isLoading = false;
-            myComponents.error(context, "Invalid credentials!", "Incorrect email or password. Please try again.");
-          });
-        });
-      });
-    }
-  }
+  // Future<void> login() async {
+  //   bool success = await _loginUser(emailController.text, passController.text)
+  //   if (success) {
+  //     setState(() {
+  //       _isLoading = true;
+  //     });
+  //     Future.delayed(Duration(seconds: 2), () {
+  //       setState(() {
+  //         _isLoading = false;
+  //         myFunc.loginPin = true;
+  //         Navigator.push(
+  //           context,
+  //           MaterialPageRoute(builder: (context) => CreatePin()),
+  //         );
+  //       });
+  //     });
+  //   } else {
+  //     setState(() {
+  //       _isLoading = true;
+  //       Future.delayed(Duration(seconds: 2), () {
+  //         setState(() {
+  //           _isLoading = false;
+  //           myComponents.error(context, "Invalid credentials!", "Incorrect email or password. Please try again.");
+  //         });
+  //       });
+  //     });
+  //   }
+  // }
 
   Future<void> _authenticate() async {
     final recentUser = _filipay.get('tbl_recent_login');
@@ -184,6 +184,36 @@ class _LoginPageState extends State<LoginPage> {
       });
     } on PlatformException catch (e) {
       print(e);
+    }
+  }
+
+  Future<void> LoginRequest() async {
+    if (_formKey.currentState!.validate()) {
+      myComponents.showLoading(context, "Logging in");
+      Map<String, dynamic> isLoginResponse = await httpService.Login({
+        "email": emailController.text,
+        "password": passController.text,
+      });
+
+      if (isLoginResponse['messages']['code'].toString() == '0') {
+        Navigator.of(context).pop();
+
+        myFunc.loginPin = true;
+        // myFunc.current_user_id = isLoginResponse['response']['id'].toString();
+
+        _filipay.put('tbl_users_mndb', isLoginResponse);
+        final tbl_users_mndb = _filipay.get('tbl_users_mndb');
+
+        print("CURRENT ID: ${tbl_users_mndb['response']['id']}");
+
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => CreatePin()),
+        );
+      } else {
+        Navigator.of(context).pop();
+        myComponents.errorModal(context, "${isLoginResponse['messages']['message']}");
+      }
     }
   }
 
@@ -324,29 +354,7 @@ class _LoginPageState extends State<LoginPage> {
                                     width: double.infinity,
                                     child: mainButtons.mainButton(
                                       context: context,
-                                      onPressed: () async {
-                                        if (_formKey.currentState!.validate()) {
-                                          myComponents.showLoading(context, "Logging in");
-                                          Map<String, dynamic> isLoginResponse = await httpService.Login({
-                                            "email": emailController.text,
-                                            "password": passController.text,
-                                          });
-
-                                          if (isLoginResponse['messages']['code'].toString() == '0') {
-                                            Navigator.of(context).pop();
-
-                                            myFunc.loginPin = true;
-
-                                            Navigator.push(
-                                              context,
-                                              MaterialPageRoute(builder: (context) => CreatePin()),
-                                            );
-                                          } else {
-                                            Navigator.of(context).pop();
-                                            myComponents.errorModal(context, "${isLoginResponse['messages']['message']}");
-                                          }
-                                        }
-                                      },
+                                      onPressed: LoginRequest,
                                       text: 'LOGIN',
                                       BackgroundColor: Color.fromRGBO(47, 50, 145, 1.0),
                                       padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),

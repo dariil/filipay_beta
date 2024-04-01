@@ -115,7 +115,7 @@ class httprequestService {
         // Successful response
         print('sendtocketTicket: $masterCarddata');
         if (masterCarddata['messages']['code'].toString() == "0") {
-          myFunc.serverPin = masterCarddata['response']['pin'];
+          myFunc.current_user_id = masterCarddata['response']['id'].toString();
           return masterCarddata;
         } else {
           return masterCarddata;

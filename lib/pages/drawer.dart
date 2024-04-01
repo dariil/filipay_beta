@@ -9,62 +9,41 @@ import 'transactionHistoryPage.dart';
 import 'package:image_picker/image_picker.dart';
 import 'TOSPage.dart';
 import 'privacyPolicyPage.dart';
-import '../functions/functions.dart';
+import 'newChatPage.dart';
 import 'helpCenterPage.dart';
-import 'dart:io';
 
 class NavDrawer extends StatefulWidget {
-  const NavDrawer({Key? key});
-
+  const NavDrawer({super.key});
   @override
   State<NavDrawer> createState() => _NavDrawerState();
 }
 
 class _NavDrawerState extends State<NavDrawer> {
-  File? _selectedImage;
   pageComponents myPageComponents = pageComponents();
-  final pageFunctions _functions = pageFunctions();
-
+  final ImagePicker _picker = ImagePicker();
   Future<void> _pickImage(BuildContext context) async {
-    final ImagePicker _picker = ImagePicker();
-    final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
-
-    if (pickedFile != null) {
-      setState(() {
-        _selectedImage = File(pickedFile.path);
-      });
-    } else {
-      // User canceled the image selection
+    final image = await _picker.pickImage(source: ImageSource.gallery);
+    if (image != null) {
+      // Handle the picked image file
     }
   }
 
   @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    int userId = _functions.current_user_id;
-    String selectedOption = _functions.getAccountType(userId);
-
-    String firstName = _functions.getFirstName(userId);
-    String lastName = _functions.getLastName(userId);
-
     return Drawer(
-      child: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            buildHeader(context, firstName, lastName, selectedOption),
-            buildMenuItems(context),
-          ],
-        ),
+        // width: 270,
+        child: SingleChildScrollView(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          buildHeader(context),
+          buildMenuItems(context),
+        ],
       ),
-    );
+    ));
   }
 
-  Widget buildHeader(BuildContext context, String firstName, String lastName, String selectedOption) => Container(
+  Widget buildHeader(BuildContext context) => Container(
         color: Color.fromRGBO(82, 161, 217, 1.0),
         padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
         child: Container(
@@ -83,9 +62,7 @@ class _NavDrawerState extends State<NavDrawer> {
                     ),
                     child: CircleAvatar(
                       radius: 35,
-                      backgroundImage: _selectedImage != null
-                          ? FileImage(_selectedImage!)
-                          : AssetImage("assets/general/undraw_Drink_coffee.png") as ImageProvider<Object>,
+                      backgroundImage: AssetImage("assets/general/undraw_Drink_coffee.png"),
                     ),
                   ),
                   Positioned(
@@ -123,7 +100,7 @@ class _NavDrawerState extends State<NavDrawer> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "$firstName $lastName",
+                    "Jhon Dela Cruz",
                     style: TextStyle(
                       fontWeight: FontWeight.w900,
                       fontSize: 20.0,
@@ -139,7 +116,7 @@ class _NavDrawerState extends State<NavDrawer> {
                     ),
                   ),
                   Text(
-                    '${selectedOption.substring(0, 1).toUpperCase()}${selectedOption.substring(1).toLowerCase()}',
+                    "Standard",
                     style: TextStyle(
                       fontWeight: FontWeight.w500,
                       fontSize: 14.0,

@@ -200,16 +200,9 @@ class _CreatePinState extends State<CreatePin> {
   }
 
   Future<void> _pinLogin() async {
-    // _filipay.put('tbl_users', pinPage.tbl_users);
-    // _filipay.put('tbl_user_profile', pinPage.tbl_user_profile);
-    final userList = _filipay.get('tbl_users');
-    final userProfileList = _filipay.get('tbl_user_profile');
-
-    int userProfileListIndex = userProfileList.indexWhere((user) => user['user_id'] == pinPage.current_user_id);
-    int index = userList.indexWhere((user) => user['user_id'] == pinPage.current_user_id);
-    userPin = userList[index]['user_pin'].toString();
-    var decryptPin = MyEncryptionDecryption.decryptAES(userPin).toString();
     _isLoading = true;
+    final tbl_users_mndb = _filipay.get('tbl_users_mndb');
+    var decryptPin = MyEncryptionDecryption.decryptAES(tbl_users_mndb['response']['pin']).toString();
     Future.delayed(Duration(seconds: 2), () {
       if (pinEnter.toString() != decryptPin) {
         _isLoading = false;
@@ -217,46 +210,17 @@ class _CreatePinState extends State<CreatePin> {
           incorrectPin();
         });
       } else {
-        if (userProfileList[userProfileListIndex]['firstname'] == "" ||
-            userProfileList[userProfileListIndex]['middlename'] == "" ||
-            userProfileList[userProfileListIndex]['lastname'] == "" ||
-            userProfileList[userProfileListIndex]['date_of_birth'] == "" ||
-            userProfileList[userProfileListIndex]['address'] == "" ||
-            userProfileList[userProfileListIndex]['user_type'] == "N/A") {
-          setState(() {
-            _isLoading = false;
-            pinPage.loginPin = false;
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => AccountSetup()),
-            );
-          });
-        } else {
-          setState(() {
-            _isLoading = false;
-            pinPage.loginPin = false;
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => MainPage()),
-            );
-          });
-        }
+        setState(() {
+          _isLoading = false;
+          pinPage.loginPin = false;
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => MainPage()),
+          );
+        });
       }
     });
   }
-
-  // Future<bool> _pinLogin(String email, String password) async {
-  //   final userList = _filipay.get('tbl_users');
-
-  //   for (var user in userList) {
-  //     if (user['user_email'] == email && user['user_pass'] == password) {
-  //       print('Login successful for ${user['user_email']}');
-  //       return true;
-  //     }
-  //   }
-  //   print('Login failed');
-  //   return false;
-  // }
 
   @override
   Widget build(BuildContext context) {

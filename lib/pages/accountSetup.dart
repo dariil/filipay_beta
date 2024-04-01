@@ -38,7 +38,6 @@ class _AccountSetupState extends State<AccountSetup> {
   TextEditingController lastNameController = TextEditingController();
   TextEditingController dateofbirthController = TextEditingController();
   TextEditingController addressController = TextEditingController();
-  TextEditingController emailController = TextEditingController();
   TextEditingController numberController = TextEditingController();
 
   pageComponents myComponents = pageComponents();
@@ -90,54 +89,32 @@ class _AccountSetupState extends State<AccountSetup> {
 
   void initState() {
     super.initState();
-    print("\n\nTHIS IS WORKING\n\n");
-    final userProfileList = _filipay.get('tbl_user_profile');
+    final tbl_users_mndb = _filipay.get('tbl_users_mndb');
 
-    int userProfileListIndex = userProfileList.indexWhere((user) => user['user_id'] == myFunc.current_user_id);
-
-    selectedOption = userProfileList[userProfileListIndex]['user_type'];
-
-    switch (selectedOption) {
-      case "STANDARD":
-        standard();
-        break;
-      case "STUDENT":
-        student();
-        break;
-      case "SENIOR CITIZEN":
-        senior();
-        break;
-      case "PWD":
-        pwd();
-        break;
-      default:
-        standard();
-    }
-
-    firstNameController.text = userProfileList[userProfileListIndex]['firstname'];
-    middleNameController.text = userProfileList[userProfileListIndex]['middlename'];
-    lastNameController.text = userProfileList[userProfileListIndex]['lastname'];
-    dateofbirthController.text = userProfileList[userProfileListIndex]['date_of_birth'];
-    addressController.text = userProfileList[userProfileListIndex]['address'];
+    firstNameController.text = tbl_users_mndb['response']['firstName'].toString();
+    middleNameController.text = tbl_users_mndb['response']['middleName'].toString();
+    lastNameController.text = tbl_users_mndb['response']['lastName'].toString();
+    dateofbirthController.text = tbl_users_mndb['response']['birthday'].toString();
+    addressController.text = tbl_users_mndb['response']['address'].toString();
+    numberController.text = tbl_users_mndb['response']['mobileNumber'].toString();
   }
 
   void finishSetup() {
-    final userProfileList = _filipay.get('tbl_user_profile');
+    final tbl_users_mndb = _filipay.get('tbl_users_mndb');
 
-    int userProfileListIndex = userProfileList.indexWhere((user) => user['user_id'] == myFunc.current_user_id);
-
-    if (userProfileList[userProfileListIndex]['firstname'] == "" ||
-        userProfileList[userProfileListIndex]['middlename'] == "" ||
-        userProfileList[userProfileListIndex]['lastname'] == "" ||
-        userProfileList[userProfileListIndex]['date_of_birth'] == "" ||
-        userProfileList[userProfileListIndex]['address'] == "" ||
-        userProfileList[userProfileListIndex]['user_type'] == "N/A") {
+    if (tbl_users_mndb['response']['firstName'] == null ||
+        tbl_users_mndb['response']['middleName'] == null ||
+        tbl_users_mndb['response']['lastName'] == null ||
+        tbl_users_mndb['response']['birthday'] == null ||
+        tbl_users_mndb['response']['address'] == null ||
+        tbl_users_mndb['response']['mobileNumber'] == null) {
       myComponents.error(context, "Account setup incomplete", "You need to setup your account first. Please fill al the fields to complete setup.");
-    } else if (firstNameController.text != userProfileList[userProfileListIndex]['firstname'] ||
-        middleNameController.text != userProfileList[userProfileListIndex]['middlename'] ||
-        lastNameController.text != userProfileList[userProfileListIndex]['lastname'] ||
-        dateofbirthController.text != userProfileList[userProfileListIndex]['date_of_birth'] ||
-        addressController.text != userProfileList[userProfileListIndex]['address']) {
+    } else if (firstNameController.text != tbl_users_mndb['response']['firstName'].toString() ||
+        middleNameController.text != tbl_users_mndb['response']['middleName'].toString() ||
+        lastNameController.text != tbl_users_mndb['response']['lastName'].toString() ||
+        dateofbirthController.text != tbl_users_mndb['response']['birthday'].toString() ||
+        addressController.text != tbl_users_mndb['response']['address'].toString() ||
+        numberController.text != tbl_users_mndb['response']['mobileNumber'].toString()) {
       myComponents.alert(context, () {
         Navigator.of(context).pushReplacement(MaterialPageRoute(
           builder: (context) => MainPage(),
@@ -392,16 +369,6 @@ class _AccountSetupState extends State<AccountSetup> {
                                           SetupAccountTextForm(
                                             myComponents: myComponents,
                                             controller: lastNameController,
-                                          ),
-                                          Text(
-                                            "Email Address",
-                                            style: TextStyle(
-                                              color: Color.fromRGBO(5, 80, 120, 1.0),
-                                            ),
-                                          ),
-                                          SetupAccountTextForm(
-                                            myComponents: myComponents,
-                                            controller: emailController,
                                           ),
                                           Text(
                                             "Mobile Number",

@@ -36,7 +36,7 @@ class _RegisterPageState extends State<RegisterPage> {
     final userProfileList = _filipay.get('tbl_user_profile');
     final recentUser = _filipay.get('tbl_recent_login');
 
-    myFunc.user_id = myFunc.tbl_users.length;
+    myFunc.user_id = myFunc.generateRandomId(16);
     myFunc.current_user_id = myFunc.user_id;
     var ecryptedPassword = MyEncryptionDecryption.encryptAES(passController.text).toString();
 

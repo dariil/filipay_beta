@@ -9,7 +9,6 @@ import 'package:slider_button/slider_button.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'dart:math';
 import 'package:intl/intl.dart';
-import 'dart:convert';
 import '../functions/functions.dart';
 import '../pages/bookings.dart';
 import '../pages/waitingConfirmationPage.dart';
@@ -409,9 +408,9 @@ class pageComponents {
   }
 
   AppBar appBar({scaffoldKey}) {
-    int userId = pageFunc.current_user_id;
-    String selectedOption = pageFunc.getAccountType(userId);
-    String firstName = pageFunc.getFirstName(userId);
+    String userId = pageFunc.current_user_id;
+    // String selectedOption = pageFunc.getAccountType(userId);
+    // String firstName = pageFunc.getFirstName(userId);
     return AppBar(
       backgroundColor: Color.fromRGBO(44, 177, 230, 1.0),
       centerTitle: true,
@@ -432,7 +431,7 @@ class pageComponents {
         Container(
           width: 150.0,
           child: Text(
-            "Hello, $firstName",
+            "Hello, Jhon",
             overflow: TextOverflow.ellipsis,
             style: TextStyle(
               color: Color.fromRGBO(39, 50, 115, 1.0),
@@ -883,7 +882,7 @@ class pageComponents {
                     Navigator.of(context).pop(); // Close the dialog
                     onOkPressed(); // Call the function passed as parameter
                     try {
-                      int _currently_logged_user = pageFunc.current_user_id;
+                      String _currently_logged_user = pageFunc.current_user_id;
                       Map<dynamic, dynamic> transactionDetails = {
                         'userId': _currently_logged_user,
                         'amount': loadAmount,

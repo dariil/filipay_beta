@@ -22,7 +22,7 @@ class _EWalletPageState extends State<EWalletPage> {
   void initState() {
     super.initState();
     // Retrieve balance from Hive box using current user's ID
-    int currentUserId = _functions.current_user_id;
+    String currentUserId = _functions.current_user_id;
     balance = _filipay.get('balance_$currentUserId', defaultValue: 0.0);
   }
 
@@ -31,7 +31,7 @@ class _EWalletPageState extends State<EWalletPage> {
     setState(() {
       balance = newBalance;
       // Retrieve current user's ID
-      int currentUserId = _functions.current_user_id;
+      String currentUserId = _functions.current_user_id;
       // Update balance in Hive box using current user's ID
       _filipay.put('balance_$currentUserId', balance);
     });

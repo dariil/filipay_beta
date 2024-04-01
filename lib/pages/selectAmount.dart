@@ -36,7 +36,7 @@ class _SelectAmountPageState extends State<SelectAmountPage> {
 
   void initState() {
     super.initState();
-    int _currently_logged_user = _functions.current_user_id;
+    String _currently_logged_user = _functions.current_user_id;
     balance = _filipay.get('balance_$_currently_logged_user', defaultValue: 0.0);
   }
 
@@ -44,7 +44,7 @@ class _SelectAmountPageState extends State<SelectAmountPage> {
     setState(() {
       balance += amount;
       // Retrieve current user's ID
-      int _currently_logged_user = _functions.current_user_id;
+      String _currently_logged_user = _functions.current_user_id;
       // Update balance in Hive box using current user's ID
       _filipay.put('balance_$_currently_logged_user', balance);
     });

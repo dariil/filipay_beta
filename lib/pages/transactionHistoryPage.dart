@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
-import 'package:intl/intl.dart';
 import '../widgets/components.dart';
 import '../functions/functions.dart';
-import 'dart:convert';
-import 'dart:math';
 
 class TransactionHistoryPage extends StatefulWidget {
   const TransactionHistoryPage({Key? key, required this.title}) : super(key: key);
@@ -192,7 +189,7 @@ class _TransactionHistoryPageState extends State<TransactionHistoryPage> {
   List<Map<String, dynamic>> _buildFilteredTransactions() {
     List<Map<String, dynamic>> filteredTransactions = [];
 
-    int _currently_logged_user = _functions.current_user_id;
+    String _currently_logged_user = _functions.current_user_id;
 
     List<dynamic>? hiveTransactionHistory = _filipay.get('user_transactions_$_currently_logged_user', defaultValue: []);
 
