@@ -11,6 +11,7 @@ import 'TOSPage.dart';
 import 'privacyPolicyPage.dart';
 import '../functions/functions.dart';
 import 'helpCenterPage.dart';
+import 'dart:io';
 
 class NavDrawer extends StatefulWidget {
   const NavDrawer({Key? key});
@@ -20,15 +21,20 @@ class NavDrawer extends StatefulWidget {
 }
 
 class _NavDrawerState extends State<NavDrawer> {
+  File? _selectedImage;
   pageComponents myPageComponents = pageComponents();
   final pageFunctions _functions = pageFunctions();
-  final ImagePicker _picker = ImagePicker();
 
   Future<void> _pickImage(BuildContext context) async {
-    final image = await _picker.pickImage(source: ImageSource.gallery);
+    final ImagePicker _picker = ImagePicker();
+    final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
 
-    if (image != null) {
-      // Handle the picked image
+    if (pickedFile != null) {
+      setState(() {
+        _selectedImage = File(pickedFile.path);
+      });
+    } else {
+      // User canceled the image selection
     }
   }
 
@@ -77,7 +83,9 @@ class _NavDrawerState extends State<NavDrawer> {
                     ),
                     child: CircleAvatar(
                       radius: 35,
-                      backgroundImage: AssetImage("assets/general/undraw_Drink_coffee.png"),
+                      backgroundImage: _selectedImage != null
+                          ? FileImage(_selectedImage!)
+                          : AssetImage("assets/general/undraw_Drink_coffee.png") as ImageProvider<Object>,
                     ),
                   ),
                   Positioned(

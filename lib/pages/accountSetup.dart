@@ -11,6 +11,8 @@ import 'package:intl/intl.dart';
 import 'package:image_picker/image_picker.dart';
 import 'changePasswordPage.dart';
 import 'upgradeLimitsPage.dart';
+import 'dart:io';
+import 'package:image_picker/image_picker.dart';
 
 class AccountSetup extends StatefulWidget {
   const AccountSetup({super.key});
@@ -29,6 +31,7 @@ class _AccountSetupState extends State<AccountSetup> {
   bool seniorSelected = false;
   bool pwdSelected = false;
   String? birthdate = "";
+  File? _selectedImage;
 
   TextEditingController firstNameController = TextEditingController();
   TextEditingController middleNameController = TextEditingController();
@@ -185,12 +188,16 @@ class _AccountSetupState extends State<AccountSetup> {
     }
   }
 
-  final ImagePicker _picker = ImagePicker();
   Future<void> _pickImage(BuildContext context) async {
-    final image = await _picker.pickImage(source: ImageSource.gallery);
+    final ImagePicker _picker = ImagePicker();
+    final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
 
-    if (image != null) {
-      // Handle the picked image file
+    if (pickedFile != null) {
+      setState(() {
+        _selectedImage = File(pickedFile.path);
+      });
+    } else {
+      // User canceled the image selection
     }
   }
 
@@ -293,7 +300,9 @@ class _AccountSetupState extends State<AccountSetup> {
                                   ),
                                   child: CircleAvatar(
                                     radius: 35,
-                                    backgroundImage: AssetImage("assets/general/undraw_Drink_coffee.png"),
+                                    backgroundImage: _selectedImage != null
+                                        ? FileImage(_selectedImage!)
+                                        : AssetImage("assets/general/undraw_Drink_coffee.png") as ImageProvider<Object>,
                                   ),
                                 ),
                                 Positioned(
