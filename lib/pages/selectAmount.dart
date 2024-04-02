@@ -1,3 +1,4 @@
+import 'package:filipay_beta/functions/httpRequest.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -17,7 +18,8 @@ class SelectAmountPage extends StatefulWidget {
 
 class _SelectAmountPageState extends State<SelectAmountPage> {
   final Box _filipay = Hive.box('filipay');
-  pageFunctions _functions = pageFunctions();
+  pageFunctions myFunc = pageFunctions();
+  httprequestService httpService = httprequestService();
 
   double balance = 0.0;
 
@@ -28,7 +30,6 @@ class _SelectAmountPageState extends State<SelectAmountPage> {
 
   void loadingEnter(double amount) {
     // Set loadAmount when entering the amount manually
-    double loadAmount = amount;
     setState(() {
       Navigator.push(context, MaterialPageRoute(builder: (context) => EnterAmountPage()));
     });
@@ -36,17 +37,45 @@ class _SelectAmountPageState extends State<SelectAmountPage> {
 
   void initState() {
     super.initState();
-    String _currently_logged_user = _functions.current_user_id;
-    balance = _filipay.get('balance_$_currently_logged_user', defaultValue: 0.0);
+    // String _currently_logged_user = myFunc.current_user_id;
+    // balance = _filipay.get('balance_$_currently_logged_user', defaultValue: 0.0);
+    _initializeWallet();
+  }
+
+  void _initializeWallet() async {
+    Map<String, dynamic> getWalletResponse = await httpService.getWallet();
+    balance = getWalletResponse['response']['balance'].toDouble();
+    setState(() {
+      myFunc.remaining_balance = balance;
+    });
   }
 
   void updateBalance(double amount) {
     setState(() {
-      balance += amount;
+      balance += 1000;
+      Future.delayed(Duration(seconds: 2), () async {
+        Map<String, dynamic> isUpdateResponse = await httpService.Wallet({
+          "balance": balance,
+        });
+
+        if (isUpdateResponse['messages']['code'].toString() == '0') {
+          _filipay.put('tbl_users_mndb', isUpdateResponse);
+          final tbl_users_mndb = _filipay.get('tbl_users_mndb');
+          setState(() {
+            _isLoading = false;
+          });
+          myComponents.alert(context, () {
+            Navigator.pop(context);
+          }, "Successful!", "Changes has been saved!.");
+        } else {
+          Navigator.of(context).pop();
+          myComponents.errorModal(context, "${isUpdateResponse['messages']['message']}");
+        }
+      });
       // Retrieve current user's ID
-      String _currently_logged_user = _functions.current_user_id;
+      // String _currently_logged_user = _functions.current_user_id;
       // Update balance in Hive box using current user's ID
-      _filipay.put('balance_$_currently_logged_user', balance);
+      // _filipay.put('balance_$_currently_logged_user', balance);
     });
   }
 
@@ -57,7 +86,6 @@ class _SelectAmountPageState extends State<SelectAmountPage> {
   }
 
   void loadingConnect(double loadAmount) {
-    setTrue();
     setState(() {
       _isLoading = true;
     });
@@ -88,6 +116,15 @@ class _SelectAmountPageState extends State<SelectAmountPage> {
         );
       });
     });
+  }
+
+  void confirmTopUp() {
+    _focusNode.unfocus();
+    if (_formKey.currentState!.validate()) {
+      setTrue();
+      // Call loadingConnect only when confirm button is pressed
+      loadingConnect(double.parse(_controller.text));
+    }
   }
 
   GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
@@ -233,14 +270,7 @@ class _SelectAmountPageState extends State<SelectAmountPage> {
                       padding: const EdgeInsets.symmetric(horizontal: 80.0),
                       child: mainButtons.mainButton(
                         context: context,
-                        onPressed: () {
-                          _focusNode.unfocus();
-                          if (_formKey.currentState!.validate()) {
-                            setTrue();
-                            // Call loadingConnect only when confirm button is pressed
-                            loadingConnect(double.parse(_controller.text));
-                          }
-                        },
+                        onPressed: confirmTopUp,
                         text: 'CONFIRM',
                         BackgroundColor: Color.fromRGBO(47, 50, 145, 1.0),
                         padding: EdgeInsets.symmetric(horizontal: 40.0, vertical: 20.0),

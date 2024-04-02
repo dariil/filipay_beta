@@ -263,7 +263,7 @@ class httprequestService {
       }
 
       final responseMastercard = await http.patch(
-        Uri.parse('${dotenv.env['UPDATE'].toString()}${myFunc.current_user_id.toString()}'),
+        Uri.parse('${dotenv.env['UPDATE_WALLET'].toString()}${myFunc.current_user_id.toString()}'),
         headers: {'Authorization': 'Bearer ${token['response']['token']}', 'Content-Type': 'application/json'},
         body: jsonEncode(item),
       );
