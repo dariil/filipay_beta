@@ -1,8 +1,10 @@
 import 'dart:async';
+import 'package:filipay_beta/functions/httpRequest.dart';
 import 'package:filipay_beta/pages/mainPage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:logger/logger.dart';
 import '../widgets/components.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 import '../functions/functions.dart';
@@ -17,6 +19,7 @@ class CreatePin extends StatefulWidget {
 }
 
 class _CreatePinState extends State<CreatePin> {
+  httprequestService httpService = httprequestService();
   pageComponents myComponents = pageComponents();
   pageFunctions pinPage = pageFunctions();
 
@@ -84,30 +87,41 @@ class _CreatePinState extends State<CreatePin> {
     });
   }
 
-  Future<void> currentUserPin() async {
-    print("\n\nTHIS IS WORKING\n\n");
-    // _filipay.put('tbl_users', pinPage.tbl_users);
-    final userList = _filipay.get('tbl_users');
-    int index = userList.indexWhere((user) => user['user_id'] == pinPage.current_user_id);
-    userPin = userList[index]['user_pin'];
-  }
+  // Future<void> currentUserPin() async {
+  //   print("\n\nTHIS IS WORKING\n\n");
+  //   // _filipay.put('tbl_users', pinPage.tbl_users);
+  //   final userList = _filipay.get('tbl_users');
+  //   int index = userList.indexWhere((user) => user['user_id'] == pinPage.current_user_id);
+  //   userPin = userList[index]['user_pin'];
+  // }
 
   /////////////////////////////////////////////////////////////////////////////////////////////
   void loadingConfirm() {
     _isLoading = true;
-    Future.delayed(Duration(seconds: 2), () {
-      // _filipay.put('tbl_users', pinPage.tbl_users);
-      final userList = _filipay.get('tbl_users');
+    Future.delayed(Duration(seconds: 2), () async {
       setState(() {
-        _isLoading = false;
-        int index = userList.indexWhere((user) => user['user_id'] == pinPage.current_user_id);
         var ecryptedText = MyEncryptionDecryption.encryptAES(confirmPin).toString();
-        userList[index]['user_pin'] = ecryptedText;
-        print(pinPage.current_user_id);
-        userPin = userList[index]['user_pin'];
-        print(userList[index]['user_pin']);
+        userPin = ecryptedText;
+        _isLoading = false;
+      });
+      Logger().i(userPin);
+      Map<String, dynamic> isUpdateResponse = await httpService.UpdateUser({
+        "pin": userPin.toString(),
+      });
+      if (isUpdateResponse['messages']['code'].toString() == '0') {
+        pinPage.pinMode = false;
+        pinPage.loginPin = false;
+        pinPage.current_user_id = isUpdateResponse['response']['_id'].toString();
+        Logger().i(pinPage.current_user_id);
+
+        _filipay.put('tbl_users_mndb', isUpdateResponse);
+        // final tbl_users_mndb = _filipay.get('tbl_users_mndb');
+      } else {
+        // Navigator.of(context).pop();
+        myComponents.errorModal(context, "${isUpdateResponse['messages']['message']}");
+      }
+      setState(() {
         enter();
-        _filipay.put('tbl_users', pinPage.tbl_users);
       });
     });
   }
@@ -623,7 +637,7 @@ class _CreatePinState extends State<CreatePin> {
                             pinEnter = currentText;
                             var decryptedPin = MyEncryptionDecryption.decryptAES(userPin).toString();
                             // var pinEnter = MyEncryptionDecryption.decryptAES(currentText).toString();
-                            currentUserPin();
+                            // currentUserPin();
                             if (pinEnter.toString() != decryptedPin.toString()) {
                               incorrectPin();
                             } else {

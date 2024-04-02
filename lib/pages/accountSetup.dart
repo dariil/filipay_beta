@@ -1,3 +1,4 @@
+import 'package:filipay_beta/functions/httpRequest.dart';
 import 'package:filipay_beta/pages/mainPage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -13,6 +14,7 @@ import 'changePasswordPage.dart';
 import 'upgradeLimitsPage.dart';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
+import 'package:logger/logger.dart';
 
 class AccountSetup extends StatefulWidget {
   const AccountSetup({super.key});
@@ -22,6 +24,7 @@ class AccountSetup extends StatefulWidget {
 }
 
 class _AccountSetupState extends State<AccountSetup> {
+  httprequestService httpService = httprequestService();
   final _filipay = Hive.box("filipay");
 
   bool _isLoading = false;
@@ -91,12 +94,21 @@ class _AccountSetupState extends State<AccountSetup> {
     super.initState();
     final tbl_users_mndb = _filipay.get('tbl_users_mndb');
 
-    firstNameController.text = tbl_users_mndb['response']['firstName'].toString();
-    middleNameController.text = tbl_users_mndb['response']['middleName'].toString();
-    lastNameController.text = tbl_users_mndb['response']['lastName'].toString();
-    dateofbirthController.text = tbl_users_mndb['response']['birthday'].toString();
-    addressController.text = tbl_users_mndb['response']['address'].toString();
-    numberController.text = tbl_users_mndb['response']['mobileNumber'].toString();
+    if (!tbl_users_mndb['response'].containsKey('firstName')) {
+      firstNameController.text = "";
+      middleNameController.text = "";
+      lastNameController.text = "";
+      dateofbirthController.text = "";
+      addressController.text = "";
+      numberController.text = "";
+    } else {
+      firstNameController.text = tbl_users_mndb['response']['firstName'].toString();
+      middleNameController.text = tbl_users_mndb['response']['middleName'].toString();
+      lastNameController.text = tbl_users_mndb['response']['lastName'].toString();
+      dateofbirthController.text = tbl_users_mndb['response']['birthday'].toString();
+      addressController.text = tbl_users_mndb['response']['address'].toString();
+      numberController.text = tbl_users_mndb['response']['mobileNumber'].toString();
+    }
   }
 
   void finishSetup() {
@@ -128,8 +140,8 @@ class _AccountSetupState extends State<AccountSetup> {
   }
 
   Future<void> saveChanges(BuildContext context) async {
-    final userProfileList = _filipay.get('tbl_user_profile');
-    int userProfileListIndex = userProfileList.indexWhere((user) => user['user_id'] == myFunc.current_user_id);
+    String user_ID = myFunc.current_user_id;
+    Logger().i(user_ID);
 
     if (firstNameController.text.isEmpty ||
         middleNameController.text.isEmpty ||
@@ -144,21 +156,37 @@ class _AccountSetupState extends State<AccountSetup> {
         Navigator.pop(context);
         setState(() {
           _isLoading = true;
-          Future.delayed(Duration(seconds: 2), () {
-            setState(() {
-              userProfileList[userProfileListIndex]['firstname'] = firstNameController.text;
-              userProfileList[userProfileListIndex]['middlename'] = middleNameController.text;
-              userProfileList[userProfileListIndex]['lastname'] = lastNameController.text;
-              userProfileList[userProfileListIndex]['date_of_birth'] = dateofbirthController.text;
-              userProfileList[userProfileListIndex]['address'] = addressController.text;
-              userProfileList[userProfileListIndex]['user_type'] = selectedOption; // Save selected user type
-              _filipay.put('tbl_users', myFunc.tbl_users);
-              _filipay.put('tbl_user_profile', myFunc.tbl_user_profile);
-              _isLoading = false;
+          Future.delayed(Duration(seconds: 2), () async {
+            Map<String, dynamic> isUpdateResponse = await httpService.UpdateUser({
+              "firstName": firstNameController.text,
+              "middleName": middleNameController.text,
+              "lastName": lastNameController.text,
+              "type": selectedOption.toString(),
+              "address": addressController.text,
+              "birthday": dateofbirthController.text,
+              "mobileNumber": numberController.text,
+            });
+
+            if (isUpdateResponse['messages']['code'].toString() == '0') {
+              myFunc.pinMode = false;
+              myFunc.loginPin = false;
+              myFunc.current_user_id = isUpdateResponse['response']['id'].toString();
+
+              _filipay.put('tbl_users_mndb', isUpdateResponse);
+              final tbl_users_mndb = _filipay.get('tbl_users_mndb');
+
+              print("CURRENT ID: ${tbl_users_mndb['response']['id']}");
+
+              setState(() {
+                _isLoading = false;
+              });
               myComponents.alert(context, () {
                 Navigator.pop(context);
               }, "Successful!", "Changes has been saved!.");
-            });
+            } else {
+              Navigator.of(context).pop();
+              myComponents.errorModal(context, "${isUpdateResponse['messages']['message']}");
+            }
           });
         });
       }, () {

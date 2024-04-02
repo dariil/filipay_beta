@@ -5,6 +5,7 @@ import '../functions/functions.dart';
 import 'login.dart';
 import 'pin.dart';
 import '../functions/myEncryption.dart';
+import '../functions/httpRequest.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
@@ -18,6 +19,7 @@ class _RegisterPageState extends State<RegisterPage> {
 
   pageComponents myComponents = pageComponents();
   pageFunctions myFunc = pageFunctions();
+  httprequestService httpService = httprequestService();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final emailControler = TextEditingController();
   final passController = TextEditingController();
@@ -26,6 +28,34 @@ class _RegisterPageState extends State<RegisterPage> {
   final _filipay = Hive.box("filipay");
 
   // List<Map<String, dynamic>> tbl_users = [];
+
+  Future<void> Register() async {
+    Map<String, dynamic> isRegisterResponse = await httpService.Register({
+      "email": emailControler.text,
+      "password": passController.text,
+    });
+
+    if (isRegisterResponse['messages']['code'].toString() == '0') {
+      Navigator.of(context).pop();
+
+      myFunc.pinMode = false;
+      myFunc.loginPin = false;
+      myFunc.current_user_id = isRegisterResponse['response']['user']['_id'].toString();
+
+      _filipay.put('tbl_users_mndb', isRegisterResponse);
+      final tbl_users_mndb = _filipay.get('tbl_users_mndb');
+
+      print("CURRENT ID: ${tbl_users_mndb['response']['id']}");
+
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => CreatePin()),
+      );
+    } else {
+      Navigator.of(context).pop();
+      myComponents.errorModal(context, "${isRegisterResponse['messages']['message']}");
+    }
+  }
 
   Future<void> _initializedData() async {
     _filipay.put('tbl_users', myFunc.tbl_users);
@@ -178,7 +208,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                       context: context,
                                       onPressed: () {
                                         if (_formKey.currentState!.validate()) {
-                                          _initializedData();
+                                          Register();
                                           Navigator.push(
                                             context,
                                             MaterialPageRoute(builder: (context) => CreatePin()),

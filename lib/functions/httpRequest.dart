@@ -4,6 +4,8 @@ import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'functions.dart';
+import 'package:logger/logger.dart';
+import '../functions/functions.dart';
 
 class httprequestService {
   pageFunctions myFunc = pageFunctions();
@@ -97,6 +99,7 @@ class httprequestService {
       },
       "response": {}
     };
+    Logger().i(item);
     try {
       final token = await getToken();
       if (token['messages']['code'].toString() != "0") {
@@ -113,9 +116,114 @@ class httprequestService {
       masterCarddata = json.decode(responseMastercard.body);
       if (responseMastercard.statusCode == 200) {
         // Successful response
+        // if(masterCarddata.containsKey('pin')){
+
+        // }
         print('sendtocketTicket: $masterCarddata');
         if (masterCarddata['messages']['code'].toString() == "0") {
           myFunc.current_user_id = masterCarddata['response']['id'].toString();
+          return masterCarddata;
+        } else {
+          return masterCarddata;
+        }
+      } else {
+        // Handle error responses
+        // print('sendtocketTicket Error: ${responseMastercard.statusCode}');
+        // print('sendtocketTicket Response body: ${responseMastercard.body}');
+        return masterCarddata;
+      }
+    } catch (e) {
+      print("sendtocketTicket error: $e");
+      print('sendtocketTicket masterCarddata: $masterCarddata');
+
+      if (e is ClientException) {
+        return {
+          "messages": {"code": "500", "message": "NO INTERNET"}
+        };
+      } else {
+        return masterCarddata;
+      }
+    }
+  }
+
+  Future<Map<String, dynamic>> Register(Map<String, dynamic> item) async {
+    Map<String, dynamic> masterCarddata = {
+      "messages": {
+        "code": 500,
+        "message": "SOMETHING WENT WRONG",
+      },
+      "response": {}
+    };
+    try {
+      final token = await getToken();
+      if (token['messages']['code'].toString() != "0") {
+        return masterCarddata;
+      }
+
+      final responseMastercard = await http.post(
+        Uri.parse(dotenv.env['REGISTER'].toString()),
+        headers: {'Authorization': 'Bearer ${token['response']['token']}', 'Content-Type': 'application/json'},
+        body: jsonEncode(item),
+      );
+
+      print('sendtocketTicket Raw Response: ${responseMastercard.body}');
+      masterCarddata = json.decode(responseMastercard.body);
+      if (responseMastercard.statusCode == 200) {
+        // Successful response
+        print('sendtocketTicket: $masterCarddata');
+        if (masterCarddata['messages']['code'].toString() == "0") {
+          myFunc.current_user_id = masterCarddata['response']['user']['_id'].toString();
+          return masterCarddata;
+        } else {
+          return masterCarddata;
+        }
+      } else {
+        // Handle error responses
+        // print('sendtocketTicket Error: ${responseMastercard.statusCode}');
+        // print('sendtocketTicket Response body: ${responseMastercard.body}');
+        return masterCarddata;
+      }
+    } catch (e) {
+      print("sendtocketTicket error: $e");
+      print('sendtocketTicket masterCarddata: $masterCarddata');
+
+      if (e is ClientException) {
+        return {
+          "messages": {"code": "500", "message": "NO INTERNET"}
+        };
+      } else {
+        return masterCarddata;
+      }
+    }
+  }
+
+  Future<Map<String, dynamic>> UpdateUser(Map<String, dynamic> item) async {
+    Map<String, dynamic> masterCarddata = {
+      "messages": {
+        "code": 500,
+        "message": "SOMETHING WENT WRONG",
+      },
+      "response": {}
+    };
+    try {
+      final token = await getToken();
+      if (token['messages']['code'].toString() != "0") {
+        return masterCarddata;
+      }
+
+      final responseMastercard = await http.patch(
+        Uri.parse('${dotenv.env['UPDATE'].toString()}${myFunc.current_user_id.toString()}'),
+        headers: {'Authorization': 'Bearer ${token['response']['token']}', 'Content-Type': 'application/json'},
+        body: jsonEncode(item),
+      );
+
+      print('sendtocketTicket Raw Response: ${responseMastercard.body}');
+      masterCarddata = json.decode(responseMastercard.body);
+      if (responseMastercard.statusCode == 200) {
+        // Successful response
+        print('sendtocketTicket: $masterCarddata');
+        if (masterCarddata['messages']['code'].toString() == "0") {
+          myFunc.current_user_id = masterCarddata['response']['user']['_id'].toString();
           return masterCarddata;
         } else {
           return masterCarddata;
