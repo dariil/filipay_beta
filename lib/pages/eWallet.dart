@@ -4,6 +4,7 @@ import 'package:hive/hive.dart'; // Import Hive package
 import 'topUpPage.dart';
 import '../functions/functions.dart';
 import 'claimRewardsPage.dart';
+import '../functions/httpRequest.dart';
 
 class EWalletPage extends StatefulWidget {
   const EWalletPage({Key? key}) : super(key: key);
@@ -14,16 +15,24 @@ class EWalletPage extends StatefulWidget {
 
 class _EWalletPageState extends State<EWalletPage> {
   final Box _filipay = Hive.box('filipay');
-  pageFunctions _functions = pageFunctions();
+  pageFunctions myFunc = pageFunctions();
   pageComponents myComponents = pageComponents();
+  httprequestService httpService = httprequestService();
   late double balance;
 
   @override
   void initState() {
     super.initState();
-    // Retrieve balance from Hive box using current user's ID
-    String currentUserId = _functions.current_user_id;
-    balance = _filipay.get('balance_$currentUserId', defaultValue: 0.0);
+    // String currentUserId = myFunc.current_user_id;
+    _initializeWallet();
+  }
+
+  void _initializeWallet() async {
+    Map<String, dynamic> getWalletResponse = await httpService.getWallet();
+    double balance = getWalletResponse['response']['balance'].toDouble();
+    setState(() {
+      myFunc.remaining_balance = balance;
+    });
   }
 
   // Method to update balance
@@ -31,7 +40,7 @@ class _EWalletPageState extends State<EWalletPage> {
     setState(() {
       balance = newBalance;
       // Retrieve current user's ID
-      String currentUserId = _functions.current_user_id;
+      String currentUserId = myFunc.current_user_id;
       // Update balance in Hive box using current user's ID
       _filipay.put('balance_$currentUserId', balance);
     });
@@ -67,7 +76,7 @@ class _EWalletPageState extends State<EWalletPage> {
                             ),
                           ),
                           child: Text(
-                            "PHP $balance", // Display dynamic balance
+                            "PHP ${myFunc.remaining_balance}", // Display dynamic balance
                             style: TextStyle(
                               fontSize: 40.0,
                               fontWeight: FontWeight.w600,
