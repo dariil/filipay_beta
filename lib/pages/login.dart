@@ -198,7 +198,13 @@ class _LoginPageState extends State<LoginPage> {
       if (isLoginResponse['messages']['code'].toString() == '0') {
         Navigator.of(context).pop();
 
-        myFunc.loginPin = true;
+        if (isLoginResponse['response'].containsKey('pin')) {
+          myFunc.loginPin = true;
+          myFunc.pinMode = false;
+        } else {
+          myFunc.loginPin = false;
+          myFunc.pinMode = false;
+        }
         // myFunc.current_user_id = isLoginResponse['response']['id'].toString();
 
         _filipay.put('tbl_users_mndb', isLoginResponse);

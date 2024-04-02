@@ -227,10 +227,17 @@ class _CreatePinState extends State<CreatePin> {
         setState(() {
           _isLoading = false;
           pinPage.loginPin = false;
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => MainPage()),
-          );
+          if (tbl_users_mndb['response'].containsKey('firstName')) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => MainPage()),
+            );
+          } else {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => AccountSetup()),
+            );
+          }
         });
       }
     });
