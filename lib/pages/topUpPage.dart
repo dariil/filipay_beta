@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import '../widgets/components.dart';
 import '../functions/functions.dart';
+import '../functions/httpRequest.dart';
 
 class TopUpPage extends StatefulWidget {
   const TopUpPage({super.key});
@@ -15,12 +16,23 @@ class TopUpPage extends StatefulWidget {
 class _TopUpPageState extends State<TopUpPage> {
   pageComponents myComponents = pageComponents();
   pageFunctions myFunc = pageFunctions();
+  httprequestService httpService = httprequestService();
 
   String cardNumber = "SN XXXXXXXXX";
   bool isConnected = false;
   Icon myIcon = Icon(Icons.add_circle_outline_sharp, color: Color(0xff18467e));
 
   bool _isLoading = false;
+
+  void initState() {
+    super.initState();
+    _initializeWallet();
+  }
+
+  void _initializeWallet() async {
+    Map<String, dynamic> getWalletResponse = await httpService.getWallet();
+    cardNumber = getWalletResponse['response']['sNo'].toString();
+  }
 
   void connected() {
     setState(() {
