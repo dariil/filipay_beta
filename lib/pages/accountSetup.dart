@@ -140,8 +140,7 @@ class _AccountSetupState extends State<AccountSetup> {
   }
 
   Future<void> saveChanges(BuildContext context) async {
-    String user_ID = myFunc.current_user_id;
-    Logger().i(user_ID);
+    Logger().i(myFunc.current_user_id);
 
     if (firstNameController.text.isEmpty ||
         middleNameController.text.isEmpty ||
@@ -170,12 +169,12 @@ class _AccountSetupState extends State<AccountSetup> {
             if (isUpdateResponse['messages']['code'].toString() == '0') {
               myFunc.pinMode = false;
               myFunc.loginPin = false;
-              myFunc.current_user_id = isUpdateResponse['response']['id'].toString();
+              myFunc.current_user_id = isUpdateResponse['response']['_id'].toString();
 
               _filipay.put('tbl_users_mndb', isUpdateResponse);
               final tbl_users_mndb = _filipay.get('tbl_users_mndb');
 
-              print("CURRENT ID: ${tbl_users_mndb['response']['id']}");
+              // print("CURRENT ID: ${tbl_users_mndb['response']['id']}");
 
               setState(() {
                 _isLoading = false;
