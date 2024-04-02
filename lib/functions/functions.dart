@@ -137,13 +137,13 @@ class pageFunctions {
 
   int get active_booking_id => _active_booking_id!;
 
-  static int _remaining_balance = 35000;
+  static double _remaining_balance = 0.00;
 
-  set remaining_balance(int value) {
+  set remaining_balance(double value) {
     _remaining_balance = value;
   }
 
-  int get remaining_balance => _remaining_balance;
+  double get remaining_balance => _remaining_balance;
 
   // String getFirstName(String userId) {
   //   final userProfile = _filipay.get('tbl_user_profile');

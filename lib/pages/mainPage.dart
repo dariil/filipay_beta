@@ -1,3 +1,4 @@
+import 'package:filipay_beta/functions/httpRequest.dart';
 import 'package:filipay_beta/pages/topUpPage.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
@@ -16,6 +17,7 @@ class MainPage extends StatefulWidget {
 
 class _MainPageState extends State<MainPage> {
   final Box _filipay = Hive.box('filipay');
+  httprequestService httpService = httprequestService();
 
   pageFunctions myFunc = pageFunctions();
   bool _alertDialogShown = false;
@@ -23,11 +25,30 @@ class _MainPageState extends State<MainPage> {
   String? fff;
   double balance = 0.0;
 
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   balance = myFunc.getBalance();
-  // }
+  @override
+  void initState() {
+    super.initState();
+    _initializeWallet();
+  }
+
+  void _initializeWallet() async {
+    Map<String, dynamic> getWalletResponse = await httpService.getWallet();
+    double balance = getWalletResponse['response']['balance'].toDouble();
+    setState(() {
+      myFunc.remaining_balance = balance;
+    });
+  }
+
+  Future<void> updateBalance() async {
+    // Wait for the response from the httpService.getWallet() call
+    Map<String, dynamic> getWalletResponse = await httpService.getWallet();
+
+    // Access the response data and update the state
+    setState(() {
+      double balance = getWalletResponse['response']['balance'].toDouble();
+      myFunc.remaining_balance = balance;
+    });
+  }
 
   void switchPanelPOTG() {
     setState(() {
@@ -159,183 +180,190 @@ class _MainPageState extends State<MainPage> {
       ),
       body: Stack(children: [
         myComponents.background(),
-        SingleChildScrollView(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              SizedBox(
-                height: 10.0,
-              ),
-              Text(
-                "Smile Always!",
-                style: TextStyle(fontSize: 30.0, fontWeight: FontWeight.w700, fontStyle: FontStyle.italic, color: Color.fromRGBO(240, 139, 7, 1.0)),
-              ),
-              Container(
-                padding: EdgeInsets.fromLTRB(15.0, 15.0, 15.0, 20.0),
-                child: Stack(
-                  children: [
-                    Container(
-                      width: double.infinity,
-                      height: 40,
-                      decoration: BoxDecoration(
-                        color: Color.fromRGBO(242, 242, 242, 1.0),
-                        borderRadius: BorderRadius.circular(10.0),
-                      ),
-                      child: Padding(
-                        padding: EdgeInsets.all(5.0),
-                        child: Text(
-                          "TRANSPORTATION",
-                          style: TextStyle(
-                            fontWeight: FontWeight.w900,
-                            fontSize: 18.0,
-                            color: Color.fromRGBO(32, 62, 120, 1.0),
+        RefreshIndicator(
+          onRefresh: updateBalance,
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                SizedBox(
+                  height: 20.0,
+                ),
+                Text(
+                  "Smile Always!",
+                  style: TextStyle(fontSize: 30.0, fontWeight: FontWeight.w700, fontStyle: FontStyle.italic, color: Color.fromRGBO(240, 139, 7, 1.0)),
+                ),
+                Container(
+                  padding: EdgeInsets.fromLTRB(15.0, 15.0, 15.0, 20.0),
+                  child: Stack(
+                    children: [
+                      Container(
+                        width: double.infinity,
+                        height: 40,
+                        decoration: BoxDecoration(
+                          color: Color.fromRGBO(242, 242, 242, 1.0),
+                          borderRadius: BorderRadius.circular(10.0),
+                        ),
+                        child: Padding(
+                          padding: EdgeInsets.all(5.0),
+                          child: Text(
+                            "TRANSPORTATION",
+                            style: TextStyle(
+                              fontWeight: FontWeight.w900,
+                              fontSize: 18.0,
+                              color: Color.fromRGBO(32, 62, 120, 1.0),
+                            ),
+                            textAlign: TextAlign.center,
                           ),
-                          textAlign: TextAlign.center,
                         ),
                       ),
-                    ),
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: Container(
-                          decoration: BoxDecoration(
-                            color: Color.fromRGBO(39, 50, 115, 1.0),
-                            borderRadius: BorderRadius.circular(10.0),
-                          ),
-                          child: Padding(
-                            padding: EdgeInsets.only(left: 5.0, right: 5.0),
-                            child: Image(
-                              image: AssetImage("assets/transportation/sedan.png"),
-                              width: 40,
-                              height: 40,
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: Container(
+                            decoration: BoxDecoration(
+                              color: Color.fromRGBO(39, 50, 115, 1.0),
+                              borderRadius: BorderRadius.circular(10.0),
                             ),
-                          )),
-                    ),
-                  ],
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 15.0),
-                child: Container(
-                  padding: EdgeInsets.all(10.0),
-                  decoration: BoxDecoration(
-                    color: Color.fromRGBO(39, 50, 115, 1.0),
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            "Available Balance",
-                            style: TextStyle(color: Colors.white, fontSize: 14.0, fontWeight: FontWeight.w400),
-                          ),
-                          Text("₱${balance}", style: TextStyle(color: Colors.white, fontSize: 30.0, fontWeight: FontWeight.w700)),
-                        ],
-                      ),
-                      ElevatedButton(
-                          onPressed: () {
-                            Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (context) => TopUpPage(),
+                            child: Padding(
+                              padding: EdgeInsets.only(left: 5.0, right: 5.0),
+                              child: Image(
+                                image: AssetImage("assets/transportation/sedan.png"),
+                                width: 40,
+                                height: 40,
                               ),
-                            );
-                          },
-                          child: Row(
-                            children: [
-                              Text("TOP UP"),
-                              Icon(
-                                Icons.add,
-                              )
-                            ],
-                          )),
+                            )),
+                      ),
                     ],
                   ),
                 ),
-              ),
-              SizedBox(
-                height: 20.0,
-              ),
-              Stack(
-                children: [
-                  Align(
-                    alignment: Alignment.center,
-                    child: Padding(
-                      padding: EdgeInsets.symmetric(vertical: 0.0, horizontal: 25.0),
-                      child: Container(
-                        decoration: BoxDecoration(color: Color.fromRGBO(44, 177, 230, 0.25), borderRadius: BorderRadius.circular(10.0)),
-                        child: Padding(
-                          padding: EdgeInsets.symmetric(vertical: 5.0, horizontal: 0.0),
-                          child: isPayAhead
-                              ? Column(
-                                  children: [
-                                    Wrap(alignment: WrapAlignment.center, children: [
-                                      myComponents.transportaionMode(
-                                          padding: 10.0,
-                                          context: context,
-                                          page: QRCam(),
-                                          modeText: "Jeepney",
-                                          path: "assets/transportation/jeepney.png"),
-                                      myComponents.transportaionMode(
-                                          padding: 10.0, context: context, page: QRCam(), modeText: "Bus", path: "assets/transportation/Bus.png"),
-                                      myComponents.transportaionMode(
-                                          padding: 10.0,
-                                          context: context,
-                                          page: QRCam(),
-                                          modeText: "UV Express",
-                                          path: "assets/transportation/van.png"),
-                                      myComponents.transportaionMode(
-                                          padding: 10.0, context: context, page: QRCam(), modeText: "Ship", path: "assets/transportation/Ship.png"),
-                                      myComponents.transportaionMode(
-                                          padding: 10.0,
-                                          context: context,
-                                          page: QRCam(),
-                                          modeText: "Tricycle",
-                                          path: "assets/transportation/Trike.png"),
-                                      myComponents.transportaionMode(
-                                          padding: 10.0, context: context, page: QRCam(), modeText: "Taxi", path: "assets/transportation/taxi.png"),
-                                      myComponents.transportaionMode(
-                                          padding: 10.0, context: context, page: QRCam(), modeText: "Plane", path: "assets/transportation/Plane.png"),
-                                      myComponents.transportaionMode(
-                                          padding: 10.0,
-                                          context: context,
-                                          page: QRCam(),
-                                          modeText: "Train",
-                                          path: "assets/transportation/Train Icon.png"),
-                                    ]),
-                                  ],
-                                )
-                              : Column(
-                                  children: [
-                                    Wrap(alignment: WrapAlignment.center, children: [
-                                      myComponents.transportaionMode(
-                                          padding: 10.0,
-                                          context: context,
-                                          page: BookingPage(),
-                                          modeText: "Bus",
-                                          path: "assets/transportation/Bus.png"),
-                                      myComponents.transportaionMode(
-                                          padding: 10.0,
-                                          context: context,
-                                          page: BookingPage(),
-                                          modeText: "Ship",
-                                          path: "assets/transportation/Ship.png"),
-                                      myComponents.transportaionMode(
-                                          padding: 10.0,
-                                          context: context,
-                                          page: BookingPage(),
-                                          modeText: "Plane",
-                                          path: "assets/transportation/Plane.png"),
-                                    ]),
-                                  ],
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 15.0),
+                  child: Container(
+                    padding: EdgeInsets.all(10.0),
+                    decoration: BoxDecoration(
+                      color: Color.fromRGBO(39, 50, 115, 1.0),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "Available Balance",
+                              style: TextStyle(color: Colors.white, fontSize: 14.0, fontWeight: FontWeight.w400),
+                            ),
+                            Text("₱${myFunc.remaining_balance}", style: TextStyle(color: Colors.white, fontSize: 30.0, fontWeight: FontWeight.w700)),
+                          ],
+                        ),
+                        ElevatedButton(
+                            onPressed: () {
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (context) => TopUpPage(),
                                 ),
+                              );
+                            },
+                            child: Row(
+                              children: [
+                                Text("TOP UP"),
+                                Icon(
+                                  Icons.add,
+                                )
+                              ],
+                            )),
+                      ],
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  height: 20.0,
+                ),
+                Stack(
+                  children: [
+                    Align(
+                      alignment: Alignment.center,
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(vertical: 0.0, horizontal: 25.0),
+                        child: Container(
+                          decoration: BoxDecoration(color: Color.fromRGBO(44, 177, 230, 0.25), borderRadius: BorderRadius.circular(10.0)),
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(vertical: 5.0, horizontal: 0.0),
+                            child: isPayAhead
+                                ? Column(
+                                    children: [
+                                      Wrap(alignment: WrapAlignment.center, children: [
+                                        myComponents.transportaionMode(
+                                            padding: 10.0,
+                                            context: context,
+                                            page: QRCam(),
+                                            modeText: "Jeepney",
+                                            path: "assets/transportation/jeepney.png"),
+                                        myComponents.transportaionMode(
+                                            padding: 10.0, context: context, page: QRCam(), modeText: "Bus", path: "assets/transportation/Bus.png"),
+                                        myComponents.transportaionMode(
+                                            padding: 10.0,
+                                            context: context,
+                                            page: QRCam(),
+                                            modeText: "UV Express",
+                                            path: "assets/transportation/van.png"),
+                                        myComponents.transportaionMode(
+                                            padding: 10.0, context: context, page: QRCam(), modeText: "Ship", path: "assets/transportation/Ship.png"),
+                                        myComponents.transportaionMode(
+                                            padding: 10.0,
+                                            context: context,
+                                            page: QRCam(),
+                                            modeText: "Tricycle",
+                                            path: "assets/transportation/Trike.png"),
+                                        myComponents.transportaionMode(
+                                            padding: 10.0, context: context, page: QRCam(), modeText: "Taxi", path: "assets/transportation/taxi.png"),
+                                        myComponents.transportaionMode(
+                                            padding: 10.0,
+                                            context: context,
+                                            page: QRCam(),
+                                            modeText: "Plane",
+                                            path: "assets/transportation/Plane.png"),
+                                        myComponents.transportaionMode(
+                                            padding: 10.0,
+                                            context: context,
+                                            page: QRCam(),
+                                            modeText: "Train",
+                                            path: "assets/transportation/Train Icon.png"),
+                                      ]),
+                                    ],
+                                  )
+                                : Column(
+                                    children: [
+                                      Wrap(alignment: WrapAlignment.center, children: [
+                                        myComponents.transportaionMode(
+                                            padding: 10.0,
+                                            context: context,
+                                            page: BookingPage(),
+                                            modeText: "Bus",
+                                            path: "assets/transportation/Bus.png"),
+                                        myComponents.transportaionMode(
+                                            padding: 10.0,
+                                            context: context,
+                                            page: BookingPage(),
+                                            modeText: "Ship",
+                                            path: "assets/transportation/Ship.png"),
+                                        myComponents.transportaionMode(
+                                            padding: 10.0,
+                                            context: context,
+                                            page: BookingPage(),
+                                            modeText: "Plane",
+                                            path: "assets/transportation/Plane.png"),
+                                      ]),
+                                    ],
+                                  ),
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                ],
-              ),
-            ],
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
         checkRecentLogs()
