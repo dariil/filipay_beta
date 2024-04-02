@@ -52,7 +52,7 @@ class _RegisterPageState extends State<RegisterPage> {
         MaterialPageRoute(builder: (context) => CreatePin()),
       );
     } else {
-      Navigator.of(context).pop();
+      // Navigator.of(context).pop();
       myComponents.errorModal(context, "${isRegisterResponse['messages']['message']}");
     }
   }
@@ -209,10 +209,6 @@ class _RegisterPageState extends State<RegisterPage> {
                                       onPressed: () {
                                         if (_formKey.currentState!.validate()) {
                                           Register();
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(builder: (context) => CreatePin()),
-                                          );
                                         }
 
                                         if (passController.text != confirmPassController.text) {}

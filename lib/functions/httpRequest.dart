@@ -158,7 +158,7 @@ class httprequestService {
       final token = await getToken();
       if (token['messages']['code'].toString() != "0") {
         return masterCarddata;
-      }
+      } else {}
 
       final responseMastercard = await http.post(
         Uri.parse(dotenv.env['REGISTER'].toString()),
