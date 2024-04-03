@@ -2,6 +2,7 @@ import 'package:filipay_beta/functions/httpRequest.dart';
 import 'package:filipay_beta/pages/topUpPage.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
+import 'package:logger/logger.dart';
 import '../widgets/components.dart';
 import 'drawer.dart';
 import 'qrcam.dart';
@@ -28,6 +29,7 @@ class _MainPageState extends State<MainPage> {
   @override
   void initState() {
     super.initState();
+    Logger().i(myFunc.current_user_id);
     _initializeWallet();
   }
 

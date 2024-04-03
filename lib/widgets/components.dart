@@ -278,8 +278,8 @@ class pageComponents {
                       style: TextStyle(color: Colors.blue, fontSize: 20, fontWeight: FontWeight.bold),
                     ),
                     Image.asset(
-                      'assets/general/loading.gif',
-                      width: MediaQuery.of(context).size.width * 0.4,
+                      'assets/general/loading-confirmation.gif',
+                      width: MediaQuery.of(context).size.width * 0.25,
                     ),
                     Text(
                       'Please wait...',

@@ -149,6 +149,7 @@ class _CreatePinState extends State<CreatePin> {
 
   void loadingEnter() {
     _isLoading = true;
+    Logger().i(pinPage.current_user_id);
     Future.delayed(Duration(seconds: 2), () {
       setState(() {
         _isLoading = false;
@@ -202,12 +203,13 @@ class _CreatePinState extends State<CreatePin> {
   }
 
   void incorrectPin() {
+    print(pinPage.current_user_id);
     setState(() {
       _isLoading = true;
       Future.delayed(Duration(seconds: 2), () {
         setState(() {
           _isLoading = false;
-          myComponents.error(context, "Incorrect Pin!", "The pin that you have entered is incorrect. Please try again.");
+          myComponents.error(context, "MALI BOBO!", "The pin that you have entered is incorrect. Please try again.");
         });
       });
     });
@@ -581,9 +583,6 @@ class _CreatePinState extends State<CreatePin> {
                             onCompleted: (v) {
                               debugPrint("Completed");
                             },
-                            // onTap: () {
-                            //   print("Pressed");
-                            // },
                             onChanged: (value) {
                               debugPrint(value);
                               setState(() {
@@ -643,8 +642,6 @@ class _CreatePinState extends State<CreatePin> {
                           } else if (currentText.length == 4 && buttonText == 'ENTER') {
                             pinEnter = currentText;
                             var decryptedPin = MyEncryptionDecryption.decryptAES(userPin).toString();
-                            // var pinEnter = MyEncryptionDecryption.decryptAES(currentText).toString();
-                            // currentUserPin();
                             if (pinEnter.toString() != decryptedPin.toString()) {
                               incorrectPin();
                             } else {

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
+import 'package:logger/logger.dart';
 import '../widgets/components.dart';
 import '../functions/functions.dart';
 import 'login.dart';
@@ -31,8 +32,8 @@ class _RegisterPageState extends State<RegisterPage> {
 
   Future<void> Register() async {
     Map<String, dynamic> isRegisterResponse = await httpService.Register({
-      "email": emailControler.text,
-      "password": passController.text,
+      "email": emailControler.text.toString(),
+      "password": passController.text.toString(),
     });
 
     if (isRegisterResponse['messages']['code'].toString() == '0') {
@@ -41,11 +42,12 @@ class _RegisterPageState extends State<RegisterPage> {
       myFunc.pinMode = false;
       myFunc.loginPin = false;
       myFunc.current_user_id = isRegisterResponse['response']['user']['_id'].toString();
+      Logger().i(myFunc.current_user_id);
 
       _filipay.put('tbl_users_mndb', isRegisterResponse);
       final tbl_users_mndb = _filipay.get('tbl_users_mndb');
 
-      print("CURRENT ID: ${tbl_users_mndb['response']['id']}");
+      print("CURRENT ID: ${tbl_users_mndb['response']['user']['_id'].toString()}");
 
       Navigator.push(
         context,

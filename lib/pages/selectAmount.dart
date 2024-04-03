@@ -52,15 +52,13 @@ class _SelectAmountPageState extends State<SelectAmountPage> {
 
   void updateBalance(double amount) {
     setState(() {
-      balance += 1000;
+      balance += amount;
       Future.delayed(Duration(seconds: 2), () async {
         Map<String, dynamic> isUpdateResponse = await httpService.Wallet({
           "balance": balance,
         });
 
         if (isUpdateResponse['messages']['code'].toString() == '0') {
-          _filipay.put('tbl_users_mndb', isUpdateResponse);
-          final tbl_users_mndb = _filipay.get('tbl_users_mndb');
           setState(() {
             _isLoading = false;
           });

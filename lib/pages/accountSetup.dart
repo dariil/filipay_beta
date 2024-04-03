@@ -91,6 +91,7 @@ class _AccountSetupState extends State<AccountSetup> {
   }
 
   void initState() {
+    Logger().i(myFunc.current_user_id);
     super.initState();
     final tbl_users_mndb = _filipay.get('tbl_users_mndb');
 
@@ -112,6 +113,7 @@ class _AccountSetupState extends State<AccountSetup> {
   }
 
   void finishSetup() {
+    Logger().i(myFunc.current_user_id);
     final tbl_users_mndb = _filipay.get('tbl_users_mndb');
 
     if (tbl_users_mndb['response']['firstName'] == null ||
