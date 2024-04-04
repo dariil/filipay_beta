@@ -1,5 +1,6 @@
 import 'package:filipay_beta/pages/mainPage.dart';
 import 'package:flutter/material.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import '../widgets/components.dart';
 import 'login.dart';
 import 'accountSetup.dart';
@@ -20,6 +21,17 @@ class NavDrawer extends StatefulWidget {
 class _NavDrawerState extends State<NavDrawer> {
   pageComponents myPageComponents = pageComponents();
   final ImagePicker _picker = ImagePicker();
+  final _filipay = Hive.box("filipay");
+  String fullName = "";
+
+  void initState() {
+    super.initState();
+    final tbl_users_mndb = _filipay.get('tbl_users_mndb');
+    setState(() {
+      fullName = "${tbl_users_mndb['response']['firstName']} ${tbl_users_mndb['response']['lastName']}";
+    });
+  }
+
   Future<void> _pickImage(BuildContext context) async {
     final image = await _picker.pickImage(source: ImageSource.gallery);
     if (image != null) {
@@ -99,21 +111,21 @@ class _NavDrawerState extends State<NavDrawer> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "Jhon Dela Cruz",
+                    "${fullName}",
                     style: TextStyle(
                       fontWeight: FontWeight.w900,
                       fontSize: 20.0,
                       color: Color.fromRGBO(7, 64, 87, 1.0),
                     ),
                   ),
-                  Text(
-                    "@JuanDelaCruz",
-                    style: TextStyle(
-                      fontWeight: FontWeight.w400,
-                      fontSize: 10.0,
-                      color: Color.fromRGBO(7, 64, 87, 1.0),
-                    ),
-                  ),
+                  // Text(
+                  //   "@JuanDelaCruz",
+                  //   style: TextStyle(
+                  //     fontWeight: FontWeight.w400,
+                  //     fontSize: 10.0,
+                  //     color: Color.fromRGBO(7, 64, 87, 1.0),
+                  //   ),
+                  // ),
                   Text(
                     "Standard",
                     style: TextStyle(
