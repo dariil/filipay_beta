@@ -28,9 +28,11 @@ class _MainPageState extends State<MainPage> {
 
   @override
   void initState() {
+    // final tbl_users_mndb = _filipay.get('tbl_users_mndb');
     super.initState();
     Logger().i(myFunc.current_user_id);
     _initializeWallet();
+    // Logger().i(tbl_users_mndb);
   }
 
   void _initializeWallet() async {
@@ -75,13 +77,26 @@ class _MainPageState extends State<MainPage> {
     }
   }
 
-  // void enableBiometrics() {
-  //   _filipay.put('tbl_recent_login', myFunc.tbl_recent_login);
-  //   final recentUser = _filipay.get('tbl_recent_login');
-  //   recentUser.add({
-  //     "recent_user_id": myFunc.current_user_id,
-  //   });
-  // }
+  void enableBiometrics() {
+    _filipay.put('tbl_recent_login', myFunc.tbl_recent_login);
+    final recentUser = _filipay.get('tbl_recent_login');
+
+    final tbl_users_mndb = _filipay.get('tbl_users_mndb');
+    recentUser.add({
+      "recent_user_id": myFunc.current_user_id,
+      "recent_user_email": tbl_users_mndb['response']['email'],
+      "recent_user_pin": tbl_users_mndb['response']['pin'],
+      "recent_user_firstname": tbl_users_mndb['response']['firstName'],
+      "recent_user_middlename": tbl_users_mndb['response']['middleName'],
+      "recent_user_lastname": tbl_users_mndb['response']['lastName'],
+      "recent_user_type": tbl_users_mndb['response']['type'],
+      "recent_user_address": tbl_users_mndb['response']['address'],
+      "recent_user_birthday": tbl_users_mndb['response']['birthday'],
+      "recent_user_mobile": tbl_users_mndb['response']['mobileNumber'],
+      "recent_user_date_created": tbl_users_mndb['response']['createdAt'],
+      "recent_user_date_updated": tbl_users_mndb['response']['updatedAt'],
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -420,7 +435,7 @@ class _MainPageState extends State<MainPage> {
                                             )),
                                         TextButton(
                                             onPressed: () {
-                                              // enableBiometrics();
+                                              enableBiometrics();
                                               Navigator.pop(context);
                                             },
                                             child: Text(

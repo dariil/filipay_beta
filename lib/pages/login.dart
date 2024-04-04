@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:hive_flutter/adapters.dart';
+import 'package:logger/logger.dart';
 import '../widgets/components.dart';
 import 'signup.dart';
 import '../functions/functions.dart';
@@ -84,80 +85,6 @@ class _LoginPageState extends State<LoginPage> {
     }
   }
 
-  // Future<void> loginReq() async {
-  //   String LoginAPI = dotenv.get("LOGIN_REQUEST", fallback: "");
-  //   try {
-  //     var response = await http.post(
-  //       Uri.parse(LoginAPI),
-  //       headers: {
-  //         'Content-Type': 'application/json',
-  //         'Authorization': 'Bearer ${myToken.getToken}', // Replace YOUR_TOKEN_HERE with the actual token
-  //       },
-  //       body: jsonEncode({
-  //         'email': emailController.text,
-  //         'password': passController.text,
-  //       }),
-  //     );
-
-  //     if (response.statusCode == 200) {
-  //       var responseData = jsonDecode(response.body);
-  //       // var token = responseData['response']['token'];
-  //       print(responseData);
-  //       // print('\n\n\n${responseData['response']['pin']}');
-  //       var logger = Logger();
-  //       logger.d('${responseData['response']['pin']}');
-  //       myFunc.serverPin = responseData['response']['pin'];
-
-  //       setState(() {
-  //         _isLoading = true;
-  //       });
-  //       Future.delayed(Duration(seconds: 2), () {
-  //         setState(() {
-  //           _isLoading = false;
-  //           myFunc.loginPin = true;
-  //           Navigator.push(
-  //             context,
-  //             MaterialPageRoute(builder: (context) => CreatePin()),
-  //           );
-  //         });
-  //       });
-  //     } else {
-  //       print('Login failed with status: ${response.statusCode}.');
-  //     }
-  //   } catch (e) {
-  //     print('Error during login: $e');
-  //   }
-  // }
-
-  // Future<void> login() async {
-  //   bool success = await _loginUser(emailController.text, passController.text)
-  //   if (success) {
-  //     setState(() {
-  //       _isLoading = true;
-  //     });
-  //     Future.delayed(Duration(seconds: 2), () {
-  //       setState(() {
-  //         _isLoading = false;
-  //         myFunc.loginPin = true;
-  //         Navigator.push(
-  //           context,
-  //           MaterialPageRoute(builder: (context) => CreatePin()),
-  //         );
-  //       });
-  //     });
-  //   } else {
-  //     setState(() {
-  //       _isLoading = true;
-  //       Future.delayed(Duration(seconds: 2), () {
-  //         setState(() {
-  //           _isLoading = false;
-  //           myComponents.error(context, "Invalid credentials!", "Incorrect email or password. Please try again.");
-  //         });
-  //       });
-  //     });
-  //   }
-  // }
-
   Future<void> _authenticate() async {
     final recentUser = _filipay.get('tbl_recent_login');
     try {
@@ -172,10 +99,12 @@ class _LoginPageState extends State<LoginPage> {
         _isLoading = true;
       });
       Future.delayed(Duration(seconds: 2), () {
+        final tbl_users_mndb = _filipay.get('tbl_users_mndb');
+        Logger().i(tbl_users_mndb);
         setState(() {
           _isLoading = false;
           myFunc.loginPin = true;
-          myFunc.current_user_id = recentUser[0]['recent_user_id'];
+          myFunc.current_user_id = recentUser[0]['recent_user_id'].toString();
           Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => CreatePin()),
@@ -412,7 +341,7 @@ class _LoginPageState extends State<LoginPage> {
                       child: checkRecentLogs()
                           ? GestureDetector(
                               onTap: () {
-                                checkRecentLogs();
+                                // checkRecentLogs();
                                 _authenticate();
                               },
                               child: Image(

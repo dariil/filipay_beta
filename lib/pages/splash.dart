@@ -2,6 +2,7 @@ import 'package:filipay_beta/pages/login.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:logger/logger.dart';
 import '../functions/functions.dart';
 import '../functions/myEncryption.dart';
 import 'package:http/http.dart' as http;
@@ -53,6 +54,8 @@ class _SplashState extends State<Splash> with SingleTickerProviderStateMixin {
     });
     _initializedData();
     fetchToken();
+    // final tbl_users_mndb = _filipay.get('tbl_users_mndb');
+    // Logger().i(tbl_users_mndb);
   }
 
   // GET REQUEST
