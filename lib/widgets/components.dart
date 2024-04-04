@@ -408,7 +408,7 @@ class pageComponents {
   }
 
   AppBar appBar({scaffoldKey}) {
-    String userId = pageFunc.current_user_id;
+    // String userId = pageFunc.current_user_id;
     // String selectedOption = pageFunc.getAccountType(userId);
     // String firstName = pageFunc.getFirstName(userId);
     return AppBar(

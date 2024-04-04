@@ -48,6 +48,7 @@ class _SelectAmountPageState extends State<SelectAmountPage> {
     setState(() {
       myFunc.remaining_balance = balance;
     });
+    // Logger().i(getWalletResponse);
   }
 
   void updateBalance(double amount) {
@@ -67,10 +68,7 @@ class _SelectAmountPageState extends State<SelectAmountPage> {
           myComponents.errorModal(context, "${isUpdateResponse['messages']['message']}");
         }
       });
-      // Retrieve current user's ID
-      // String _currently_logged_user = _functions.current_user_id;
-      // Update balance in Hive box using current user's ID
-      // _filipay.put('balance_$_currently_logged_user', balance);
+      // Logger().i(Wallet);
     });
   }
 

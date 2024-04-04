@@ -13,7 +13,6 @@ import 'package:image_picker/image_picker.dart';
 import 'changePasswordPage.dart';
 import 'upgradeLimitsPage.dart';
 import 'dart:io';
-import 'package:image_picker/image_picker.dart';
 import 'package:logger/logger.dart';
 
 class AccountSetup extends StatefulWidget {
@@ -174,7 +173,7 @@ class _AccountSetupState extends State<AccountSetup> {
               myFunc.current_user_id = isUpdateResponse['response']['_id'].toString();
 
               _filipay.put('tbl_users_mndb', isUpdateResponse);
-              final tbl_users_mndb = _filipay.get('tbl_users_mndb');
+              // final tbl_users_mndb = _filipay.get('tbl_users_mndb');
 
               // print("CURRENT ID: ${tbl_users_mndb['response']['id']}");
 

@@ -2,14 +2,12 @@ import 'package:filipay_beta/pages/login.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:logger/logger.dart';
 import '../functions/functions.dart';
 import '../functions/myEncryption.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import '../functions/token.dart';
-import '../functions/myEncryption.dart';
 // import 'package:encrypt/encrypt.dart' as encrypt;
 
 class Splash extends StatefulWidget {

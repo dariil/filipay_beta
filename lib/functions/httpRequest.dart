@@ -1,15 +1,13 @@
-import 'package:hive/hive.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'functions.dart';
 import 'package:logger/logger.dart';
-import '../functions/functions.dart';
 
 class httprequestService {
   pageFunctions myFunc = pageFunctions();
-  final _myBox = Hive.box('myBox');
+  // final _myBox = Hive.box('myBox');
 
   Future<Map<String, dynamic>> getToken() async {
     // print('username: ${dotenv.env['myUsername']}');
