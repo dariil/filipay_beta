@@ -3,7 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import '../widgets/components.dart';
-import 'package:hive/hive.dart';
+// import 'package:hive/hive.dart';
 import 'enterAmount.dart';
 import 'eWallet.dart';
 import '../functions/functions.dart';
@@ -17,7 +17,7 @@ class SelectAmountPage extends StatefulWidget {
 }
 
 class _SelectAmountPageState extends State<SelectAmountPage> {
-  final Box _filipay = Hive.box('filipay');
+  // final Box _filipay = Hive.box('filipay');
   pageFunctions myFunc = pageFunctions();
   httprequestService httpService = httprequestService();
 
@@ -62,9 +62,6 @@ class _SelectAmountPageState extends State<SelectAmountPage> {
           setState(() {
             _isLoading = false;
           });
-          myComponents.alert(context, () {
-            Navigator.pop(context);
-          }, "Successful!", "Changes has been saved!.");
         } else {
           Navigator.of(context).pop();
           myComponents.errorModal(context, "${isUpdateResponse['messages']['message']}");
@@ -98,10 +95,8 @@ class _SelectAmountPageState extends State<SelectAmountPage> {
             Future.delayed(Duration(seconds: 2), () {
               setState(() {
                 _isLoading = false;
-                // Update balance when confirmation is completed
-                updateBalance(loadAmount); // This line updates the balance
+                updateBalance(loadAmount);
                 myComponents.loadConfirmed(context, () {
-                  // Navigate to the eWallet page after confirmation
                   Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(builder: (context) => EWalletPage()),
