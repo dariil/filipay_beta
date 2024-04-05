@@ -25,7 +25,6 @@ class _SelectAmountPageState extends State<SelectAmountPage> {
   httprequestService httpService = httprequestService();
 
   double balance = 0.0;
-  double previousBalance = 0.0;
 
   bool _isLoading = false;
   String username = "[name]";
@@ -50,16 +49,15 @@ class _SelectAmountPageState extends State<SelectAmountPage> {
   void _initializeWallet() async {
     Map<String, dynamic> getWalletResponse = await httpService.getWallet();
     balance = getWalletResponse['response']['balance'].toDouble();
-    setState(() {
-      myFunc.remaining_balance = balance;
-      Logger().i(myFunc.remaining_balance);
-    });
+    // setState(() {
+    //   myFunc.remaining_balance = balance;
+    //   Logger().i(myFunc.remaining_balance);
+    // });
     // Logger().i(getWalletResponse);
   }
 
   void updateBalance(double amount) {
     setState(() {
-      previousBalance = balance;
       balance += amount;
       String referenceCode = "FP${Random().nextInt(999999).toString().padLeft(6, '0')}";
       Future.delayed(Duration(seconds: 2), () async {

@@ -1158,7 +1158,7 @@ class pageComponents {
     );
   }
 
-  void paymentSuccessful(BuildContext context, int amount) {
+  void paymentSuccessful(BuildContext context, double amount) {
     showDialog(
         context: context,
         builder: (BuildContext context) {

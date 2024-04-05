@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import '../widgets/components.dart';
 import '../functions/functions.dart';
+import 'package:intl/intl.dart';
 
 class TransactionHistoryPage extends StatefulWidget {
   const TransactionHistoryPage({Key? key, required this.title}) : super(key: key);
@@ -213,14 +214,18 @@ class _TransactionHistoryPageState extends State<TransactionHistoryPage> {
     for (var transaction in transactionResponse ?? []) {
       String userId = transaction['userId'];
       String paymentMethod = transaction['paymentMethod'];
-      int amount = transaction['newBalance'] - transaction['previousBalance'];
+      double amount = transaction['newBalance'].toDouble() - transaction['previousBalance'].toDouble();
       String referenceCode = transaction['referenceCode'];
-      int serviceFee = transaction['serviceFee'];
+      double serviceFee = transaction['serviceFee'].toDouble();
       String status = transaction['status'];
       String date = transaction['createdAt'];
 
-      // Convert date string to DateTime object
+      String formattedAmount = amount.toStringAsFixed(2);
       DateTime transactionDate = DateTime.parse(date);
+
+      DateTime dateTime = DateTime.parse(date);
+      String formattedDate = DateFormat('yyyy-MM-dd').format(dateTime);
+      String formattedTime = DateFormat('hh:mm a').format(dateTime);
 
       // Filter transactions based on selected criteria
       if (userId == currentlyLoggedUser &&
@@ -229,11 +234,12 @@ class _TransactionHistoryPageState extends State<TransactionHistoryPage> {
           _selectedDate.month == transactionDate.month &&
           _selectedDate.day == transactionDate.day) {
         Map<String, dynamic> transactionDetails = {
-          'Amount': '+₱$amount', // Assuming 'serviceFee' represents the transaction amount
+          'Amount': '+₱${double.parse(formattedAmount)}', // Assuming 'serviceFee' represents the transaction amount
           'Reference Code': referenceCode,
           'Payment Method': paymentMethod,
           'Service Fee': '₱$serviceFee', // Assuming 'serviceFee' represents the service fee
-          'Date': '$date', // Assuming 'date' is in the format "YYYY-MM-DDTHH:mm:ss.sssZ"
+          'Date': '$formattedDate',
+          'Time': '$formattedTime',
           'Status': status,
         };
 

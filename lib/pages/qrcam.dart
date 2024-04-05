@@ -80,9 +80,7 @@ class _QRCamState extends State<QRCam> {
                         margin: const EdgeInsets.all(8),
                         child: ElevatedButton(
                             style: ElevatedButton.styleFrom(
-                              shape: RoundedRectangleBorder(
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(10.0))),
+                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(10.0))),
                             ),
                             onPressed: () async {
                               await controller?.toggleFlash();
@@ -105,9 +103,7 @@ class _QRCamState extends State<QRCam> {
                                     );
                                   },
                                 ),
-                                FittedBox(
-                                    fit: BoxFit.scaleDown,
-                                    child: Text("Flash")),
+                                FittedBox(fit: BoxFit.scaleDown, child: Text("Flash")),
                               ],
                             )),
                       ),
@@ -116,9 +112,7 @@ class _QRCamState extends State<QRCam> {
                         margin: const EdgeInsets.all(8),
                         child: ElevatedButton(
                             style: ElevatedButton.styleFrom(
-                              shape: RoundedRectangleBorder(
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(10.0))),
+                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(10.0))),
                             ),
                             onPressed: () {
                               myComponents.generateQR(
@@ -136,9 +130,7 @@ class _QRCamState extends State<QRCam> {
                                     );
                                   },
                                 ),
-                                FittedBox(
-                                    fit: BoxFit.scaleDown,
-                                    child: Text("Generate QR Code")),
+                                FittedBox(fit: BoxFit.scaleDown, child: Text("Generate QR Code")),
                               ],
                             )),
                       ),
@@ -148,9 +140,7 @@ class _QRCamState extends State<QRCam> {
                         margin: const EdgeInsets.all(8),
                         child: ElevatedButton(
                             style: ElevatedButton.styleFrom(
-                              shape: RoundedRectangleBorder(
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(10.0))),
+                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(10.0))),
                             ),
                             onPressed: () async {
                               await controller?.flipCamera();
@@ -163,14 +153,11 @@ class _QRCamState extends State<QRCam> {
                                   builder: (context, snapshot) {
                                     return Padding(
                                       padding: const EdgeInsets.all(8.0),
-                                      child: Icon(Icons.cameraswitch_sharp,
-                                          size: 30),
+                                      child: Icon(Icons.cameraswitch_sharp, size: 30),
                                     );
                                   },
                                 ),
-                                FittedBox(
-                                    fit: BoxFit.scaleDown,
-                                    child: Text("Switch Camera"))
+                                FittedBox(fit: BoxFit.scaleDown, child: Text("Switch Camera"))
                               ],
                             )),
                       )
@@ -186,10 +173,7 @@ class _QRCamState extends State<QRCam> {
   }
 
   Widget _buildQrView(BuildContext context) {
-    var scanArea = (MediaQuery.of(context).size.width < 400 ||
-            MediaQuery.of(context).size.height < 400)
-        ? 300.0
-        : 200.0;
+    var scanArea = (MediaQuery.of(context).size.width < 400 || MediaQuery.of(context).size.height < 400) ? 300.0 : 200.0;
 
     return QRView(
       key: qrKey,

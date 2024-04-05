@@ -1,4 +1,5 @@
 import 'package:filipay_beta/functions/httpRequest.dart';
+import 'package:filipay_beta/pages/qrPay.dart';
 import 'package:filipay_beta/pages/topUpPage.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
@@ -144,7 +145,7 @@ class _MainPageState extends State<MainPage> {
                   myFunc.transportMode = 'QR Reader';
                   Navigator.of(context).push(
                     MaterialPageRoute(
-                      builder: (context) => QRCam(),
+                      builder: (context) => qrPay(),
                     ),
                   );
                 },

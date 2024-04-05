@@ -1,6 +1,10 @@
+import 'dart:math';
+
+import 'package:filipay_beta/functions/httpRequest.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:logger/logger.dart';
 import '../widgets/components.dart';
 import '../functions/functions.dart';
 
@@ -15,9 +19,28 @@ class _qrPayState extends State<qrPay> {
   final FocusNode _focusNode = FocusNode();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   TextEditingController _controller = TextEditingController();
+  httprequestService httpService = httprequestService();
   pageFunctions myFunc = pageFunctions();
   pageComponents myComponents = pageComponents();
   bool isLoading = false;
+  double balance = 0.0;
+
+  void initState() {
+    super.initState();
+    // String _currently_logged_user = myFunc.current_user_id;
+    // balance = _filipay.get('balance_$_currently_logged_user', defaultValue: 0.0);
+    _initializeWallet();
+  }
+
+  void _initializeWallet() async {
+    Map<String, dynamic> getWalletResponse = await httpService.getWallet();
+    balance = getWalletResponse['response']['balance'].toDouble();
+    // setState(() {
+    //   myFunc.remaining_balance = balance;
+    //   Logger().i(myFunc.remaining_balance);
+    // });
+    // Logger().i(getWalletResponse);
+  }
 
   void confirmPayment() {
     myComponents.bookConfirmation(
@@ -28,11 +51,34 @@ class _qrPayState extends State<qrPay> {
         });
         Navigator.pop(context);
         Future.delayed(Duration(seconds: 3), () {
+          Logger().i(balance);
+          Logger().i(double.parse(_controller.text));
+          balance -= double.parse(_controller.text);
+          String referenceCode = "FP${Random().nextInt(999999).toString().padLeft(6, '0')}";
           setState(() {
             isLoading = false;
+            Future.delayed(Duration(seconds: 2), () async {
+              Map<String, dynamic> isUpdateResponse = await httpService.Wallet({
+                "userId": myFunc.current_user_id,
+                "referenceCode": referenceCode,
+                "balance": balance,
+                "paymentMethod": "Online",
+                "serviceFee": 5.00,
+                "status": "SUCCESSFUL",
+              });
+
+              if (isUpdateResponse['messages']['code'].toString() == '0') {
+                setState(() {
+                  isLoading = false;
+                });
+              } else {
+                Navigator.of(context).pop();
+                myComponents.errorModal(context, "${isUpdateResponse['messages']['message']}");
+              }
+            });
           });
-          myComponents.paymentSuccessful(context, int.parse(_controller.text));
-          myFunc.remaining_balance = myFunc.remaining_balance - int.parse(_controller.text); //
+          myComponents.paymentSuccessful(context, double.parse(_controller.text));
+          myFunc.remaining_balance = myFunc.remaining_balance - double.parse(_controller.text); //
         });
       },
       () {
@@ -42,6 +88,33 @@ class _qrPayState extends State<qrPay> {
       "Are you sure you want to confirm this payment?",
     );
   }
+
+  // void updateBalance(double amount) {
+  //   setState(() {
+  //     balance += amount;
+  //     String referenceCode = "FP${Random().nextInt(999999).toString().padLeft(6, '0')}";
+  //     Future.delayed(Duration(seconds: 2), () async {
+  //       Map<String, dynamic> isUpdateResponse = await httpService.Wallet({
+  //         "userId": myFunc.current_user_id,
+  //         "referenceCode": referenceCode,
+  //         "balance": balance,
+  //         "paymentMethod": "Online",
+  //         "serviceFee": 5.00,
+  //         "status": "SUCCESSFUL",
+  //       });
+
+  //       if (isUpdateResponse['messages']['code'].toString() == '0') {
+  //         setState(() {
+  //           isLoading = false;
+  //         });
+  //       } else {
+  //         Navigator.of(context).pop();
+  //         myComponents.errorModal(context, "${isUpdateResponse['messages']['message']}");
+  //       }
+  //     });
+  //     // Logger().i(Wallet);
+  //   });
+  // }
 
   void setTrue() {
     isLoading = true;
