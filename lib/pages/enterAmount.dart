@@ -108,7 +108,7 @@ class _EnterAmountPageState extends State<EnterAmountPage> {
                             _focusNode.unfocus();
                             if (_formKey.currentState!.validate()) {
                               setTrue();
-                              loadingConnect(); // Remove loadAmount argument
+                              loadingConnect();
                             }
                           },
                           text: 'CONFIRM',

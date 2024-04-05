@@ -1,5 +1,4 @@
 import 'package:filipay_beta/functions/httpRequest.dart';
-import 'package:filipay_beta/pages/qrPay.dart';
 import 'package:filipay_beta/pages/topUpPage.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
@@ -29,11 +28,9 @@ class _MainPageState extends State<MainPage> {
 
   @override
   void initState() {
-    // final tbl_users_mndb = _filipay.get('tbl_users_mndb');
     super.initState();
     Logger().i(myFunc.current_user_id);
     _initializeWallet();
-    // Logger().i(tbl_users_mndb);
   }
 
   void _initializeWallet() async {
@@ -45,10 +42,8 @@ class _MainPageState extends State<MainPage> {
   }
 
   Future<void> updateBalance() async {
-    // Wait for the response from the httpService.getWallet() call
     Map<String, dynamic> getWalletResponse = await httpService.getWallet();
 
-    // Access the response data and update the state
     setState(() {
       double balance = getWalletResponse['response']['balance'].toDouble();
       myFunc.remaining_balance = balance;
@@ -181,7 +176,7 @@ class _MainPageState extends State<MainPage> {
                     backgroundColor: isPayAhead ? Colors.white : Color.fromRGBO(39, 50, 115, 1.0),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(5.0),
-                      side: BorderSide(color: Color.fromRGBO(39, 50, 115, 1.0), width: 2.0), // Change the color and width here
+                      side: BorderSide(color: Color.fromRGBO(39, 50, 115, 1.0), width: 2.0),
                     ),
                     padding: EdgeInsets.symmetric(horizontal: 0.0, vertical: 1.0),
                   ),
@@ -389,12 +384,11 @@ class _MainPageState extends State<MainPage> {
                 future: Future.delayed(Duration(seconds: 2)),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
-                    return SizedBox(); // Show a loading indicator while waiting
+                    return SizedBox();
                   } else {
-                    // Your logic here
                     print('Do something after 2 seconds');
                     if (!_alertDialogShown) {
-                      _alertDialogShown = true; // Set flag to true to indicate AlertDialog shown
+                      _alertDialogShown = true;
                       WidgetsBinding.instance.addPostFrameCallback((_) {
                         showDialog(
                           context: context,
@@ -457,7 +451,7 @@ class _MainPageState extends State<MainPage> {
                         );
                       });
                     }
-                    return SizedBox(); // Placeholder widget after showing AlertDialog
+                    return SizedBox();
                   }
                 },
               )

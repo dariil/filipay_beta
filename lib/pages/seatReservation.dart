@@ -39,7 +39,7 @@ class _SeatReservationState extends State<SeatReservation> {
 
     bool isSeatAvailable(int seatNumber, String currentDate) {
       bool isAvailable = true;
-      // Check if seat is booked for the given date
+
       for (var booking in userBookings) {
         if (booking['date'] == currentDate &&
             userReservation[booking['seat_reservation_id']]['time'] == myFunc.reservedTime &&
@@ -53,7 +53,7 @@ class _SeatReservationState extends State<SeatReservation> {
     }
 
     for (int i = 0; i < count; i++) {
-      String currentDate = myFunc.dateSelected; // Change this to the selected date
+      String currentDate = myFunc.dateSelected;
       bool isAvailable = isSeatAvailable(seatNumber, currentDate);
 
       Color seatColor = isAvailable ? Color(0xff53a1d8) : Color(0xffb5e0fe);
@@ -67,11 +67,11 @@ class _SeatReservationState extends State<SeatReservation> {
                 if (seatSelected[i]) {
                   selectedSeatCount++;
                   price += 900;
-                  selectedSeats.add(i + 1); // Add selected seat number
+                  selectedSeats.add(i + 1);
                 } else {
                   selectedSeatCount--;
                   price -= 900;
-                  selectedSeats.remove(i + 1); // Remove deselected seat number
+                  selectedSeats.remove(i + 1);
                 }
               });
             }
@@ -205,7 +205,6 @@ class _SeatReservationState extends State<SeatReservation> {
                   setState(() {
                     _isLoading = false;
 
-                    /// ADD HERE
                     int index = userReservation.indexWhere((user) => user['booking_id'] == (myFunc.active_booking_id));
                     userReservation[index]['time'] = myFunc.reservedTime;
                     userReservation[index]['quantity'] = selectedSeatCount;
@@ -216,7 +215,6 @@ class _SeatReservationState extends State<SeatReservation> {
                     int routeIndexFinder = userBookings.indexWhere((user) => user['booking_id'] == (myFunc.active_booking_id));
                     String route = userBookings[routeIndexFinder]['route'];
 
-                    ///
                     myComponents.bookSuccessful(context, "${route}", "${myFunc.headerDateSelected}", price);
                     myFunc.active_booking_id = -1;
                     myFunc.reservedTime = "N/A";
@@ -316,7 +314,7 @@ class _SeatReservationState extends State<SeatReservation> {
                           onFirstTimeSelected: (startHour) {
                             DateTime dateTime = DateTime(2022, 1, 1, startHour.hour, startHour.minute);
                             String formattedTime = DateFormat('hh:mm a').format(dateTime);
-                            // setState(() => print("$formattedTime"));
+
                             setState(() {
                               myFunc.reservedTime = "$formattedTime";
                               print(myFunc.reservedTime);
@@ -426,7 +424,6 @@ class _SeatReservationState extends State<SeatReservation> {
                   SizedBox(height: 20.0),
                   Container(
                     width: MediaQuery.of(context).size.width * 0.9,
-                    // height: MediaQuery.of(context).size.height * 0.7,
                     decoration: BoxDecoration(
                       border: Border.all(width: 1.0, style: BorderStyle.solid, color: Colors.grey),
                       borderRadius: BorderRadius.circular(10.0),
@@ -504,8 +501,6 @@ class _SeatReservationState extends State<SeatReservation> {
   }
 }
 
-//////////////////////////
-// This is temporary as I have isolated this file from the project flow
 void main() {
   runApp(MaterialApp(
     home: SeatReservation(),

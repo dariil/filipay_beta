@@ -139,9 +139,7 @@ class _TopUpPageState extends State<TopUpPage> {
                       }
                       return null;
                     },
-                    onSaved: (newValue) {
-                      // Handle the saved value
-                    },
+                    onSaved: (newValue) {},
                     onFieldSubmitted: (value) {
                       loadingConnect();
                     },
@@ -170,18 +168,12 @@ class _TopUpPageState extends State<TopUpPage> {
                 topupbutton(
                   label: "via FILIPAY\nDistributor",
                   imagename: "store-alt-solid.png",
-                  thisFunction: () {
-                    // Navigator.push(context,
-                    //     MaterialPageRoute(builder: (context) => SelectAmountPage()));
-                  },
+                  thisFunction: () {},
                 ),
                 topupbutton(
                   label: "via Driver",
                   imagename: "driver-man.png",
-                  thisFunction: () {
-                    // Navigator.push(context,
-                    //     MaterialPageRoute(builder: (context) => SelectAmountPage()));
-                  },
+                  thisFunction: () {},
                 ),
               ],
             ),

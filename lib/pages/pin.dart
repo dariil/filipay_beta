@@ -87,15 +87,6 @@ class _CreatePinState extends State<CreatePin> {
     });
   }
 
-  // Future<void> currentUserPin() async {
-  //   print("\n\nTHIS IS WORKING\n\n");
-  //   // _filipay.put('tbl_users', pinPage.tbl_users);
-  //   final userList = _filipay.get('tbl_users');
-  //   int index = userList.indexWhere((user) => user['user_id'] == pinPage.current_user_id);
-  //   userPin = userList[index]['user_pin'];
-  // }
-
-  /////////////////////////////////////////////////////////////////////////////////////////////
   void loadingConfirm() {
     _isLoading = true;
     Future.delayed(Duration(seconds: 2), () async {
@@ -115,9 +106,7 @@ class _CreatePinState extends State<CreatePin> {
         Logger().i(pinPage.current_user_id);
 
         _filipay.put('tbl_users_mndb', isUpdateResponse);
-        // final tbl_users_mndb = _filipay.get('tbl_users_mndb');
       } else {
-        // Navigator.of(context).pop();
         myComponents.errorModal(context, "${isUpdateResponse['messages']['message']}");
       }
       setState(() {
@@ -129,7 +118,6 @@ class _CreatePinState extends State<CreatePin> {
   void pinChanged() {
     _isLoading = true;
     Future.delayed(Duration(seconds: 2), () {
-      // _filipay.put('tbl_users', pinPage.tbl_users);
       final userList = _filipay.get('tbl_users');
       setState(() {
         _isLoading = false;
@@ -321,9 +309,6 @@ class _CreatePinState extends State<CreatePin> {
                             onCompleted: (v) {
                               debugPrint("Completed");
                             },
-                            // onTap: () {
-                            //   print("Pressed");
-                            // },
                             onChanged: (value) {
                               debugPrint(value);
                               setState(() {
@@ -458,9 +443,6 @@ class _CreatePinState extends State<CreatePin> {
                             onCompleted: (v) {
                               debugPrint("Completed");
                             },
-                            // onTap: () {
-                            //   print("Pressed");
-                            // },
                             onChanged: (value) {
                               debugPrint(value);
                               setState(() {
@@ -502,7 +484,7 @@ class _CreatePinState extends State<CreatePin> {
                               () {
                                 hasError = false;
                                 pinEnter = currentText.toString();
-                                // loginEnter();
+
                                 _pinLogin();
                               },
                             );

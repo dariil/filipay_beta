@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../widgets/components.dart';
-import 'package:hive/hive.dart'; // Import Hive package
+import 'package:hive/hive.dart';
 import 'topUpPage.dart';
 import '../functions/functions.dart';
 import 'claimRewardsPage.dart';
@@ -23,7 +23,7 @@ class _EWalletPageState extends State<EWalletPage> {
   @override
   void initState() {
     super.initState();
-    // String currentUserId = myFunc.current_user_id;
+
     _initializeWallet();
   }
 
@@ -35,13 +35,12 @@ class _EWalletPageState extends State<EWalletPage> {
     });
   }
 
-  // Method to update balance
   void updateBalance(double newBalance) {
     setState(() {
       balance = newBalance;
-      // Retrieve current user's ID
+
       String currentUserId = myFunc.current_user_id;
-      // Update balance in Hive box using current user's ID
+
       _filipay.put('balance_$currentUserId', balance);
     });
   }
@@ -76,7 +75,7 @@ class _EWalletPageState extends State<EWalletPage> {
                             ),
                           ),
                           child: Text(
-                            "PHP ${myFunc.remaining_balance}", // Display dynamic balance
+                            "PHP ${myFunc.remaining_balance}",
                             style: TextStyle(
                               fontSize: 40.0,
                               fontWeight: FontWeight.w600,

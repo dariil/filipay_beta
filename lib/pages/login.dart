@@ -11,11 +11,6 @@ import 'pin.dart';
 import 'package:local_auth/local_auth.dart';
 import '../functions/myEncryption.dart';
 import '../functions/token.dart';
-// import 'package:http/http.dart' as http;
-// import 'dart:convert';
-// import 'package:flutter_dotenv/flutter_dotenv.dart';
-// import '../functions/token.dart';
-// import 'package:logger/logger.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -28,7 +23,6 @@ class _LoginPageState extends State<LoginPage> {
   globalToken myToken = globalToken();
   late final LocalAuthentication auth = LocalAuthentication();
   MyEncryptionDecryption encrpytionMethod = MyEncryptionDecryption();
-  // bool _supportState = false;
 
   void initState() {
     super.initState();
@@ -51,28 +45,6 @@ class _LoginPageState extends State<LoginPage> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   httprequestService httpService = httprequestService();
   final _filipay = Hive.box("filipay");
-
-  // Future<bool> _loginUser(String email, String password) async {
-  //   _filipay.put('tbl_recent_login', myFunc.tbl_recent_login);
-  //   final userList = _filipay.get('tbl_users');
-  //   //final recentUser = _filipay.get('tbl_recent_login');
-  //   for (var user in userList) {
-  //     String decryptEmail = MyEncryptionDecryption.decryptAES(user['user_pass']).toString();
-  //     if (user['user_email'] == email && decryptEmail == password) {
-  //       print('Login successful for ${user['user_email']}');
-  //       int index = userList.indexWhere((user) => user['user_email'] == email);
-  //       myFunc.current_user_id = userList[index]['user_id'];
-  //       // if (recentUser != null || (recentUser as List).isNotEmpty) {
-  //       //   if (myFunc.current_user_id != recentUser[0]['recent_user_id']) {
-  //       //     recentUser.clear();
-  //       //   }
-  //       // }
-  //       return true;
-  //     }
-  //   }
-  //   print('Login failed');
-  //   return false;
-  // }
 
   bool checkRecentLogs() {
     final recentUser = _filipay.get('tbl_recent_login');
@@ -134,7 +106,6 @@ class _LoginPageState extends State<LoginPage> {
           myFunc.loginPin = false;
           myFunc.pinMode = false;
         }
-        // myFunc.current_user_id = isLoginResponse['response']['id'].toString();
 
         _filipay.put('tbl_users_mndb', isLoginResponse);
         final tbl_users_mndb = _filipay.get('tbl_users_mndb');
@@ -341,7 +312,6 @@ class _LoginPageState extends State<LoginPage> {
                       child: checkRecentLogs()
                           ? GestureDetector(
                               onTap: () {
-                                // checkRecentLogs();
                                 _authenticate();
                               },
                               child: Image(
@@ -359,7 +329,6 @@ class _LoginPageState extends State<LoginPage> {
                         buttonText: "Sign in with Facebook",
                         buttonColor: Color.fromRGBO(11, 97, 184, 1.0),
                         buttonTextColor: Colors.white,
-                        // action: _getData(),
                       ),
                     ),
                     Padding(
@@ -370,9 +339,6 @@ class _LoginPageState extends State<LoginPage> {
                         buttonText: "Sign in with Google",
                         buttonColor: Colors.white,
                         buttonTextColor: Colors.black,
-                        // action: () {
-                        //   _getData();
-                        // }),
                       ),
                     ),
                   ],

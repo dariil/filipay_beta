@@ -28,8 +28,6 @@ class _RegisterPageState extends State<RegisterPage> {
 
   final _filipay = Hive.box("filipay");
 
-  // List<Map<String, dynamic>> tbl_users = [];
-
   Future<void> Register() async {
     Map<String, dynamic> isRegisterResponse = await httpService.Register({
       "email": emailControler.text.toString(),
@@ -54,7 +52,6 @@ class _RegisterPageState extends State<RegisterPage> {
         MaterialPageRoute(builder: (context) => CreatePin()),
       );
     } else {
-      // Navigator.of(context).pop();
       myComponents.errorModal(context, "${isRegisterResponse['messages']['message']}");
     }
   }
@@ -364,7 +361,7 @@ class TextFormFieldsWidget extends StatelessWidget {
           if (value!.isEmpty) {
             return 'Please enter an email address';
           }
-          // Regular expression for email validation
+
           final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
           if (!emailRegex.hasMatch(value)) {
             return 'Please enter a valid email address';

@@ -8,7 +8,6 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import '../functions/token.dart';
-// import 'package:encrypt/encrypt.dart' as encrypt;
 
 class Splash extends StatefulWidget {
   const Splash({super.key});
@@ -24,7 +23,6 @@ class _SplashState extends State<Splash> with SingleTickerProviderStateMixin {
   final _filipay = Hive.box("filipay");
   late AnimationController _controller;
   late Animation<double> _animation;
-  // static final iv = encrypt.IV.fromLength(16);
 
   @override
   void initState() {
@@ -52,19 +50,14 @@ class _SplashState extends State<Splash> with SingleTickerProviderStateMixin {
     });
     _initializedData();
     fetchToken();
-    // final tbl_users_mndb = _filipay.get('tbl_users_mndb');
-    // Logger().i(tbl_users_mndb);
   }
 
-  // GET REQUEST
   void fetchToken() async {
     String getTokenAPI = dotenv.get("GET_TOKEN", fallback: "");
     var url = Uri.parse(getTokenAPI);
 
-    // Encode your username and password using base64
     var authCredentials = base64.encode(utf8.encode('${dotenv.env['username'].toString()}:${dotenv.env['password'].toString()}'));
 
-    // Add basic auth header to your request
     var response = await http.get(
       url,
       headers: {'Authorization': 'Basic $authCredentials'},
@@ -125,9 +118,6 @@ class _SplashState extends State<Splash> with SingleTickerProviderStateMixin {
     }
 
     if (!_filipay.containsKey('tbl_recent_login')) {
-      // myFunc.tbl_recent_login.add({
-      //   "recent_user_id": 0,
-      // });
       _filipay.put('tbl_recent_login', myFunc.tbl_recent_login);
     } else {
       final recentUser = _filipay.get('tbl_recent_login');
@@ -135,24 +125,6 @@ class _SplashState extends State<Splash> with SingleTickerProviderStateMixin {
     }
 
     if (!_filipay.containsKey('tbl_bookings')) {
-      // myFunc.tbl_bookings.add({
-      //   "booking_id": 0,
-      //   "seat_reservation_id": 0,
-      //   "user_id": 0,
-      //   "reference_code": "TY5H6TW5T565YE",
-      //   "route": "Sample Route 1",
-      //   "date": "03/18/2024",
-      //   "status": "PENDING",
-      // });
-      // myFunc.tbl_bookings.add({
-      //   "booking_id": 1,
-      //   "seat_reservation_id": 20,
-      //   "user_id": 1,
-      //   "reference_code": "GS6H0TW5FKNVYE",
-      //   "route": "Sample Route 2",
-      //   "date": "02/24/2024",
-      //   "status": "PENDING",
-      // });
       _filipay.put('tbl_bookings', myFunc.tbl_bookings);
     } else {
       final userBookings = _filipay.get('tbl_bookings');
@@ -160,34 +132,11 @@ class _SplashState extends State<Splash> with SingleTickerProviderStateMixin {
     }
 
     if (!_filipay.containsKey('tbl_seat_reservation')) {
-      // myFunc.tbl_seat_reservation.add({
-      //   "seat_reservation_id": 0,
-      //   "booking_id": 0,
-      //   "time": "9:30 PM",
-      //   "quantity": 1,
-      //   "seat_number": [18],
-      //   "price": 900
-      // });
-      // myFunc.tbl_seat_reservation.add({
-      //   "seat_reservation_id": 20,
-      //   "booking_id": 1,
-      //   "time": "3:30 AM",
-      //   "quantity": 2,
-      //   "seat_number": [6, 5],
-      //   "price": 1800
-      // });
       _filipay.put('tbl_seat_reservation', myFunc.tbl_seat_reservation);
     } else {
       final userReservation = _filipay.get('tbl_seat_reservation');
       myFunc.tbl_seat_reservation = List<Map<dynamic, dynamic>>.from(userReservation);
     }
-
-    // if (!_filipay.containsKey('tbl_users_mndb')) {
-    //   _filipay.put('tbl_users_mndb', myFunc.tbl_seat_reservation);
-    // } else {
-    //   final userReservation = _filipay.get('tbl_seat_reservation');
-    //   myFunc.tbl_seat_reservation = List<Map<dynamic, dynamic>>.from(userReservation);
-    // }
   }
 
   @override

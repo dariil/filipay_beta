@@ -112,7 +112,6 @@ class pageComponents {
     required String buttonText,
     required buttonColor,
     required Color buttonTextColor,
-    // required action,
   }) {
     double screenWidth = MediaQuery.of(context).size.width;
     return ElevatedButton(
@@ -130,15 +129,12 @@ class pageComponents {
             width: 28.0,
             height: 28.0,
           ),
-          // SizedBox(
-          //   width: 10.0,
-          // ),
           Center(
             child: Text(
               buttonText,
               style: TextStyle(
                 color: buttonTextColor,
-                fontSize: screenWidth * 0.03, // 3% of screen width
+                fontSize: screenWidth * 0.03,
               ),
             ),
           ),
@@ -263,9 +259,7 @@ class pageComponents {
         builder: (BuildContext context) {
           return PopScope(
             canPop: false,
-            onPopInvoked: (didPop) {
-              // logic
-            },
+            onPopInvoked: (didPop) {},
             child: AlertDialog(
               contentPadding: EdgeInsets.zero,
               content: Container(
@@ -410,9 +404,6 @@ class pageComponents {
   }
 
   AppBar appBar({scaffoldKey}) {
-    // String userId = pageFunc.current_user_id;
-    // String selectedOption = pageFunc.getAccountType(userId);
-    // String firstName = pageFunc.getFirstName(userId);
     final tbl_users_mndb = _filipay.get('tbl_users_mndb');
     return AppBar(
       backgroundColor: Color.fromRGBO(44, 177, 230, 1.0),
@@ -647,10 +638,8 @@ class pageComponents {
   }
 
   void slider(BuildContext context, Function() onOkPressed, double loadAmount) {
-    // Define service fee
     double serviceFee = 5.00;
 
-    // Calculate total amount
     double totalAmount = loadAmount + serviceFee;
 
     showDialog(
@@ -768,7 +757,6 @@ class pageComponents {
     String alertDescription,
     double loadAmount,
   ) {
-    // Generate reference code, format date and ti
     String referenceCode = "FP${Random().nextInt(999999).toString().padLeft(6, '0')}";
     DateTime utcTime = DateTime.now().toUtc();
     Duration philippinesOffset = Duration(hours: 8);
@@ -819,7 +807,7 @@ class pageComponents {
                       ),
                     ),
                     Text(
-                      "₱${loadAmount.toStringAsFixed(2)}", // Display the amount
+                      "₱${loadAmount.toStringAsFixed(2)}",
                       style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Color.fromRGBO(13, 93, 158, 1.0)),
                       textAlign: TextAlign.center,
                     ),
@@ -863,7 +851,7 @@ class pageComponents {
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(5.0),
                           border: Border.all(
-                            color: Color.fromRGBO(13, 93, 158, 1.0), // Border color
+                            color: Color.fromRGBO(13, 93, 158, 1.0),
                             width: 5,
                           ),
                           color: Colors.white,
@@ -882,8 +870,8 @@ class pageComponents {
                 ),
                 TextButton(
                   onPressed: () {
-                    Navigator.of(context).pop(); // Close the dialog
-                    onOkPressed(); // Call the function passed as parameter
+                    Navigator.of(context).pop();
+                    onOkPressed();
                     try {
                       String _currently_logged_user = pageFunc.current_user_id;
                       Map<dynamic, dynamic> transactionDetails = {
@@ -895,18 +883,16 @@ class pageComponents {
                         'time': formattedTime,
                       };
 
-                      // Add the transaction details to the Hive box 'filipay'
                       List<Map<dynamic, dynamic>> userTransactions = _filipay.get(
                         'user_transactions_$_currently_logged_user',
                         defaultValue: [],
-                      ).cast<Map<dynamic, dynamic>>(); // Cast to the correct type
+                      ).cast<Map<dynamic, dynamic>>();
                       userTransactions.add(transactionDetails);
                       _filipay.put(
                         'user_transactions_$_currently_logged_user',
                         userTransactions,
                       );
 
-                      // Print the updated transaction history
                       print('User Transactions: $userTransactions');
                     } catch (e) {
                       print('Error storing user transactions: $e');
@@ -1485,7 +1471,6 @@ class mainButtons {
   }) {
     return Container(
       width: MediaQuery.of(context).size.width * 0.9,
-      // height: MediaQuery.of(context).size.height * 0.9,
       child: ElevatedButton(
         onPressed: onPressed,
         style: ElevatedButton.styleFrom(

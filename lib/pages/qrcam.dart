@@ -221,9 +221,3 @@ class _QRCamState extends State<QRCam> {
     super.dispose();
   }
 }
-
-// void main() {
-//   runApp(MaterialApp(
-//     home: qrPay(),
-//   ));
-// }

@@ -1,6 +1,5 @@
 import 'package:filipay_beta/functions/httpRequest.dart';
 import 'package:flutter/material.dart';
-import 'package:hive/hive.dart';
 import '../widgets/components.dart';
 import '../functions/functions.dart';
 import 'package:intl/intl.dart';
@@ -15,7 +14,6 @@ class TransactionHistoryPage extends StatefulWidget {
 
 class _TransactionHistoryPageState extends State<TransactionHistoryPage> {
   httprequestService httpService = httprequestService();
-  final _filipay = Hive.box("filipay");
   late DateTime _selectedDate;
   String _selectedFilter = 'All';
   pageFunctions _functions = pageFunctions();
@@ -204,11 +202,9 @@ class _TransactionHistoryPageState extends State<TransactionHistoryPage> {
   Future<List<Map<String, dynamic>>> _buildFilteredTransactions() async {
     List<Map<String, dynamic>> filteredTransactions = [];
 
-    // Fetch transaction data
     Map<String, dynamic> transactionData = await httpService.getHistories();
     List<dynamic>? transactionResponse = transactionData['response'];
 
-    // Extract transaction history from response
     String currentlyLoggedUser = _functions.current_user_id;
 
     for (var transaction in transactionResponse ?? []) {
@@ -227,17 +223,16 @@ class _TransactionHistoryPageState extends State<TransactionHistoryPage> {
       String formattedDate = DateFormat('yyyy-MM-dd').format(dateTime);
       String formattedTime = DateFormat('hh:mm a').format(dateTime);
 
-      // Filter transactions based on selected criteria
       if (userId == currentlyLoggedUser &&
           (_selectedFilter == 'All' || paymentMethod == _selectedFilter) &&
           _selectedDate.year == transactionDate.year &&
           _selectedDate.month == transactionDate.month &&
           _selectedDate.day == transactionDate.day) {
         Map<String, dynamic> transactionDetails = {
-          'Amount': '+${double.parse(formattedAmount)}', // Assuming 'serviceFee' represents the transaction amount
+          'Amount': '+${double.parse(formattedAmount)}',
           'Reference Code': referenceCode,
           'Payment Method': paymentMethod,
-          'Service Fee': '₱$serviceFee', // Assuming 'serviceFee' represents the service fee
+          'Service Fee': '₱$serviceFee',
           'Date': '$formattedDate',
           'Time': '$formattedTime',
           'Status': status,
@@ -262,10 +257,10 @@ class _TransactionHistoryPageState extends State<TransactionHistoryPage> {
         return Theme(
           data: ThemeData.light().copyWith(
             colorScheme: ColorScheme.light(
-              primary: Color.fromRGBO(239, 139, 6, 1), // header background color
-              onPrimary: Color.fromARGB(255, 255, 255, 255), // header text color
+              primary: Color.fromRGBO(239, 139, 6, 1),
+              onPrimary: Color.fromARGB(255, 255, 255, 255),
               surface: const Color.fromARGB(255, 255, 255, 255),
-              onSurface: const Color.fromARGB(255, 30, 30, 30), // body text color
+              onSurface: const Color.fromARGB(255, 30, 30, 30),
             ),
             textButtonTheme: TextButtonThemeData(
               style: TextButton.styleFrom(
@@ -324,7 +319,7 @@ class _TransactionHistoryPageState extends State<TransactionHistoryPage> {
     List<Widget> widgets = [];
 
     transactionDetails.forEach((key, value) {
-      Color valueColor = Colors.black; // Default color
+      Color valueColor = Colors.black;
       if (key == 'Amount' || key == '₱') {
         valueColor = Colors.blue;
         if (value.startsWith('+')) {
@@ -345,7 +340,7 @@ class _TransactionHistoryPageState extends State<TransactionHistoryPage> {
           padding: const EdgeInsets.symmetric(vertical: 2.0),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.end, // Aligns text to the end
+            crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               Text(
                 '$key: ',
@@ -358,7 +353,7 @@ class _TransactionHistoryPageState extends State<TransactionHistoryPage> {
               Expanded(
                 child: Text(
                   '$value',
-                  textAlign: TextAlign.end, // Aligns the text to the right
+                  textAlign: TextAlign.end,
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 12,

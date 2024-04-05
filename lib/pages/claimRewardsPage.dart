@@ -18,7 +18,6 @@ class _ClaimRewardsPageState extends State<ClaimRewardsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // appBar: MyAppBar(title: widget.title),
       body: Stack(
         children: [
           Align(
@@ -35,9 +34,7 @@ class _ClaimRewardsPageState extends State<ClaimRewardsPage> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => MainPage(
-                        // title: "Main Page",
-                        ),
+                    builder: (context) => MainPage(),
                   ),
                 );
               },
@@ -82,7 +79,7 @@ class _ClaimRewardsPageState extends State<ClaimRewardsPage> {
                       ),
                     ),
                     SizedBox(
-                      height: 30, //space between PS & Container
+                      height: 30,
                     ),
                     Image.asset(
                       'assets/e-wallet/filipcoin.png',
@@ -90,7 +87,7 @@ class _ClaimRewardsPageState extends State<ClaimRewardsPage> {
                       height: 200,
                     ),
                     SizedBox(
-                      height: 45, //space between image and button
+                      height: 45,
                     ),
                     SizedBox(
                       width: 260,
@@ -111,18 +108,16 @@ class _ClaimRewardsPageState extends State<ClaimRewardsPage> {
                             setState(() {
                               _isPressed = true;
                             });
-                            // Simulate claim button logic
                             Future.delayed(Duration(milliseconds: 300), () {
                               setState(() {
                                 _isPressed = false;
                               });
-                              // Show a dialog when the button is pressed
                               showDialog(
                                 context: context,
                                 builder: (BuildContext context) {
                                   return AlertDialog(
                                     title: Padding(
-                                      padding: const EdgeInsets.only(top: 50.0), // Adjust top padding as needed
+                                      padding: const EdgeInsets.only(top: 50.0),
                                       child: Text(
                                         'Reward Successfully Claimed!',
                                         textAlign: TextAlign.center,
@@ -132,7 +127,7 @@ class _ClaimRewardsPageState extends State<ClaimRewardsPage> {
                                     actions: <Widget>[
                                       TextButton(
                                         onPressed: () {
-                                          Navigator.of(context).pop(); // Close the dialog
+                                          Navigator.of(context).pop();
                                         },
                                         child: Text('OK'),
                                       ),

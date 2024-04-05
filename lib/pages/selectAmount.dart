@@ -4,7 +4,6 @@ import 'package:filipay_beta/functions/httpRequest.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:logger/logger.dart';
 import '../widgets/components.dart';
 import 'enterAmount.dart';
 import 'eWallet.dart';
@@ -19,7 +18,6 @@ class SelectAmountPage extends StatefulWidget {
 }
 
 class _SelectAmountPageState extends State<SelectAmountPage> {
-  // final Box _filipay = Hive.box('filipay');
   pageFunctions myFunc = pageFunctions();
   httprequestService httpService = httprequestService();
 
@@ -45,11 +43,6 @@ class _SelectAmountPageState extends State<SelectAmountPage> {
   void _initializeWallet() async {
     Map<String, dynamic> getWalletResponse = await httpService.getWallet();
     balance = getWalletResponse['response']['balance'].toDouble();
-    // setState(() {
-    //   myFunc.remaining_balance = balance;
-    //   Logger().i(myFunc.remaining_balance);
-    // });
-    // Logger().i(getWalletResponse);
   }
 
   void updateBalance(double amount) {
@@ -75,7 +68,6 @@ class _SelectAmountPageState extends State<SelectAmountPage> {
           myComponents.errorModal(context, "${isUpdateResponse['messages']['message']}");
         }
       };
-      // Logger().i(Wallet);
     });
   }
 
@@ -120,7 +112,6 @@ class _SelectAmountPageState extends State<SelectAmountPage> {
     _focusNode.unfocus();
     if (_formKey.currentState!.validate()) {
       setTrue();
-      // Call loadingConnect only when confirm button is pressed
       loadingConnect(double.parse(_controller.text));
     }
   }
@@ -241,12 +232,12 @@ class _SelectAmountPageState extends State<SelectAmountPage> {
                     ),
                     SizedBox(height: 10.0),
                     GridView.builder(
-                      shrinkWrap: true, // Add this line
+                      shrinkWrap: true,
                       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                         crossAxisCount: 3,
                         mainAxisSpacing: 15.0,
                         crossAxisSpacing: 15.0,
-                        childAspectRatio: 1.5, // Aspect ratio of each grid item
+                        childAspectRatio: 1.5,
                       ),
                       itemCount: buttonData.length,
                       itemBuilder: (BuildContext context, int index) {

@@ -1,15 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-// import 'package:flutter_application_2/widgets/background.dart';
-// import 'package:flutter_application_2/pages/waitingConfirmationPage.dart';
-// import 'package:flutter_application_2/pages/transactionHistoryPage.dart';
-// import 'package:flutter_application_2/widgets/appbar.dart';
+
 import 'transactionHistoryPage.dart';
 import '../widgets/components.dart';
 
 class PaymentSuccessfulPage extends StatefulWidget {
-  const PaymentSuccessfulPage({Key? key, required this.title})
-      : super(key: key);
+  const PaymentSuccessfulPage({Key? key, required this.title}) : super(key: key);
   final String title;
 
   @override
@@ -21,7 +17,6 @@ class _PaymentSuccessfulPageState extends State<PaymentSuccessfulPage> {
   Widget build(BuildContext context) {
     pageComponents myComponents = pageComponents();
     return Scaffold(
-      // appBar: myComponents.appBar(),
       body: SafeArea(
         child: Stack(
           children: [
@@ -90,11 +85,10 @@ class _PaymentSuccessfulPageState extends State<PaymentSuccessfulPage> {
                     ],
                   ),
                   SizedBox(
-                    height: 25, //space between PS & Container
+                    height: 25,
                   ),
                   Padding(
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 0.0, horizontal: 20),
+                    padding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 20),
                     child: Container(
                       padding: EdgeInsets.all(5),
                       decoration: BoxDecoration(
@@ -108,8 +102,7 @@ class _PaymentSuccessfulPageState extends State<PaymentSuccessfulPage> {
                           children: [
                             _buildTableRow('Amount', '-PHP 13.00'),
                             _buildTableRow('Ref Id', 'ORNZNXS8YX7JUYBXVA2'),
-                            _buildTableRow(
-                                'Route', 'BONI PINATUBO - STOP & SHOP'),
+                            _buildTableRow('Route', 'BONI PINATUBO - STOP & SHOP'),
                             _buildTableRow('Date', '5/11/2020'),
                             _buildTableRow('Time', '3:13 PM'),
                             _buildTableRow('Status', 'PAID'),
@@ -119,7 +112,7 @@ class _PaymentSuccessfulPageState extends State<PaymentSuccessfulPage> {
                     ),
                   ),
                   SizedBox(
-                    height: 15, // Space between container and text
+                    height: 15,
                   ),
                   GestureDetector(
                     onTap: () {
@@ -133,10 +126,7 @@ class _PaymentSuccessfulPageState extends State<PaymentSuccessfulPage> {
                     },
                     child: Text(
                       "View Transaction History",
-                      style: TextStyle(
-                          fontSize: 20,
-                          fontStyle: FontStyle.italic,
-                          color: Color.fromRGBO(5, 81, 121, 1)),
+                      style: TextStyle(fontSize: 20, fontStyle: FontStyle.italic, color: Color.fromRGBO(5, 81, 121, 1)),
                     ),
                   ),
                 ],

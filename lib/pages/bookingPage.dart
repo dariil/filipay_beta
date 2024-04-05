@@ -75,13 +75,10 @@ class _BookingPage extends State<BookingPage> {
         return Theme(
           data: ThemeData.light().copyWith(
             colorScheme: ColorScheme.light(
-              primary:
-                  Color.fromRGBO(239, 139, 6, 1), // header background color
-              onPrimary:
-                  Color.fromARGB(255, 255, 255, 255), // header text color
+              primary: Color.fromRGBO(239, 139, 6, 1),
+              onPrimary: Color.fromARGB(255, 255, 255, 255),
               surface: const Color.fromARGB(255, 255, 255, 255),
-              onSurface:
-                  const Color.fromARGB(255, 30, 30, 30), // body text color
+              onSurface: const Color.fromARGB(255, 30, 30, 30),
             ),
             textButtonTheme: TextButtonThemeData(
               style: TextButton.styleFrom(
@@ -102,10 +99,8 @@ class _BookingPage extends State<BookingPage> {
       setState(() {
         myFunc.active_booking_id = userBookings.length;
         _selectedDate = pickedDate;
-        myFunc.dateSelected =
-            "${DateFormat('MM/dd/yyyy').format(_selectedDate!)}";
-        myFunc.headerDateSelected =
-            "${DateFormat('E, MMMM dd, yyyy').format(_selectedDate!)}";
+        myFunc.dateSelected = "${DateFormat('MM/dd/yyyy').format(_selectedDate!)}";
+        myFunc.headerDateSelected = "${DateFormat('E, MMMM dd, yyyy').format(_selectedDate!)}";
         userReservation.add({
           "seat_reservation_id": userReservation.length,
           "booking_id": myFunc.active_booking_id,
@@ -140,8 +135,6 @@ class _BookingPage extends State<BookingPage> {
       debugShowCheckedModeBanner: false,
       home: Scaffold(
         key: scaffoldKey,
-        // appBar: myComponents.appBar(scaffoldKey: scaffoldKey),
-        // drawer: NavDrawer(),
         body: SafeArea(
           child: Stack(
             children: [
@@ -292,47 +285,30 @@ class _BookingPage extends State<BookingPage> {
                                   children: [
                                     Padding(
                                       padding: const EdgeInsets.all(16.0),
-                                      child: Text('ROUTE',
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              color: Color.fromRGBO(
-                                                  51, 51, 51, 1))),
+                                      child: Text('ROUTE', style: TextStyle(fontWeight: FontWeight.bold, color: Color.fromRGBO(51, 51, 51, 1))),
                                     ),
                                     Padding(
                                       padding: const EdgeInsets.only(top: 6.0),
                                       child: Container(
                                         height: 40,
-                                        padding: EdgeInsets.symmetric(
-                                            horizontal: 10),
+                                        padding: EdgeInsets.symmetric(horizontal: 10),
                                         decoration: BoxDecoration(
-                                          color:
-                                              Color.fromRGBO(255, 255, 255, 1),
+                                          color: Color.fromRGBO(255, 255, 255, 1),
                                         ),
                                         child: DropdownButtonHideUnderline(
                                           child: DropdownButton<String>(
                                             value: _selectedRoute,
                                             icon: Icon(
                                               Icons.arrow_drop_down,
-                                              color: Color.fromRGBO(
-                                                  40, 52, 116, 1),
+                                              color: Color.fromRGBO(40, 52, 116, 1),
                                             ),
-                                            items: <String>[
-                                              'SELECT A ROUTE',
-                                              'Route 2',
-                                              'Route 3'
-                                            ].map((String value) {
+                                            items: <String>['SELECT A ROUTE', 'Route 2', 'Route 3'].map((String value) {
                                               return DropdownMenuItem<String>(
                                                 value: value,
                                                 child: Text(
                                                   value,
-                                                  overflow:
-                                                      TextOverflow.ellipsis,
-                                                  style: TextStyle(
-                                                      fontSize: 12,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      color: Color.fromRGBO(
-                                                          83, 161, 216, 1)),
+                                                  overflow: TextOverflow.ellipsis,
+                                                  style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Color.fromRGBO(83, 161, 216, 1)),
                                                 ),
                                               );
                                             }).toList(),
@@ -366,47 +342,31 @@ class _BookingPage extends State<BookingPage> {
                                       padding: const EdgeInsets.all(16.0),
                                       child: Text(
                                         'ORIGIN',
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            color:
-                                                Color.fromRGBO(51, 51, 51, 1)),
+                                        style: TextStyle(fontWeight: FontWeight.bold, color: Color.fromRGBO(51, 51, 51, 1)),
                                       ),
                                     ),
                                     Padding(
                                       padding: const EdgeInsets.only(top: 6.0),
                                       child: Container(
                                         height: 40,
-                                        padding: EdgeInsets.symmetric(
-                                            horizontal: 10),
+                                        padding: EdgeInsets.symmetric(horizontal: 10),
                                         decoration: BoxDecoration(
-                                          color:
-                                              Color.fromRGBO(255, 255, 255, 1),
+                                          color: Color.fromRGBO(255, 255, 255, 1),
                                         ),
                                         child: DropdownButtonHideUnderline(
                                           child: DropdownButton<String>(
                                             value: _selectedOrigin,
                                             icon: Icon(
                                               Icons.arrow_drop_down,
-                                              color: Color.fromRGBO(
-                                                  40, 52, 116, 1),
+                                              color: Color.fromRGBO(40, 52, 116, 1),
                                             ),
-                                            items: <String>[
-                                              'SELECT AN ORIGIN',
-                                              'Origin 2',
-                                              'Origin 3'
-                                            ].map((String value) {
+                                            items: <String>['SELECT AN ORIGIN', 'Origin 2', 'Origin 3'].map((String value) {
                                               return DropdownMenuItem<String>(
                                                 value: value,
                                                 child: Text(
                                                   value,
-                                                  overflow:
-                                                      TextOverflow.ellipsis,
-                                                  style: TextStyle(
-                                                      fontSize: 12,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      color: Color.fromRGBO(
-                                                          83, 161, 216, 1)),
+                                                  overflow: TextOverflow.ellipsis,
+                                                  style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Color.fromRGBO(83, 161, 216, 1)),
                                                 ),
                                               );
                                             }).toList(),
@@ -440,10 +400,7 @@ class _BookingPage extends State<BookingPage> {
                                       padding: const EdgeInsets.all(16.0),
                                       child: Text(
                                         'DESTINATION',
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            color:
-                                                Color.fromRGBO(51, 51, 51, 1)),
+                                        style: TextStyle(fontWeight: FontWeight.bold, color: Color.fromRGBO(51, 51, 51, 1)),
                                       ),
                                     ),
                                     Padding(
@@ -452,44 +409,31 @@ class _BookingPage extends State<BookingPage> {
                                         fit: BoxFit.scaleDown,
                                         child: Container(
                                           height: 40,
-                                          padding: EdgeInsets.symmetric(
-                                              horizontal: 10),
+                                          padding: EdgeInsets.symmetric(horizontal: 10),
                                           decoration: BoxDecoration(
-                                            color: Color.fromRGBO(
-                                                255, 255, 255, 1),
+                                            color: Color.fromRGBO(255, 255, 255, 1),
                                           ),
                                           child: DropdownButtonHideUnderline(
                                             child: DropdownButton<String>(
                                               value: _selectedDestination,
                                               icon: Icon(
                                                 Icons.arrow_drop_down,
-                                                color: Color.fromRGBO(
-                                                    40, 52, 116, 1),
+                                                color: Color.fromRGBO(40, 52, 116, 1),
                                               ),
-                                              items: <String>[
-                                                'SELECT A DESTINATION',
-                                                'Destination 2',
-                                                'Destination 3'
-                                              ].map((String value) {
+                                              items: <String>['SELECT A DESTINATION', 'Destination 2', 'Destination 3'].map((String value) {
                                                 return DropdownMenuItem<String>(
                                                   value: value,
                                                   child: Text(
                                                     value,
-                                                    overflow:
-                                                        TextOverflow.ellipsis,
-                                                    style: TextStyle(
-                                                        fontSize: 12,
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        color: Color.fromRGBO(
-                                                            83, 161, 216, 1)),
+                                                    overflow: TextOverflow.ellipsis,
+                                                    style:
+                                                        TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Color.fromRGBO(83, 161, 216, 1)),
                                                   ),
                                                 );
                                               }).toList(),
                                               onChanged: (String? newValue) {
                                                 setState(() {
-                                                  _selectedDestination =
-                                                      newValue!;
+                                                  _selectedDestination = newValue!;
                                                   print(_selectedDestination);
                                                 });
                                               },
@@ -525,27 +469,20 @@ class _BookingPage extends State<BookingPage> {
                             width: 200,
                             child: OutlinedButton(
                               onPressed: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            MyBookingsPage()));
+                                Navigator.push(context, MaterialPageRoute(builder: (context) => MyBookingsPage()));
                               },
                               child: Text(
                                 'MY BOOKINGS',
-                                style: TextStyle(
-                                    color: Color.fromRGBO(0, 51, 102, 1)),
+                                style: TextStyle(color: Color.fromRGBO(0, 51, 102, 1)),
                               ),
                               style: OutlinedButton.styleFrom(
-                                backgroundColor:
-                                    Color.fromRGBO(255, 255, 255, 1),
+                                backgroundColor: Color.fromRGBO(255, 255, 255, 1),
                                 side: BorderSide(
                                   width: 2,
                                   color: Color.fromRGBO(0, 51, 102, 1),
                                 ),
                                 shape: RoundedRectangleBorder(
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(5)),
+                                  borderRadius: BorderRadius.all(Radius.circular(5)),
                                 ),
                               ),
                             ),
@@ -565,15 +502,12 @@ class _BookingPage extends State<BookingPage> {
                               },
                               child: Text(
                                 'RESERVE A SEAT',
-                                style: TextStyle(
-                                    color: Color.fromRGBO(0, 51, 102, 1)),
+                                style: TextStyle(color: Color.fromRGBO(0, 51, 102, 1)),
                               ),
                               style: ElevatedButton.styleFrom(
-                                backgroundColor:
-                                    Color.fromRGBO(83, 161, 216, 1),
+                                backgroundColor: Color.fromRGBO(83, 161, 216, 1),
                                 shape: RoundedRectangleBorder(
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(5)),
+                                  borderRadius: BorderRadius.all(Radius.circular(5)),
                                 ),
                               ),
                             ),

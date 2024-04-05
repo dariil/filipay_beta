@@ -27,19 +27,13 @@ class _qrPayState extends State<qrPay> {
 
   void initState() {
     super.initState();
-    // String _currently_logged_user = myFunc.current_user_id;
-    // balance = _filipay.get('balance_$_currently_logged_user', defaultValue: 0.0);
+
     _initializeWallet();
   }
 
   void _initializeWallet() async {
     Map<String, dynamic> getWalletResponse = await httpService.getWallet();
     balance = getWalletResponse['response']['balance'].toDouble();
-    // setState(() {
-    //   myFunc.remaining_balance = balance;
-    //   Logger().i(myFunc.remaining_balance);
-    // });
-    // Logger().i(getWalletResponse);
   }
 
   void confirmPayment() {
@@ -78,7 +72,7 @@ class _qrPayState extends State<qrPay> {
             });
           });
           myComponents.paymentSuccessful(context, double.parse(_controller.text));
-          myFunc.remaining_balance = myFunc.remaining_balance - double.parse(_controller.text); //
+          myFunc.remaining_balance = myFunc.remaining_balance - double.parse(_controller.text);
         });
       },
       () {
@@ -88,33 +82,6 @@ class _qrPayState extends State<qrPay> {
       "Are you sure you want to confirm this payment?",
     );
   }
-
-  // void updateBalance(double amount) {
-  //   setState(() {
-  //     balance += amount;
-  //     String referenceCode = "FP${Random().nextInt(999999).toString().padLeft(6, '0')}";
-  //     Future.delayed(Duration(seconds: 2), () async {
-  //       Map<String, dynamic> isUpdateResponse = await httpService.Wallet({
-  //         "userId": myFunc.current_user_id,
-  //         "referenceCode": referenceCode,
-  //         "balance": balance,
-  //         "paymentMethod": "Online",
-  //         "serviceFee": 5.00,
-  //         "status": "SUCCESSFUL",
-  //       });
-
-  //       if (isUpdateResponse['messages']['code'].toString() == '0') {
-  //         setState(() {
-  //           isLoading = false;
-  //         });
-  //       } else {
-  //         Navigator.of(context).pop();
-  //         myComponents.errorModal(context, "${isUpdateResponse['messages']['message']}");
-  //       }
-  //     });
-  //     // Logger().i(Wallet);
-  //   });
-  // }
 
   void setTrue() {
     isLoading = true;

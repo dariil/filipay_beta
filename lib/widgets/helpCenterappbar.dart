@@ -1,5 +1,3 @@
-// ignore_for_file: prefer_const_constructors
-
 import 'package:flutter/material.dart';
 
 class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
@@ -59,9 +57,9 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
                           height: 20,
                         ),
                         Image.asset(
-                          'assets/general/chat-support-popup.png', // Change path as needed
-                          width: 70, // Adjust width as needed
-                          height: 70, // Adjust height as needed
+                          'assets/general/chat-support-popup.png',
+                          width: 70,
+                          height: 70,
                         ),
                         SizedBox(height: 5),
                         Text(

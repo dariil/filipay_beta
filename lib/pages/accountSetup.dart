@@ -149,7 +149,6 @@ class _AccountSetupState extends State<AccountSetup> {
         dateofbirthController.text.isEmpty ||
         addressController.text.isEmpty ||
         selectedOption == "NONE") {
-      // Ensure an option is selected
       myComponents.error(context, "Fields cannot be empty", "Make sure to fill all text fields and select a user type. Please try again.");
     } else {
       myComponents.bookConfirmation(context, () {
@@ -173,10 +172,6 @@ class _AccountSetupState extends State<AccountSetup> {
               myFunc.current_user_id = isUpdateResponse['response']['_id'].toString();
 
               _filipay.put('tbl_users_mndb', isUpdateResponse);
-              // final tbl_users_mndb = _filipay.get('tbl_users_mndb');
-
-              // print("CURRENT ID: ${tbl_users_mndb['response']['id']}");
-
               setState(() {
                 _isLoading = false;
               });
@@ -203,9 +198,7 @@ class _AccountSetupState extends State<AccountSetup> {
       setState(() {
         _selectedImage = File(pickedFile.path);
       });
-    } else {
-      // User canceled the image selection
-    }
+    } else {}
   }
 
   DateTime? _selectedDate;
@@ -227,7 +220,6 @@ class _AccountSetupState extends State<AccountSetup> {
 
   @override
   Widget build(BuildContext context) {
-    // dateofbirthController.text = birthdate!;
     return Scaffold(
       body: SafeArea(
         child: Column(
@@ -277,7 +269,7 @@ class _AccountSetupState extends State<AccountSetup> {
                         child: Text('Change Pin'),
                       ),
                     ],
-                    icon: Icon(Icons.more_vert), // Kebab menu icon
+                    icon: Icon(Icons.more_vert),
                   ),
                 ],
               ),
@@ -301,7 +293,7 @@ class _AccountSetupState extends State<AccountSetup> {
                                   decoration: BoxDecoration(
                                     shape: BoxShape.circle,
                                     border: Border.all(
-                                      color: Color.fromRGBO(7, 64, 87, 1.0), // Border color
+                                      color: Color.fromRGBO(7, 64, 87, 1.0),
                                       width: 4, // Border width
                                     ),
                                   ),

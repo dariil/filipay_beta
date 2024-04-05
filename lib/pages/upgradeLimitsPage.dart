@@ -42,9 +42,7 @@ class UpgradeLimitsPage extends StatelessWidget {
                 alignment: Alignment.topRight,
                 child: IconButton(
                   icon: Icon(Icons.more_vert),
-                  onPressed: () {
-                    // Add functionality for the icon press here (optional)
-                  },
+                  onPressed: () {},
                   color: Color.fromARGB(255, 24, 70, 126),
                   iconSize: 30,
                 ),
@@ -109,24 +107,19 @@ class UpgradeLimitsPage extends StatelessWidget {
                                   text: "(Mobile Number)",
                                   style: TextStyle(
                                     fontSize: 9,
-                                    color:
-                                        const Color.fromRGBO(83, 161, 216, 1),
+                                    color: const Color.fromRGBO(83, 161, 216, 1),
                                   ),
                                 ),
                               ])),
-                          // SizedBox(width: 20.0),
                           Container(
                             width: 100.0,
-                            padding: EdgeInsets.symmetric(
-                                horizontal: 10, vertical: 5),
+                            padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                             decoration: BoxDecoration(
                               color: const Color.fromRGBO(19, 233, 109, 1),
                               borderRadius: BorderRadius.circular(5),
                             ),
                             child: GestureDetector(
-                              onTap: () {
-                                // Add functionality for the container press here
-                              },
+                              onTap: () {},
                               child: FittedBox(
                                 fit: BoxFit.scaleDown,
                                 child: Text(
@@ -161,24 +154,19 @@ class UpgradeLimitsPage extends StatelessWidget {
                                   text: "(Email Address)",
                                   style: TextStyle(
                                     fontSize: 9,
-                                    color:
-                                        const Color.fromRGBO(83, 161, 216, 1),
+                                    color: const Color.fromRGBO(83, 161, 216, 1),
                                   ),
                                 ),
                               ])),
-                          // SizedBox(width: 20.0),
                           Container(
                             width: 100.0,
-                            padding: EdgeInsets.symmetric(
-                                horizontal: 10, vertical: 5),
+                            padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                             decoration: BoxDecoration(
                               color: const Color.fromRGBO(19, 233, 109, 1),
                               borderRadius: BorderRadius.circular(5),
                             ),
                             child: GestureDetector(
-                              onTap: () {
-                                // Add functionality for the container press here
-                              },
+                              onTap: () {},
                               child: FittedBox(
                                 fit: BoxFit.scaleDown,
                                 child: Text(
@@ -231,44 +219,35 @@ class UpgradeLimitsPage extends StatelessWidget {
                                   text: "(Valid ID)",
                                   style: TextStyle(
                                     fontSize: 9,
-                                    color:
-                                        const Color.fromRGBO(83, 161, 216, 1),
+                                    color: const Color.fromRGBO(83, 161, 216, 1),
                                   ),
                                 ),
                               ])),
                           SizedBox(
-                            height: 30, // Adjust the height as needed
+                            height: 30,
                             child: OutlinedButton(
-                              onPressed: () {
-                                // Add functionality for the button press here
-                              },
+                              onPressed: () {},
                               style: ButtonStyle(
-                                shape: MaterialStateProperty.all<
-                                    RoundedRectangleBorder>(
+                                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                                   RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(
-                                        8), // Adjust border radius here
+                                    borderRadius: BorderRadius.circular(8),
                                   ),
                                 ),
                                 side: MaterialStateProperty.all<BorderSide>(
                                   BorderSide(
-                                    color:
-                                        const Color.fromRGBO(83, 161, 216, 1),
-                                    width: 1, // Adjust border width if needed
+                                    color: const Color.fromRGBO(83, 161, 216, 1),
+                                    width: 1,
                                   ),
                                 ),
                               ),
                               child: Container(
-                                padding: EdgeInsets.symmetric(
-                                    vertical: 1,
-                                    horizontal: 2), // Adjust padding as needed
+                                padding: EdgeInsets.symmetric(vertical: 1, horizontal: 2),
                                 child: Text(
                                   "VERIFY",
                                   style: TextStyle(
                                     fontSize: 14,
                                     fontWeight: FontWeight.bold,
-                                    color:
-                                        const Color.fromRGBO(83, 161, 216, 1),
+                                    color: const Color.fromRGBO(83, 161, 216, 1),
                                   ),
                                 ),
                               ),
@@ -277,8 +256,7 @@ class UpgradeLimitsPage extends StatelessWidget {
                         ],
                       ),
                     ),
-                    SizedBox(height: 10), // Add spacing
-                    // Another Row for Email Verification and Completed
+                    SizedBox(height: 10),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 8.0),
                       child: Row(
@@ -296,44 +274,35 @@ class UpgradeLimitsPage extends StatelessWidget {
                                   text: "(Selfie with ID)",
                                   style: TextStyle(
                                     fontSize: 9,
-                                    color:
-                                        const Color.fromRGBO(83, 161, 216, 1),
+                                    color: const Color.fromRGBO(83, 161, 216, 1),
                                   ),
                                 ),
                               ])),
                           SizedBox(
-                            height: 30, // Adjust the height as needed
+                            height: 30,
                             child: OutlinedButton(
-                              onPressed: () {
-                                // Add functionality for the button press here
-                              },
+                              onPressed: () {},
                               style: ButtonStyle(
-                                shape: MaterialStateProperty.all<
-                                    RoundedRectangleBorder>(
+                                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                                   RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(
-                                        8), // Adjust border radius here
+                                    borderRadius: BorderRadius.circular(8),
                                   ),
                                 ),
                                 side: MaterialStateProperty.all<BorderSide>(
                                   BorderSide(
-                                    color:
-                                        const Color.fromRGBO(83, 161, 216, 1),
-                                    width: 1, // Adjust border width if needed
+                                    color: const Color.fromRGBO(83, 161, 216, 1),
+                                    width: 1,
                                   ),
                                 ),
                               ),
                               child: Container(
-                                padding: EdgeInsets.symmetric(
-                                    vertical: 1,
-                                    horizontal: 2), // Adjust padding as needed
+                                padding: EdgeInsets.symmetric(vertical: 1, horizontal: 2),
                                 child: Text(
                                   "VERIFY",
                                   style: TextStyle(
                                     fontSize: 14,
                                     fontWeight: FontWeight.bold,
-                                    color:
-                                        const Color.fromRGBO(83, 161, 216, 1),
+                                    color: const Color.fromRGBO(83, 161, 216, 1),
                                   ),
                                 ),
                               ),
@@ -342,7 +311,7 @@ class UpgradeLimitsPage extends StatelessWidget {
                         ],
                       ),
                     ),
-                    SizedBox(height: 14), // Add spacing
+                    SizedBox(height: 14),
                     Center(
                       child: Container(
                         width: 330.0,
@@ -358,7 +327,7 @@ class UpgradeLimitsPage extends StatelessWidget {
                             )),
                       ),
                     ),
-                    SizedBox(height: 10), // Add spacing
+                    SizedBox(height: 10),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 8.0),
                       child: Row(
@@ -378,8 +347,7 @@ class UpgradeLimitsPage extends StatelessWidget {
                                     text: "(Business Permit)",
                                     style: TextStyle(
                                       fontSize: 9,
-                                      color:
-                                          const Color.fromRGBO(83, 161, 216, 1),
+                                      color: const Color.fromRGBO(83, 161, 216, 1),
                                     ),
                                   ),
                                 ])),
@@ -389,34 +357,28 @@ class UpgradeLimitsPage extends StatelessWidget {
                             child: FittedBox(
                               fit: BoxFit.scaleDown,
                               child: OutlinedButton(
-                                onPressed: () {
-                                  // Add functionality for the button press here
-                                },
+                                onPressed: () {},
                                 style: ButtonStyle(
-                                  shape: MaterialStateProperty.all<
-                                      RoundedRectangleBorder>(
+                                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                                     RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(8),
                                     ),
                                   ),
                                   side: MaterialStateProperty.all<BorderSide>(
                                     BorderSide(
-                                      color:
-                                          const Color.fromRGBO(83, 161, 216, 1),
+                                      color: const Color.fromRGBO(83, 161, 216, 1),
                                       width: 1,
                                     ),
                                   ),
                                 ),
                                 child: Container(
-                                  padding: EdgeInsets.symmetric(
-                                      vertical: 1, horizontal: 2),
+                                  padding: EdgeInsets.symmetric(vertical: 1, horizontal: 2),
                                   child: Text(
                                     "VERIFY",
                                     style: TextStyle(
                                       fontSize: 14,
                                       fontWeight: FontWeight.bold,
-                                      color:
-                                          const Color.fromRGBO(83, 161, 216, 1),
+                                      color: const Color.fromRGBO(83, 161, 216, 1),
                                     ),
                                   ),
                                 ),
@@ -426,7 +388,7 @@ class UpgradeLimitsPage extends StatelessWidget {
                         ],
                       ),
                     ),
-                    SizedBox(height: 18), // Add spacing
+                    SizedBox(height: 18),
                     TextDivider(
                       color: Colors.black,
                       text: Text('LIMITS',
@@ -438,8 +400,7 @@ class UpgradeLimitsPage extends StatelessWidget {
                     ),
                     SizedBox(height: 11),
                     Padding(
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 2, horizontal: 40),
+                      padding: const EdgeInsets.symmetric(vertical: 2, horizontal: 40),
                       child: Container(
                           padding: EdgeInsets.all(5),
                           decoration: BoxDecoration(
@@ -447,8 +408,7 @@ class UpgradeLimitsPage extends StatelessWidget {
                             borderRadius: BorderRadius.circular(0),
                           ),
                           child: Padding(
-                            padding: const EdgeInsets.symmetric(
-                                vertical: 5, horizontal: 15),
+                            padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 15),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [

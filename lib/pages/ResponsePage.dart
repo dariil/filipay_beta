@@ -45,8 +45,7 @@ class _ResponseChatPageState extends State<ResponseChatPage> {
 
   @override
   Widget build(BuildContext context) {
-    String formattedTime =
-        DateFormat.jm().format(DateTime.now().toUtc().add(Duration(hours: 8)));
+    String formattedTime = DateFormat.jm().format(DateTime.now().toUtc().add(Duration(hours: 8)));
     return Scaffold(
       resizeToAvoidBottomInset: true,
       appBar: MyAppBar(title: widget.title),
@@ -63,10 +62,7 @@ class _ResponseChatPageState extends State<ResponseChatPage> {
                 child: Center(
                   child: Text(
                     '$formattedTime',
-                    style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        color: Color.fromRGBO(241, 151, 45, 1)),
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Color.fromRGBO(241, 151, 45, 1)),
                   ),
                 ),
               ),
@@ -76,8 +72,7 @@ class _ResponseChatPageState extends State<ResponseChatPage> {
                   itemBuilder: (context, index) {
                     bool showIcon = index == 0;
                     return Padding(
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 7.0, horizontal: 20.0),
+                      padding: const EdgeInsets.symmetric(vertical: 7.0, horizontal: 20.0),
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -89,7 +84,7 @@ class _ResponseChatPageState extends State<ResponseChatPage> {
                                   'assets/general/chatbot-icon.png',
                                   width: 40,
                                 ),
-                              if (!showIcon) // Add a blank Icon for alignment
+                              if (!showIcon)
                                 Icon(
                                   Icons.circle,
                                   color: Colors.transparent,
@@ -110,10 +105,7 @@ class _ResponseChatPageState extends State<ResponseChatPage> {
                                   padding: const EdgeInsets.all(9.0),
                                   child: Text(
                                     messages[index],
-                                    style: TextStyle(
-                                        fontSize: 18,
-                                        color: const Color.fromARGB(
-                                            255, 32, 32, 32)),
+                                    style: TextStyle(fontSize: 18, color: const Color.fromARGB(255, 32, 32, 32)),
                                   ),
                                 ),
                               ],
@@ -142,8 +134,7 @@ class _ResponseChatPageState extends State<ResponseChatPage> {
                     );
                   },
                   style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all<Color>(
-                        Color.fromRGBO(18, 90, 139, 1)),
+                    backgroundColor: MaterialStateProperty.all<Color>(Color.fromRGBO(18, 90, 139, 1)),
                   ),
                   child: Text(
                     "Yes, start a new conversation.",

@@ -1,12 +1,9 @@
-// ignore_for_file: prefer_const_constructors
-
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:filipay_beta/widgets/helpCenterappbar.dart';
 
 class NewChatPage extends StatefulWidget {
-  const NewChatPage({Key? key, this.title = "I need help with something."})
-      : super(key: key);
+  const NewChatPage({Key? key, this.title = "I need help with something."}) : super(key: key);
   final String title;
   @override
   State<NewChatPage> createState() => _NewChatPageState();
@@ -20,38 +17,31 @@ class _NewChatPageState extends State<NewChatPage> {
   @override
   void initState() {
     super.initState();
-    addReplyMessage(
-        widget.title); //user's reply is fetched from Help Center Page
+    addReplyMessage(widget.title);
   }
 
   void addReplyMessage(String message) {
-    // Add user's message
     messages.add('You: $message');
 
-    //if Message came from ResponseChatPage
     if (isFirstMessage) {
       String botReply1;
       String botReply2;
       if (widget.title == "I need help with something.") {
-        botReply1 = 'How can we help?'; // First bot reply
+        botReply1 = 'How can we help?';
         messages.add(botReply1);
-
-        //if Message came from HelpCenterPage
       } else {
-        botReply1 = 'We received your message.'; // First bot reply
-        botReply2 = 'To assist you better,\n' +
-            'Kindly provide the following: \n\n• Reference ID: \n• Full Name: '; // Second bot reply
+        botReply1 = 'We received your message.';
+        botReply2 = 'To assist you better,\n' + 'Kindly provide the following: \n\n• Reference ID: \n• Full Name: ';
         messages.add(botReply1);
         messages.add(botReply2);
       }
-      isFirstMessage = false; // Update isFirstMessage flag
+      isFirstMessage = false;
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    String formattedTime =
-        DateFormat.jm().format(DateTime.now().toUtc().add(Duration(hours: 8)));
+    String formattedTime = DateFormat.jm().format(DateTime.now().toUtc().add(Duration(hours: 8)));
     return Scaffold(
       resizeToAvoidBottomInset: true,
       appBar: MyAppBar(title: widget.title),
@@ -88,9 +78,7 @@ class _NewChatPageState extends State<NewChatPage> {
                         horizontal: 20.0,
                       ),
                       child: Row(
-                        mainAxisAlignment: isUserMessage
-                            ? MainAxisAlignment.end
-                            : MainAxisAlignment.start,
+                        mainAxisAlignment: isUserMessage ? MainAxisAlignment.end : MainAxisAlignment.start,
                         children: [
                           Row(
                             mainAxisSize: MainAxisSize.min,
@@ -112,18 +100,14 @@ class _NewChatPageState extends State<NewChatPage> {
                             child: Container(
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(8),
-                                color: isUserMessage
-                                    ? Colors.blue
-                                    : Colors.grey.shade200,
+                                color: isUserMessage ? Colors.blue : Colors.grey.shade200,
                               ),
                               padding: const EdgeInsets.all(9.0),
                               child: Text(
                                 message.replaceAll('You: ', ''),
                                 style: TextStyle(
                                   fontSize: 18,
-                                  color: isUserMessage
-                                      ? Colors.white
-                                      : Colors.black,
+                                  color: isUserMessage ? Colors.white : Colors.black,
                                 ),
                               ),
                             ),
@@ -152,8 +136,7 @@ class _NewChatPageState extends State<NewChatPage> {
                     child: Container(
                       height: 55,
                       decoration: BoxDecoration(
-                        color:
-                            Color.fromRGBO(181, 225, 238, 1).withOpacity(0.5),
+                        color: Color.fromRGBO(181, 225, 238, 1).withOpacity(0.5),
                         borderRadius: BorderRadius.circular(10),
                       ),
                       child: Row(

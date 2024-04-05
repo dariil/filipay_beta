@@ -34,15 +34,12 @@ class _NavDrawerState extends State<NavDrawer> {
 
   Future<void> _pickImage(BuildContext context) async {
     final image = await _picker.pickImage(source: ImageSource.gallery);
-    if (image != null) {
-      // Handle the picked image file
-    }
+    if (image != null) {}
   }
 
   @override
   Widget build(BuildContext context) {
     return Drawer(
-        // width: 270,
         child: SingleChildScrollView(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -67,8 +64,8 @@ class _NavDrawerState extends State<NavDrawer> {
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
                       border: Border.all(
-                        color: Color.fromRGBO(7, 64, 87, 1.0), // Border color
-                        width: 4, // Border width
+                        color: Color.fromRGBO(7, 64, 87, 1.0),
+                        width: 4,
                       ),
                     ),
                     child: CircleAvatar(
@@ -118,14 +115,6 @@ class _NavDrawerState extends State<NavDrawer> {
                       color: Color.fromRGBO(7, 64, 87, 1.0),
                     ),
                   ),
-                  // Text(
-                  //   "@JuanDelaCruz",
-                  //   style: TextStyle(
-                  //     fontWeight: FontWeight.w400,
-                  //     fontSize: 10.0,
-                  //     color: Color.fromRGBO(7, 64, 87, 1.0),
-                  //   ),
-                  // ),
                   Text(
                     "Standard",
                     style: TextStyle(
@@ -193,10 +182,6 @@ class _NavDrawerState extends State<NavDrawer> {
             ),
             myPageComponents.otherDrawerItems(context: context, text: "Terms of Service", destinationPage: TOS()),
             myPageComponents.otherDrawerItems(context: context, text: "Privacy Policy", destinationPage: PrivacyPolicy()),
-            // myPageComponents.otherDrawerItems(
-            //     context: context,
-            //     text: "Log Out",
-            //     destinationPage: LoginPage()),
             Padding(
               padding: EdgeInsets.only(left: 18.0),
               child: TextButton(

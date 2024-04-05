@@ -56,12 +56,6 @@ class _PrivacyPolicyState extends State<PrivacyPolicy> {
                     textAlign: TextAlign.start,
                   ),
                   SizedBox(height: 40.0),
-                  // Text(
-                  //   "1. Acceptance of Terms By accessing or using our app, you agree to be bound by these terms and conditions. If you do not agree with any part of these terms, please do not use the app.\n",
-                  //   style: TextStyle(
-                  //     fontSize: 15.0,
-                  //   ),
-                  // ),
                   Container(
                     width: double.infinity,
                     child: Text(
@@ -277,8 +271,7 @@ class _PrivacyPolicyState extends State<PrivacyPolicy> {
                     },
                     text: "UNDERSTOOD",
                     BackgroundColor: Color.fromRGBO(47, 50, 145, 1.0),
-                    padding:
-                        EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                    padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
                     BorderRadius: BorderRadius.circular(50.0),
                   ),
                   SizedBox(height: 30.0),

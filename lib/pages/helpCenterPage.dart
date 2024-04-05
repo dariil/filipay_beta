@@ -122,8 +122,7 @@ class _HelpCenterPageState extends State<HelpCenterPage> {
                               height: 50,
                               decoration: BoxDecoration(
                                 color: Color.fromRGBO(181, 225, 238, 1),
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(10)),
+                                borderRadius: BorderRadius.all(Radius.circular(10)),
                                 border: GradientBoxBorder(
                                   width: 3,
                                   gradient: LinearGradient(colors: [
@@ -134,8 +133,7 @@ class _HelpCenterPageState extends State<HelpCenterPage> {
                                 ),
                               ),
                               child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
                                   SizedBox(width: 10),
                                   Image.asset(
@@ -182,8 +180,7 @@ class _HelpCenterPageState extends State<HelpCenterPage> {
                               height: 50,
                               decoration: BoxDecoration(
                                 color: Color.fromRGBO(181, 225, 238, 1),
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(10)),
+                                borderRadius: BorderRadius.all(Radius.circular(10)),
                                 border: GradientBoxBorder(
                                   width: 3,
                                   gradient: LinearGradient(colors: [
@@ -194,8 +191,7 @@ class _HelpCenterPageState extends State<HelpCenterPage> {
                                 ),
                               ),
                               child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
                                   SizedBox(width: 10),
                                   Image.asset(
@@ -242,8 +238,7 @@ class _HelpCenterPageState extends State<HelpCenterPage> {
                               height: 50,
                               decoration: BoxDecoration(
                                 color: Color.fromRGBO(181, 225, 238, 1),
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(10)),
+                                borderRadius: BorderRadius.all(Radius.circular(10)),
                                 border: GradientBoxBorder(
                                   width: 3,
                                   gradient: LinearGradient(colors: [
@@ -254,8 +249,7 @@ class _HelpCenterPageState extends State<HelpCenterPage> {
                                 ),
                               ),
                               child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
                                   SizedBox(width: 10),
                                   Image.asset(
@@ -299,8 +293,7 @@ class _HelpCenterPageState extends State<HelpCenterPage> {
                 width: double.maxFinite,
                 height: 55,
                 decoration: BoxDecoration(
-                  color: Color.fromRGBO(181, 225, 238, 1)
-                      .withOpacity(0.5), // Adjust opacity and color as needed
+                  color: Color.fromRGBO(181, 225, 238, 1).withOpacity(0.5),
                   borderRadius: BorderRadius.circular(10),
                 ),
                 child: Row(
@@ -335,9 +328,7 @@ class _HelpCenterPageState extends State<HelpCenterPage> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => NewChatPage(
-                                    title:
-                                        message), //To push the message to newChatPage
+                                builder: (context) => NewChatPage(title: message),
                               ),
                             );
                           },
