@@ -234,7 +234,7 @@ class _TransactionHistoryPageState extends State<TransactionHistoryPage> {
           _selectedDate.month == transactionDate.month &&
           _selectedDate.day == transactionDate.day) {
         Map<String, dynamic> transactionDetails = {
-          'Amount': '+₱${double.parse(formattedAmount)}', // Assuming 'serviceFee' represents the transaction amount
+          'Amount': '+${double.parse(formattedAmount)}', // Assuming 'serviceFee' represents the transaction amount
           'Reference Code': referenceCode,
           'Payment Method': paymentMethod,
           'Service Fee': '₱$serviceFee', // Assuming 'serviceFee' represents the service fee
@@ -327,6 +327,15 @@ class _TransactionHistoryPageState extends State<TransactionHistoryPage> {
       Color valueColor = Colors.black; // Default color
       if (key == 'Amount' || key == '₱') {
         valueColor = Colors.blue;
+        if (value.startsWith('+')) {
+          value = value.substring(1);
+          if (double.parse(value) < 0) {
+            valueColor = Colors.red;
+            value = '-₱${value.substring(1)}';
+          } else {
+            value = '+₱${value}';
+          }
+        }
       } else if (key == 'Status' && value == 'SUCCESSFUL') {
         valueColor = Colors.green;
       }

@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:logger/logger.dart';
 import '../widgets/components.dart';
-// import 'package:hive/hive.dart';
 import 'enterAmount.dart';
 import 'eWallet.dart';
 import '../functions/functions.dart';
@@ -32,7 +31,6 @@ class _SelectAmountPageState extends State<SelectAmountPage> {
   final FocusNode _focusNode = FocusNode();
 
   void loadingEnter(double amount) {
-    // Set loadAmount when entering the amount manually
     setState(() {
       Navigator.push(context, MaterialPageRoute(builder: (context) => EnterAmountPage()));
     });
@@ -41,8 +39,6 @@ class _SelectAmountPageState extends State<SelectAmountPage> {
   @override
   void initState() {
     super.initState();
-    // String _currently_logged_user = myFunc.current_user_id;
-    // balance = _filipay.get('balance_$_currently_logged_user', defaultValue: 0.0);
     _initializeWallet();
   }
 
@@ -60,7 +56,7 @@ class _SelectAmountPageState extends State<SelectAmountPage> {
     setState(() {
       balance += amount;
       String referenceCode = "FP${Random().nextInt(999999).toString().padLeft(6, '0')}";
-      Future.delayed(Duration(seconds: 2), () async {
+      () async {
         Map<String, dynamic> isUpdateResponse = await httpService.Wallet({
           "userId": myFunc.current_user_id,
           "referenceCode": referenceCode,
@@ -78,7 +74,7 @@ class _SelectAmountPageState extends State<SelectAmountPage> {
           Navigator.of(context).pop();
           myComponents.errorModal(context, "${isUpdateResponse['messages']['message']}");
         }
-      });
+      };
       // Logger().i(Wallet);
     });
   }

@@ -145,7 +145,7 @@ class _MainPageState extends State<MainPage> {
                   myFunc.transportMode = 'QR Reader';
                   Navigator.of(context).push(
                     MaterialPageRoute(
-                      builder: (context) => qrPay(),
+                      builder: (context) => QRCam(),
                     ),
                   );
                 },
