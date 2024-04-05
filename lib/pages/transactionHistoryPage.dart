@@ -1,3 +1,4 @@
+import 'package:filipay_beta/functions/httpRequest.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import '../widgets/components.dart';
@@ -12,6 +13,7 @@ class TransactionHistoryPage extends StatefulWidget {
 }
 
 class _TransactionHistoryPageState extends State<TransactionHistoryPage> {
+  httprequestService httpService = httprequestService();
   final _filipay = Hive.box("filipay");
   late DateTime _selectedDate;
   String _selectedFilter = 'All';
@@ -132,51 +134,63 @@ class _TransactionHistoryPageState extends State<TransactionHistoryPage> {
                   SizedBox(
                     height: 20,
                   ),
-                  Expanded(
-                      child: _buildFilteredTransactions().isEmpty
-                          ? Center(
-                              child: Text(
-                                'There are no transactions to display.',
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                  color: Color.fromRGBO(24, 70, 126, 1),
-                                ),
-                              ),
-                            )
-                          : ListView.builder(
-                              itemCount: _buildFilteredTransactions().length,
-                              itemBuilder: (context, index) {
-                                Map<String, dynamic> transactionDetails = _buildFilteredTransactions()[index]['details'];
+                  FutureBuilder<List<Map<String, dynamic>>>(
+                    future: _buildFilteredTransactions(),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return CircularProgressIndicator();
+                      } else if (snapshot.hasError) {
+                        return Text('Error: ${snapshot.error}');
+                      } else if (snapshot.data!.isEmpty) {
+                        return Center(
+                          child: Text(
+                            'There are no transactions to display.',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              color: Color.fromRGBO(24, 70, 126, 1),
+                            ),
+                          ),
+                        );
+                      } else {
+                        return Expanded(
+                          child: ListView.builder(
+                            itemCount: snapshot.data!.length,
+                            itemBuilder: (context, index) {
+                              Map<String, dynamic> transactionDetails = snapshot.data![index]['details'];
 
-                                return Padding(
-                                  padding: const EdgeInsets.symmetric(vertical: 5.0),
-                                  child: SizedBox(
-                                    width: 300, // Adjusted width
-                                    child: Container(
-                                      padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                                      margin: EdgeInsets.symmetric(horizontal: 55),
-                                      decoration: BoxDecoration(
-                                        color: Color.fromRGBO(242, 249, 255, 1),
-                                        borderRadius: BorderRadius.circular(12),
-                                        boxShadow: [
-                                          BoxShadow(
-                                            color: Colors.black.withOpacity(0.1),
-                                            blurRadius: 4,
-                                            offset: Offset(0, 2),
-                                          ),
-                                        ],
-                                      ),
-                                      child: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: _buildTransactionWidgets(transactionDetails),
-                                      ),
+                              return Padding(
+                                padding: const EdgeInsets.symmetric(vertical: 5.0),
+                                child: SizedBox(
+                                  width: 300,
+                                  child: Container(
+                                    padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                                    margin: EdgeInsets.symmetric(horizontal: 55),
+                                    decoration: BoxDecoration(
+                                      color: Color.fromRGBO(242, 249, 255, 1),
+                                      borderRadius: BorderRadius.circular(12),
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.black.withOpacity(0.1),
+                                          blurRadius: 4,
+                                          offset: Offset(0, 2),
+                                        ),
+                                      ],
+                                    ),
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: _buildTransactionWidgets(transactionDetails),
                                     ),
                                   ),
-                                );
-                              },
-                              shrinkWrap: true,
-                            )),
+                                ),
+                              );
+                            },
+                            shrinkWrap: true,
+                          ),
+                        );
+                      }
+                    },
+                  ),
                 ],
               ),
             ),
@@ -186,34 +200,44 @@ class _TransactionHistoryPageState extends State<TransactionHistoryPage> {
     );
   }
 
-  List<Map<String, dynamic>> _buildFilteredTransactions() {
+  Future<List<Map<String, dynamic>>> _buildFilteredTransactions() async {
     List<Map<String, dynamic>> filteredTransactions = [];
 
-    String _currently_logged_user = _functions.current_user_id;
+    // Fetch transaction data
+    Map<String, dynamic> transactionData = await httpService.getHistories();
+    List<dynamic>? transactionResponse = transactionData['response'];
 
-    List<dynamic>? hiveTransactionHistory = _filipay.get('user_transactions_$_currently_logged_user', defaultValue: []);
+    // Extract transaction history from response
+    String currentlyLoggedUser = _functions.current_user_id;
 
-    for (var transaction in hiveTransactionHistory ?? []) {
-      String amount = transaction['amount'].toString();
+    for (var transaction in transactionResponse ?? []) {
+      String userId = transaction['userId'];
+      String paymentMethod = transaction['paymentMethod'];
+      int amount = transaction['newBalance'] - transaction['previousBalance'];
       String referenceCode = transaction['referenceCode'];
-      String date = transaction['date'];
-      String time = transaction['time'];
+      int serviceFee = transaction['serviceFee'];
+      String status = transaction['status'];
+      String date = transaction['createdAt'];
 
-      if (transaction['userId'] == _currently_logged_user && (_selectedFilter == 'All' || transaction['Payment Method'] == _selectedFilter)) {
+      // Convert date string to DateTime object
+      DateTime transactionDate = DateTime.parse(date);
+
+      // Filter transactions based on selected criteria
+      if (userId == currentlyLoggedUser &&
+          (_selectedFilter == 'All' || paymentMethod == _selectedFilter) &&
+          _selectedDate.year == transactionDate.year &&
+          _selectedDate.month == transactionDate.month &&
+          _selectedDate.day == transactionDate.day) {
         Map<String, dynamic> transactionDetails = {
-          'Amount': '+₱$amount',
-          'Reference Code': '$referenceCode',
-          'Payment Method': 'Online',
-          'Service Fee': '₱5.00',
-          'Date': '$date',
-          'Time': '$time',
-          'Status': 'SUCCESSFUL',
+          'Amount': '+₱$amount', // Assuming 'serviceFee' represents the transaction amount
+          'Reference Code': referenceCode,
+          'Payment Method': paymentMethod,
+          'Service Fee': '₱$serviceFee', // Assuming 'serviceFee' represents the service fee
+          'Date': '$date', // Assuming 'date' is in the format "YYYY-MM-DDTHH:mm:ss.sssZ"
+          'Status': status,
         };
 
-        DateTime transactionDate = DateTime.parse(date);
-        if (_selectedDate.year == transactionDate.year && _selectedDate.month == transactionDate.month && _selectedDate.day == transactionDate.day) {
-          filteredTransactions.add({'details': transactionDetails});
-        }
+        filteredTransactions.add({'details': transactionDetails});
       }
     }
 

@@ -1,7 +1,10 @@
+import 'dart:math';
+
 import 'package:filipay_beta/functions/httpRequest.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:logger/logger.dart';
 import '../widgets/components.dart';
 // import 'package:hive/hive.dart';
 import 'enterAmount.dart';
@@ -22,6 +25,7 @@ class _SelectAmountPageState extends State<SelectAmountPage> {
   httprequestService httpService = httprequestService();
 
   double balance = 0.0;
+  double previousBalance = 0.0;
 
   bool _isLoading = false;
   String username = "[name]";
@@ -35,6 +39,7 @@ class _SelectAmountPageState extends State<SelectAmountPage> {
     });
   }
 
+  @override
   void initState() {
     super.initState();
     // String _currently_logged_user = myFunc.current_user_id;
@@ -47,16 +52,24 @@ class _SelectAmountPageState extends State<SelectAmountPage> {
     balance = getWalletResponse['response']['balance'].toDouble();
     setState(() {
       myFunc.remaining_balance = balance;
+      Logger().i(myFunc.remaining_balance);
     });
     // Logger().i(getWalletResponse);
   }
 
   void updateBalance(double amount) {
     setState(() {
+      previousBalance = balance;
       balance += amount;
+      String referenceCode = "FP${Random().nextInt(999999).toString().padLeft(6, '0')}";
       Future.delayed(Duration(seconds: 2), () async {
         Map<String, dynamic> isUpdateResponse = await httpService.Wallet({
+          "userId": myFunc.current_user_id,
+          "referenceCode": referenceCode,
           "balance": balance,
+          "paymentMethod": "Online",
+          "serviceFee": 5.00,
+          "status": "SUCCESSFUL",
         });
 
         if (isUpdateResponse['messages']['code'].toString() == '0') {
