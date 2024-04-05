@@ -13,9 +13,11 @@ import '../functions/functions.dart';
 import '../pages/bookings.dart';
 import '../pages/waitingConfirmationPage.dart';
 import '../pages/login.dart';
+import '../functions/httpRequest.dart';
 
 class pageComponents {
   pageFunctions pageFunc = pageFunctions();
+  httprequestService httpService = httprequestService();
   Align background() {
     return Align(
       alignment: Alignment.bottomCenter,
@@ -411,6 +413,7 @@ class pageComponents {
     // String userId = pageFunc.current_user_id;
     // String selectedOption = pageFunc.getAccountType(userId);
     // String firstName = pageFunc.getFirstName(userId);
+    final tbl_users_mndb = _filipay.get('tbl_users_mndb');
     return AppBar(
       backgroundColor: Color.fromRGBO(44, 177, 230, 1.0),
       centerTitle: true,
@@ -431,7 +434,7 @@ class pageComponents {
         Container(
           width: 150.0,
           child: Text(
-            "Hello, Jhon",
+            "Hello, ${tbl_users_mndb['response']['firstName'].toString()}",
             overflow: TextOverflow.ellipsis,
             style: TextStyle(
               color: Color.fromRGBO(39, 50, 115, 1.0),
