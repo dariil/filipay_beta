@@ -6,7 +6,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 class MyEncryptionDecryption {
   static late Box _ivBox;
 
-  // Initialize Hive and open the boxes
+  
   static Future<void> init() async {
     await Hive.initFlutter();
     _ivBox = await Hive.openBox('ivBox');
@@ -23,7 +23,7 @@ class MyEncryptionDecryption {
 
   static encryptAES(text) {
     final key = encrypt.Key.fromUtf8(dotenv.env['key'].toString());
-    final iv = getIV(); // Retrieve IV from Hive
+    final iv = getIV(); 
     final encrypter = encrypt.Encrypter(encrypt.AES(key));
     final encrypted = encrypter.encrypt(text, iv: iv);
 
@@ -35,7 +35,7 @@ class MyEncryptionDecryption {
 
   static decryptAES(String text) {
     final key = encrypt.Key.fromUtf8(dotenv.env['key'].toString());
-    final iv = getIV(); // Retrieve IV from Hive
+    final iv = getIV(); 
     final encrypter = encrypt.Encrypter(encrypt.AES(key));
     return encrypter.decrypt(encrypt.Encrypted.fromBase64(text), iv: iv);
   }

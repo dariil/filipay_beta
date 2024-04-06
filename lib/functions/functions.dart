@@ -3,12 +3,7 @@ import 'dart:math';
 
 class pageFunctions {
   final _filipay = Hive.box("filipay");
-  void initState() {
-    // ignore: unused_local_variable
-    final userList = _filipay.get('tbl_users');
-    // ignore: unused_local_variable
-    final userProfileList = _filipay.get('tbl_user_profile');
-  }
+  void initState() {}
 
   String generateRandomId(int length) {
     var random = Random();
@@ -144,24 +139,6 @@ class pageFunctions {
   }
 
   double get remaining_balance => _remaining_balance;
-
-  // String getFirstName(String userId) {
-  //   final userProfile = _filipay.get('tbl_user_profile');
-  //   final user = userProfile.firstWhere((user) => user['user_id'] == userId);
-  //   return user['firstname'];
-  // }
-
-  // String getLastName(String userId) {
-  //   final userProfile = _filipay.get('tbl_user_profile');
-  //   final user = userProfile.firstWhere((user) => user['user_id'] == userId);
-  //   return user['lastname'];
-  // }
-
-  // String getAccountType(String userId) {
-  //   final userProfile = _filipay.get('tbl_user_profile');
-  //   final user = userProfile.firstWhere((user) => user['user_id'] == userId, orElse: () => {});
-  //   return user.containsKey('user_type') ? user['user_type'] : 'Default Account Type';
-  // }
 
   double getBalance() {
     return _filipay.get('balance_${_currently_logged_user}', defaultValue: 0.0);
