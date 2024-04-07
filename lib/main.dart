@@ -9,9 +9,6 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 void main() async {
   await MyEncryptionDecryption.init();
   await dotenv.load(fileName: '.env');
-  // if (MyEncryptionDecryption.getIV().bytes.isEmpty) {
-  //   MyEncryptionDecryption.generateAndSaveIV();
-  // }
   await Hive.initFlutter();
   var box = await Hive.openBox('mybox');
   var filipay = await Hive.openBox('filipay');
