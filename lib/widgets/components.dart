@@ -1349,7 +1349,8 @@ class pageComponents {
         title: "Confirm Logout",
         text: "Are you sure you want to logout?",
         onConfirm: () {
-          recentUser.removeWhere((user) => user['recent_user_id'] == pageFunc.current_user_id);
+          // recentUser.removeWhere((user) => user['recent_user_id'] == pageFunc.current_user_id);
+          recentUser.clear();
           Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => LoginPage()),

@@ -79,18 +79,21 @@ class _MainPageState extends State<MainPage> {
 
     final tbl_users_mndb = _filipay.get('tbl_users_mndb');
     recentUser.add({
-      "recent_user_id": myFunc.current_user_id,
-      "recent_user_email": tbl_users_mndb['response']['email'],
-      "recent_user_pin": tbl_users_mndb['response']['pin'],
-      "recent_user_firstname": tbl_users_mndb['response']['firstName'],
-      "recent_user_middlename": tbl_users_mndb['response']['middleName'],
-      "recent_user_lastname": tbl_users_mndb['response']['lastName'],
-      "recent_user_type": tbl_users_mndb['response']['type'],
-      "recent_user_address": tbl_users_mndb['response']['address'],
-      "recent_user_birthday": tbl_users_mndb['response']['birthday'],
-      "recent_user_mobile": tbl_users_mndb['response']['mobileNumber'],
-      "recent_user_date_created": tbl_users_mndb['response']['createdAt'],
-      "recent_user_date_updated": tbl_users_mndb['response']['updatedAt'],
+      "messages": {"code": 0, "message": "User logged in successfully"},
+      "response": {
+        "id": myFunc.current_user_id,
+        "email": tbl_users_mndb['response']['email'],
+        "pin": tbl_users_mndb['response']['pin'],
+        "firstName": tbl_users_mndb['response']['firstName'],
+        "middleName": tbl_users_mndb['response']['middleName'],
+        "lastName": tbl_users_mndb['response']['lastName'],
+        "type": tbl_users_mndb['response']['type'],
+        "address": tbl_users_mndb['response']['address'],
+        "birthday": tbl_users_mndb['response']['birthday'],
+        "mobileNumber": tbl_users_mndb['response']['mobileNumber'],
+        "createdAt": tbl_users_mndb['response']['createdAt'],
+        "updatedAt": tbl_users_mndb['response']['updatedAt'],
+      }
     });
   }
 

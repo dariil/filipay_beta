@@ -215,6 +215,7 @@ class _CreatePinState extends State<CreatePin> {
         });
       } else {
         setState(() {
+          // Logger().i(pinPage.current_user_id);
           _isLoading = false;
           pinPage.loginPin = false;
           if (tbl_users_mndb['response'].containsKey('firstName')) {

@@ -76,11 +76,13 @@ class _LoginPageState extends State<LoginPage> {
         setState(() {
           _isLoading = false;
           myFunc.loginPin = true;
-          myFunc.current_user_id = recentUser[0]['recent_user_id'].toString();
+          myFunc.current_user_id = recentUser[0]['response']['id'].toString();
+          Logger().i(myFunc.current_user_id);
           Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => CreatePin()),
           );
+          _filipay.put('tbl_users_mndb', tbl_users_mndb);
         });
       });
     } on PlatformException catch (e) {
@@ -116,6 +118,7 @@ class _LoginPageState extends State<LoginPage> {
           context,
           MaterialPageRoute(builder: (context) => CreatePin()),
         );
+        Logger().i(tbl_users_mndb);
       } else {
         Navigator.of(context).pop();
         myComponents.errorModal(context, "${isLoginResponse['messages']['message']}");
