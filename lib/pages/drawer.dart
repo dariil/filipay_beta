@@ -107,12 +107,16 @@ class _NavDrawerState extends State<NavDrawer> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    "${fullName}",
-                    style: TextStyle(
-                      fontWeight: FontWeight.w900,
-                      fontSize: 20.0,
-                      color: Color.fromRGBO(7, 64, 87, 1.0),
+                  Container(
+                    width: 160.0,
+                    child: Text(
+                      "${fullName}",
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        fontWeight: FontWeight.w900,
+                        fontSize: 20.0,
+                        color: Color.fromRGBO(7, 64, 87, 1.0),
+                      ),
                     ),
                   ),
                   Text(

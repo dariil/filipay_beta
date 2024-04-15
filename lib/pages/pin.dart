@@ -117,21 +117,34 @@ class _CreatePinState extends State<CreatePin> {
 
   void pinChanged() {
     _isLoading = true;
-    Future.delayed(Duration(seconds: 2), () {
-      final userList = _filipay.get('tbl_users');
+    Future.delayed(Duration(seconds: 2), () async {
       setState(() {
+        var ecryptedText = MyEncryptionDecryption.encryptAES(confirmPin).toString();
+        userPin = ecryptedText;
         _isLoading = false;
-        int index = userList.indexWhere((user) => user['user_id'] == pinPage.current_user_id);
-        var encryptPin = MyEncryptionDecryption.encryptAES(confirmPin).toString();
-        userList[index]['user_pin'] = encryptPin;
-        print(pinPage.current_user_id);
-        userPin = userList[index]['user_pin'].toString();
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => AccountSetup()),
-        );
       });
-      _filipay.put('tbl_users', pinPage.tbl_users);
+      Logger().i(userPin);
+      Map<String, dynamic> isUpdateResponse = await httpService.UpdateUser({
+        "pin": userPin.toString(),
+      });
+      if (isUpdateResponse['messages']['code'].toString() == '0') {
+        pinPage.pinMode = false;
+        pinPage.loginPin = false;
+        pinPage.current_user_id = isUpdateResponse['response']['_id'].toString();
+        Logger().i(pinPage.current_user_id);
+
+        myComponents.alert(context, () {
+          Navigator.pop(context);
+          Navigator.pop(context);
+        }, "Successful!", "Changes has been saved!.");
+
+        _filipay.put('tbl_users_mndb', isUpdateResponse);
+      } else {
+        myComponents.errorModal(context, "${isUpdateResponse['messages']['message']}");
+      }
+      setState(() {
+        enter();
+      });
     });
   }
 
@@ -215,7 +228,6 @@ class _CreatePinState extends State<CreatePin> {
         });
       } else {
         setState(() {
-          // Logger().i(pinPage.current_user_id);
           _isLoading = false;
           pinPage.loginPin = false;
           if (tbl_users_mndb['response'].containsKey('firstName')) {
