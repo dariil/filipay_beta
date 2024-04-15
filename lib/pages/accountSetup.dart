@@ -90,6 +90,10 @@ class _AccountSetupState extends State<AccountSetup> {
   }
 
   void initState() {
+    // bool standardSelected = false;
+    // bool studentSelected = false;
+    // bool seniorSelected = false;
+    // bool pwdSelected = false;
     Logger().i(myFunc.current_user_id);
     super.initState();
     final tbl_users_mndb = _filipay.get('tbl_users_mndb');
@@ -108,6 +112,22 @@ class _AccountSetupState extends State<AccountSetup> {
       dateofbirthController.text = tbl_users_mndb['response']['birthday'].toString();
       addressController.text = tbl_users_mndb['response']['address'].toString();
       numberController.text = tbl_users_mndb['response']['mobileNumber'].toString();
+      switch (tbl_users_mndb['response']['type'].toString()) {
+        case "STANDARD":
+          standard();
+          break;
+        case "STUDENT":
+          student();
+          break;
+        case "SENIOR CITIZEN":
+          senior();
+          break;
+        case "PWD":
+          pwd();
+          break;
+        default:
+          standard();
+      }
     }
   }
 
